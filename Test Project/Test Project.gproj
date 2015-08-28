@@ -1,0 +1,8 @@
+<project>
+ <properties encryptCode="0" architecture="0" windowHeight="0" win_org="GiderosMobile" logicalHeight="480" encryptAssets="0" osx_org="GiderosMobile" win_domain="giderosmobile.com" touchToMouse="1" android_template="0" autorotation="0" scaleMode="0" orientation="0" packageName="com.yourdomain.yourapp" retinaDisplay="0" iosDevice="0" windowWidth="0" osx_domain="giderosmobile.com" logicalWidth="320" mouseToTouch="1" mouseTouchOrder="0" fps="60" assetsOnly="0">
+  <imageScales/>
+ </properties>
+ <file source="../../../Downloads/field.png"/>
+ <file source="../../../Downloads/ball.png"/>
+ <file source="main.lua"/>
+</project>
