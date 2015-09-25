@@ -11,7 +11,7 @@ setmetatable(InputObject, {
   end,
 })
 
-function InputObject:init()
+function InputObject:_init()
 end
 
 function InputObject:execute()
