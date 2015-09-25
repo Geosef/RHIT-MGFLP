@@ -1,4 +1,5 @@
 -- Unit testing starts
+M = {}
 luaunit = require('luaunit')
 
 TestMyStuff = {} --test class
@@ -20,5 +21,8 @@ TestMyStuff2 = {} --test class
 	end
 
 
+function M.run()
+	luaunit.LuaUnit.run()
+end
 
-luaunit.LuaUnit.run()
+return M
