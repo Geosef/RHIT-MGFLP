@@ -70,12 +70,18 @@ function ClusterObject:execute()
 	end
 end
 
-function ClusterObject:remove(objindex)
+function ClusterObject:removeindex(objindex)
 	for i = objindex + 1, # self.objs do
 		self.objs[i].objindex = self.objs[i].objindex - 1
 	end
 	table.remove(self.objs, objindex)
 end
+
+function ClusterObject:remove(obj)
+	self:removeindex(obj.objindex)
+end
+
+
 
 function ClusterObject:append(obj)
 	table.insert(self.objs, obj)
