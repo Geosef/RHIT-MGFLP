@@ -1,6 +1,6 @@
 -- Unit testing starts
 M = {}
-luaunit = require('luaunit')
+luaunit = require('test/luaunit')
 
 TestMyStuff = {} --test class
 	function TestMyStuff:testWithNumbers()

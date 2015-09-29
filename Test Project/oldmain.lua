@@ -1,12 +1,12 @@
 function my_super_function( arg1, arg2 ) return arg1 + arg2 end
 
-tests = require('runtests')
+tests = require('test/runtests')
 
 M = {}
 
-local background = Bitmap.new(Texture.new("field.png"))
+local background = Bitmap.new(Texture.new("images/field.png"))
 
-local ball = Bitmap.new(Texture.new("ball.png"))
+local ball = Bitmap.new(Texture.new("images/ball.png"))
 
 ball.xdirection = 1
 ball.ydirection = 1

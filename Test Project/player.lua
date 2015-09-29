@@ -22,7 +22,7 @@ function Player:_init(grid)
 	imagescale = width / grid.numrows
 	inc = 1 / grid.numrows
 	startY = height / 4
-	local playerimage = Bitmap.new(Texture.new("player.jpg"))
+	local playerimage = Bitmap.new(Texture.new("images/player.jpg"))
 	scalex = imagescale / playerimage:getWidth()
 	scaley = imagescale / playerimage:getHeight()
 			

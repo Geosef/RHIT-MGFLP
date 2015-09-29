@@ -46,7 +46,7 @@ function Grid:_init(numrows)
 		
 		row = {}
 		for j=1, numrows do
-			local cellimage = Bitmap.new(Texture.new("square.png"))
+			local cellimage = Bitmap.new(Texture.new("images/square.png"))
 			scalex = imagescale / cellimage:getWidth()
 			scaley = imagescale / cellimage:getHeight()
 			
@@ -59,7 +59,7 @@ function Grid:_init(numrows)
 			table.insert(row, cellobj)
 			
 			if ((i + j) % 2) == 0 and (i ~= 1 or j ~= 1) then
-				local goldimage = Bitmap.new(Texture.new("gold.png"))
+				local goldimage = Bitmap.new(Texture.new("images/gold.png"))
 				scalex = imagescale / goldimage:getWidth() / 2
 				scaley = imagescale / goldimage:getHeight() / 2
 				
