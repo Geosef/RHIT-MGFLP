@@ -38,11 +38,12 @@ setmetatable(Grid, {
 function Grid:_init(numrows)
 	imagescale = width / numrows
 	inc = 1 / numrows
-	starty = height / 4	
+	startY = height / 4	
 	
 	self.numrows = numrows
 	rows = {}
 	for i=1, numrows do
+		
 		row = {}
 		for j=1, numrows do
 			local cellimage = Bitmap.new(Texture.new("square.png"))
@@ -51,11 +52,27 @@ function Grid:_init(numrows)
 			
 			cellimage:setScale(scalex, scaley)
 			xpos = (inc *  (j-1)) * width
-			ypos = (inc * (i-1)) * width + starty 
+			ypos = (inc * (i-1)) * width + startY
 			cellimage:setPosition(xpos, ypos)
 			stage:addChild(cellimage)
 			cellobj = Cell(j, i, cellimage)
 			table.insert(row, cellobj)
+			
+			if ((i + j) % 2) == 0 and (i ~= 1 or j ~= 1) then
+				local goldimage = Bitmap.new(Texture.new("gold.png"))
+				scalex = imagescale / goldimage:getWidth() / 2
+				scaley = imagescale / goldimage:getHeight() / 2
+				
+				goldimage:setScale(scalex, scaley)
+				xpos = (inc * (j-1)) * width + imagescale / 4
+				ypos = (inc * (i-1)) * width + startY + (imagescale / 4)
+				goldimage:setPosition(xpos, ypos)
+				stage:addChild(goldimage)
+				cellobj.gold = true
+				cellobj.goldimage = goldimage
+			else
+				cellobj.gold = false
+			end
 		end
 		table.insert(rows, row)
 	end
