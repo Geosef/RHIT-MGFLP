@@ -16,6 +16,13 @@ setmetatable(Player, {
 
 function Player:_init(grid)
 	self.score = 0
+	local textfield = TextField.new(nil, "Score: " .. self.score)
+	textfield:setX(10)
+	textfield:setY(10)
+	stage:addChild(textfield)
+	self.scorefield = textfield
+	
+	
 	self.x = 1
 	self.y = 1
 	self.grid = grid
@@ -45,6 +52,7 @@ function Player:finishmove()
 	if cell.gold then
 		print("Player picked up gold!")
 		self.score = self.score + 1
+		self.scorefield:setText("Score: " .. self.score)
 		cell.gold = false
 		stage:removeChild(cell.goldimage)
 	end	

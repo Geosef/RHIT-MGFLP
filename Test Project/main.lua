@@ -6,7 +6,7 @@ inobj = require('inputobj')
 playermod = require('player')
 
 gridmod = require('grid')
-grid = gridmod.Grid(5)
+grid = gridmod.Grid(6)
 player = playermod.Player(grid)
 
 function funcprint()
@@ -14,22 +14,22 @@ function funcprint()
 end
 
 function moveL()
-	player:moveLeft(grid)
+	player:moveLeft()
 	print("Moved left")
 	print("Player Score:", player.score)
 end
 function moveR()
-	player:moveRight(grid)
+	player:moveRight()
 	print("Moved right")
 	print("Player Score:", player.score)
 end
 function moveU()
-	player:moveUp(grid)
+	player:moveUp()
 	print("Moved up")
 	print("Player Score:", player.score)
 end
 function moveD()
-	player:moveDown(grid)
+	player:moveDown()
 	print("Moved down")
 	print("Player Score:", player.score)
 end
@@ -51,3 +51,7 @@ clusterobj = inobj.ClusterObject({eventobj1, eventobj2, eventobj3, eventobj4, ev
 loopobj = inobj.LoopObject(clusterobj, 2)
 loopobj:execute()
 
+grid:reset()
+
+--need functionality to remove objects from stage by having them remove their children
+--eg remove grid should call remove cell which should call remove gold

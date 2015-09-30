@@ -45,6 +45,7 @@ end
 
 
 function EventObject:execute()
+	--local timer = Timer.delayedCall(1000, self.func)
 	self.func()
 end
 
@@ -66,7 +67,7 @@ end
 
 function ClusterObject:execute()
 	for index,value in ipairs(self.objs) do
-		value:execute('BLAH')
+		value:execute()
 	end
 end
 
@@ -80,8 +81,6 @@ end
 function ClusterObject:remove(obj)
 	self:removeindex(obj.objindex)
 end
-
-
 
 function ClusterObject:append(obj)
 	table.insert(self.objs, obj)
