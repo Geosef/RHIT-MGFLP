@@ -54,13 +54,9 @@ function InputEngine:removeEvent(eventobj)
 	end
 end
 
-
-
 function InputEngine:runEvents()
 	self.topcluster:execute()
 end
-
-
 
 
 M.InputEngine = InputEngine

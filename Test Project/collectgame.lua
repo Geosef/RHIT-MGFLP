@@ -17,7 +17,6 @@ setmetatable(CollectGame, {
   end,
 })
 
-
 function CollectGame:_init(numrows)
 	self.grid = gridmod.Grid(numrows)
 	self.player = playermod.Player(self.grid)

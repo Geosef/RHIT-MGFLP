@@ -49,10 +49,10 @@ function EventObject:execute()
 	self.func()
 end
 
-ClusterObject = {}
-ClusterObject.__index = ClusterObject
+ScriptObject = {}
+ScriptObject.__index = ScriptObject
 
-setmetatable(ClusterObject, {
+setmetatable(ScriptObject, {
   __index = InputObject,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
@@ -61,33 +61,33 @@ setmetatable(ClusterObject, {
   end,
 })
 
-function ClusterObject:_init(objs)
+function ScriptObject:_init(objs)
 	self.objs = objs
 end
 
-function ClusterObject:execute()
+function ScriptObject:execute()
 	for index,value in ipairs(self.objs) do
 		value:execute()
 	end
 end
 
-function ClusterObject:removeindex(objindex)
+function ScriptObject:removeindex(objindex)
 	for i = objindex + 1, # self.objs do
 		self.objs[i].objindex = self.objs[i].objindex - 1
 	end
 	table.remove(self.objs, objindex)
 end
 
-function ClusterObject:remove(obj)
+function ScriptObject:remove(obj)
 	self:removeindex(obj.objindex)
 end
 
-function ClusterObject:append(obj)
+function ScriptObject:append(obj)
 	table.insert(self.objs, obj)
 	obj.objindex = # self.objs
 end
 
-function ClusterObject:insert(obj, objindex)
+function ScriptObject:insert(obj, objindex)
 	table.insert(self.objs, objindex, obj)
 	for i = objindex + 1, # self.objs do
 		self.objs[i].objindex = self.objs[i].objindex + 1
@@ -119,7 +119,7 @@ end
 
 
 M.EventObject = EventObject
-M.ClusterObject = ClusterObject
+M.ScriptObject = ScriptObject
 M.LoopObject = LoopObject
 
 return M
