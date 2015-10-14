@@ -22,7 +22,9 @@ TestMyStuff2 = {} --test class
 
 
 function M.run()
-	luaUnit.LuaUnit.run()
+	local runner = require("luacov.runner")
+	runner.init("main.lua")
+	luaunit.LuaUnit.run()
 end
 
 return M

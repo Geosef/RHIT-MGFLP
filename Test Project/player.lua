@@ -14,7 +14,7 @@ setmetatable(Player, {
   end,
 })
 
-function Player:_init(grid)
+function Player:_init(grid, player1)
 	self.score = 0
 	self.loadedMoves = {}
 	local textField = TextField.new(nil, "Score: " .. self.score)
@@ -22,10 +22,19 @@ function Player:_init(grid)
 	textField:setY(10)
 	stage:addChild(textField)
 	self.scoreField = textField
+	self.action = false
 	
-	
-	self.x = 1
-	self.y = 1
+	if player1 then
+		self.initX = 1
+		self.initY = 1
+		self.name = "Player 1"
+	else
+		self.initX = grid.numRows
+		self.initY = grid.numRows
+		self.name = "Player 2"
+	end
+	self.x = self.initX
+	self.y = self.initY
 	self.grid = grid
 	imageScale = width / grid.numRows
 	inc = 1 / grid.numRows
@@ -48,9 +57,11 @@ end
 
 function Player:reset()
 	self.score = 0
+	self.scoreField:setText("Score: " .. self.score)
 	self.playerImage:setPosition(self.xPosStart, self.yPosStart)
-	self.x = 1
-	self.y = 1
+	self.x = self.initX
+	self.y = self.initY
+	self.action = true
 end
 
 
@@ -58,7 +69,7 @@ end
 function Player:finishMove()
 	cell = self.grid.rows[self.y][self.x]
 	if cell.gold then
-		print("Player picked up gold!")
+		print(self.name .. " picked up gold!")
 		self.score = self.score + 1
 		self.scoreField:setText("Score: " .. self.score)
 		cell.gold = false
@@ -127,12 +138,13 @@ function Player:moveDown(param)
 end
 
 function Player:update()
+	if not self.action then return end
 	
 	if self.playerImage.xSpeed == 0 and self.playerImage.ySpeed == 0 then
 		if # self.loadedMoves ~= 0 then
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
-			move()
+			move:execute()
 		end
 		return
 	end
@@ -146,10 +158,11 @@ function Player:update()
 		if # self.loadedMoves == 0 then
 			self.xSpeed = 0
 			self.ySpeed = 0
+			self.action = false
 		else
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
-			move()
+			move:execute()
 		end
 		return
 	end

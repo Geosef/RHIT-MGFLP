@@ -18,7 +18,7 @@ function MoveLeftCommand:_init(player, param, objIndex)
 	self.func = function(x) player:moveLeft(x) end
 	self.param = param
 	self.objIndex = objIndex
-	self.name = 'MoveLeft'
+	self.name = 'LeftMove'
 end
 
 local MoveRightCommand = {}
@@ -35,7 +35,7 @@ function MoveRightCommand:_init(player, param, objIndex)
 	self.func = function(x) player:moveRight(x) end
 	self.param = param
 	self.objIndex = objIndex
-	self.name = 'MoveRight'
+	self.name = 'RightMove'
 end
 
 local MoveUpCommand = {}
@@ -52,7 +52,7 @@ function MoveUpCommand:_init(player, param, objIndex)
 	self.func = function(x) player:moveUp(x) end
 	self.param = param
 	self.objIndex = objIndex
-	self.name = 'MoveUp'
+	self.name = 'UpMove'
 end
 
 local MoveDownCommand = {}
@@ -69,7 +69,7 @@ function MoveDownCommand:_init(player, param, objIndex)
 	self.func = function(x) player:moveDown(x) end
 	self.param = param
 	self.objIndex = objIndex
-	self.name = 'MoveDown'
+	self.name = 'DownMove'
 end
 
 M.LeftMove = MoveLeftCommand

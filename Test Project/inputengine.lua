@@ -61,6 +61,14 @@ function InputEngine:runEvents()
 	self.topCluster:execute()
 end
 
+function InputEngine:getEvents()
+	local events = {}
+	self.topCluster.list:iterate(function(elem)
+		table.insert(events, elem.name)
+	end)
+	return events
+end
+
 
 M.InputEngine = InputEngine
 return M
