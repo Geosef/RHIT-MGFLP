@@ -25,7 +25,7 @@ end
 
 function Cell:setGold()
 	imageScale = width / self.numRows
-	if ((self.x + self.y) % 2) == 0 and (self.x ~= 1 or self.y ~= 1) then
+	if ((self.x + self.y) % 2) == 0 and (self.x ~= 1 or self.y ~= 1) and (self.x ~= self.numRows or self.y ~= self.numRows) then
 		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
 		scaleX = imageScale / goldImage:getWidth() / 2
 		scaleY = imageScale / goldImage:getHeight() / 2

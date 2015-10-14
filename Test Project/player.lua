@@ -18,8 +18,7 @@ function Player:_init(grid, player1)
 	self.score = 0
 	self.loadedMoves = {}
 	local textField = TextField.new(nil, "Score: " .. self.score)
-	textField:setX(10)
-	textField:setY(10)
+	
 	stage:addChild(textField)
 	self.scoreField = textField
 	self.action = false
@@ -28,10 +27,14 @@ function Player:_init(grid, player1)
 		self.initX = 1
 		self.initY = 1
 		self.name = "Player 1"
+		textField:setX(10)
+		textField:setY(10)
 	else
 		self.initX = grid.numRows
 		self.initY = grid.numRows
 		self.name = "Player 2"
+		textField:setX(10)
+		textField:setY(20)
 	end
 	self.x = self.initX
 	self.y = self.initY
