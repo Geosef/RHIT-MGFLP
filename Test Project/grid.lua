@@ -15,28 +15,28 @@ setmetatable(Cell, {
   end,
 })
 
-function Cell:_init(x, y, sprite, numrows)
+function Cell:_init(x, y, sprite, numRows)
 	self.x = x
 	self.y = y
 	self.sprite = sprite
-	self.numrows = numrows
+	self.numRows = numRows
 	self:setGold()	
 end
 
 function Cell:setGold()
-	imagescale = width / self.numrows
+	imageScale = width / self.numRows
 	if ((self.x + self.y) % 2) == 0 and (self.x ~= 1 or self.y ~= 1) then
-		local goldimage = Bitmap.new(Texture.new("images/gold.png"))
-		scalex = imagescale / goldimage:getWidth() / 2
-		scaley = imagescale / goldimage:getHeight() / 2
+		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
+		scaleX = imageScale / goldimage:getWidth() / 2
+		scaleY = imageScale / goldimage:getHeight() / 2
 		
-		goldimage:setScale(scalex, scaley)
-		xpos = (inc * (self.x-1)) * width + imagescale / 4
-		ypos = (inc * (self.y-1)) * width + startY + (imagescale / 4)
-		goldimage:setPosition(xpos, ypos)
-		stage:addChild(goldimage)
+		goldImage:setScale(scaleX, scaleY0
+		xPos = (inc * (self.x-1)) * width + imageScale / 4
+		yPos = (inc * (self.y-1)) * width + startY + (imageScale / 4)
+		goldImage:setPosition(xPos, yPos)
+		stage:addChild(goldImage)
 		self.gold = true
-		self.goldimage = goldimage
+		self.goldImage = goldImage
 	else
 		self.gold = false
 	end
@@ -45,7 +45,7 @@ end
 function Cell:reset()
 	if self.gold then
 		self.gold = false
-		stage:removeChild(self.goldimage)
+		stage:removeChild(self.goldImage)
 	end
 	self:setGold()
 end
@@ -61,28 +61,28 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(numrows)
-	imagescale = width / numrows
-	inc = 1 / numrows
+function Grid:_init(numRows)
+	imageScale = width / numRows
+	inc = 1 / numRows
 	startY = height / 4	
 	
-	self.numrows = numrows
+	self.numRows = numRows
 	rows = {}
-	for i=1, numrows do
+	for i=1, numRows do
 		
 		row = {}
-		for j=1, numrows do
-			local cellimage = Bitmap.new(Texture.new("images/square.png"))
-			scalex = imagescale / cellimage:getWidth()
-			scaley = imagescale / cellimage:getHeight()
+		for j=1, numRows do
+			local cellImage = Bitmap.new(Texture.new("images/square.png"))
+			scaleX = imageScale / cellImage:getWidth()
+			scaleY = imageScale / cellImage:getHeight()
 			
-			cellimage:setScale(scalex, scaley)
-			xpos = (inc *  (j-1)) * width
-			ypos = (inc * (i-1)) * width + startY
-			cellimage:setPosition(xpos, ypos)
-			stage:addChild(cellimage)
-			cellobj = Cell(j, i, cellimage, numrows)
-			table.insert(row, cellobj)			
+			cellImage:setScale(scaleX, scaleY)
+			xPos = (inc *  (j-1)) * width
+			yPos = (inc * (i-1)) * width + startY
+			cellImage:setPosition(xPos, yPos)
+			stage:addChild(cellImage)
+			cellObj = Cell(j, i, cellImage, numRows)
+			table.insert(row, cellObj)			
 		end
 		table.insert(rows, row)
 	end
@@ -90,9 +90,9 @@ function Grid:_init(numrows)
 end
 
 function Grid:reset()
-	for i = 1,self.numrows do
+	for i = 1,self.numRows do
 		row = self.rows[i]
-		for j = 1,self.numrows do
+		for j = 1,self.numRows do
 			cell = row[j]
 			cell:reset()
 		end

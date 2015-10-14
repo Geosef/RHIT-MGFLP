@@ -1,9 +1,9 @@
 require('inputobj')
 oldmain = require('oldmain')
 --oldmain.run()
-gamemod = require('collectgame')
+gameMod = require('collectgame')
 
-game = gamemod.CollectGame(6)
+game = gameMod.CollectGame(6)
 
 --need functionality to remove objects from stage by having them remove their children
 --eg remove grid should call remove cell which should call remove gold

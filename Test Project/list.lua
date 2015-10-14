@@ -1,4 +1,8 @@
+M = {}
 local List = {}
+
+-- Any object that uses this list must have the objindex property defined for it. 
+-- For simplicity sake, simply extend the InputObject table.
 
 setmetatable(List, {
   __call = function (cls, ...)
@@ -20,7 +24,7 @@ setmetatable(List, {
 })
 
 function List:_init(objs)
-	if objs == null	then
+	if objs == nil	then
 		self.objs = {}
 	else
 		self.objs = objs
@@ -33,25 +37,29 @@ function List:iterate(func)
 	end
 end
 
-function List:removeindex(objindex)
-	for i = objindex + 1, # self.objs do
-		self.objs[i].objindex = self.objs[i].objindex - 1
+function List:removeIndex(objIndex)
+	for i = objIndex + 1, # self.objs do
+		self.objs[i].objIndex = self.objs[i].objIndex - 1
 	end
 	table.remove(self.objs, objindex)
 end
 
 function List:remove(obj)
-	self:removeindex(obj.objindex)
+	self:removeIndex(obj.objIndex)
 end
 
 function List:append(obj)
 	table.insert(self.objs, obj)
-	obj.objindex = # self.objs
+	obj.objIndex = # self.objs
 end
 
-function List:insert(obj, objindex)
-	table.insert(self.objs, objindex, obj)
-	for i = objindex + 1, # self.objs do
-		self.objs[i].objindex = self.objs[i].objindex + 1
+function List:insert(obj, objIndex)
+	obj.objIndex = objIndex
+	table.insert(self.objs, objIndex, obj)
+	for i = objIndex + 1, # self.objs do
+		self.objs[i].objIndex = self.objs[i].objIndex + 1
 	end
 end
+
+M.List = List
+return M

@@ -1,9 +1,9 @@
 M = {}
 
-gridmod = require('grid')
-playermod = require('player')
-enginemod = require('inputengine')
-buttonmod = require('inputbutton')
+gridMod = require('grid')
+playerMod = require('player')
+engineMod = require('inputengine')
+buttonMod = require('inputbutton')
 
 
 local CollectGame = {}
@@ -18,44 +18,44 @@ setmetatable(CollectGame, {
 })
 
 function CollectGame:_init(numrows)
-	self.grid = gridmod.Grid(numrows)
-	self.player = playermod.Player(self.grid)
-	self.engine = enginemod.InputEngine()
+	self.grid = gridMod.Grid(numrows)
+	self.player = playerMod.Player(self.grid)
+	self.engine = engineMod.InputEngine()
 	self:setupButtons()
 end
 
 function CollectGame:setupButtons()
-	rightbutton = buttonmod.InputButton(self.engine, "images/arrow-right.png", function()
+	rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png", function()
 		print("right")
 		--self.player:moveRight()
-		table.insert(self.player.loadedmoves, function() self.player:moveRight() end)
+		table.insert(self.player.loadedMoves, function() self.player:moveRight() end)
 		end, 1)
-	downbutton = buttonmod.InputButton(self.engine, "images/arrow-down.png", function()
+	downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", function()
 		--self.player:moveDown()
 		print("down")
-		table.insert(self.player.loadedmoves, function() self.player:moveDown() end)
+		table.insert(self.player.loadedMoves, function() self.player:moveDown() end)
 		end, 2)
-	leftbutton = buttonmod.InputButton(self.engine, "images/arrow-left.png", function()
+	leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", function()
 		print("left")
 		--self.player:moveLeft()
-		table.insert(self.player.loadedmoves, function() self.player:moveLeft() end)
+		table.insert(self.player.loadedMoves, function() self.player:moveLeft() end)
 		end, 3)
-	upbutton = buttonmod.InputButton(self.engine, "images/arrow-up.png", function()
+	upButton = buttonmod.InputButton(self.engine, "images/arrow-up.png", function()
 		--self.player:moveUp()
-		table.insert(self.player.loadedmoves, function() self.player:moveUp() end)
+		table.insert(self.player.loadedMoves, function() self.player:moveUp() end)
 		print("up")
 		end, 4)
 		
-	local buttonimage = Bitmap.new(Texture.new("images/go.png"))
-	scalex = width / buttonimage:getWidth() / 7
-	scaley = height / buttonimage:getHeight() / 10
+	local buttonImage = Bitmap.new(Texture.new("images/go.png"))
+	scaleX = width / buttonImage:getWidth() / 7
+	scaleY = height / buttonImage:getHeight() / 10
 	
-	local button = Button.new(buttonimage, buttonimage, function()
+	local button = Button.new(buttonImage, buttonImage, function()
 		self:reset() end)
-	button:setScale(scalex, scaley)
-	xpos = 5 * (width / 6)
-	ypos = height / 20
-	button:setPosition(xpos, ypos)
+	button:setScale(scaleX, scaleY)
+	xPos = 5 * (width / 6)
+	yPos = height / 20
+	button:setPosition(xPos, yPos)
 	stage:addChild(button)
 end
 

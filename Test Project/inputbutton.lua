@@ -14,20 +14,20 @@ setmetatable(InputButton, {
   end,
 })
 
-function InputButton:_init(engine, imagepath, func, buttonnum)
+function InputButton:_init(engine, imagePath, func, buttonNum)
 	self.engine = engine
 	self.func = func
-	local buttonimage = Bitmap.new(Texture.new(imagepath))
-	scalex = width / buttonimage:getWidth() / 10
-	scaley = height / buttonimage:getHeight() / 10
+	local buttonImage = Bitmap.new(Texture.new(imagePath))
+	scaleX = width / buttonImage:getWidth() / 10
+	scaleY = height / buttonImage:getHeight() / 10
 	
-	local button = Button.new(buttonimage, buttonimage, function() self:click() end)
+	local button = Button.new(buttonImage, buttonImage, function() self:click() end)
 	button:setScale(scalex, scaley)
-	xpos = buttonnum * (width / 6)
-	ypos = height / 20
-	button:setPosition(xpos, ypos)
+	xPos = buttonNum * (width / 6)
+	yPos = height / 20
+	button:setPosition(xPos, yPos)
 	stage:addChild(button)
-	self.imagepath = imagepath
+	self.imagePath = imagePath
 	--button:addEventListener("click", function()
 		--self.engine:addEvent(self.func)
 	--	self.func()
@@ -35,7 +35,7 @@ function InputButton:_init(engine, imagepath, func, buttonnum)
 end
 
 function InputButton:click()
-	self.engine:addEvent(self)
+	self.engine:addEvent(self, 1)
 end
 
 M.InputButton = InputButton

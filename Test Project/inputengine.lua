@@ -1,6 +1,6 @@
 M = {}
 
-inputmod = require('inputobj')
+inputMod = require('inputobj')
 
 width = application:getLogicalWidth()
 height = application:getLogicalHeight()
@@ -17,45 +17,45 @@ setmetatable(InputEngine, {
 })
 
 function InputEngine:_init()
-	self.topcluster = ClusterObject({})
-	self.eventsprites = {}
+	self.topCluster = ScriptObject({})
+	self.eventSprites = {}
 end
 
-function InputEngine:addEvent(button)
-	local eventnum = # self.topcluster.objs + 1
+function InputEngine:addEvent(button, param)
+	local eventNum = # self.topCluster.objs + 1
 	
-	local eventobj = inputmod.EventObject(button.func, eventnum)
-	self.topcluster:append(eventobj)
+	local eventObj = inputMod.EventObject(button.func, 1, eventNum)
+	self.topCluster:append(eventObj)
 	
-	local buttonimage = Bitmap.new(Texture.new(button.imagepath))
-	scalex = width / buttonimage:getWidth() / 20
-	scaley = height / buttonimage:getHeight() / 20
+	local buttonImage = Bitmap.new(Texture.new(button.imagePath))
+	scaleX = width / buttonImage:getWidth() / 20
+	scaleY = height / buttonImage:getHeight() / 20
 	
-	local eventsprite = Button.new(buttonimage, buttonimage, function()
+	local eventSprite = Button.new(buttonImage, buttonImage, function()
 	self:removeEvent(eventobj)	end)
-	eventsprite:setScale(scalex, scaley)
-	xpos = eventnum * (width / 15)
-	ypos = 3 * height / 20
-	eventsprite:setPosition(xpos, ypos)
-	stage:addChild(eventsprite)
-	table.insert(self.eventsprites, eventsprite)
+	eventSprite:setScale(scaleX, scaleY)
+	xPos = eventnum * (width / 15)
+	yPos = 3 * height / 20
+	eventSprite:setPosition(xPos, yPos)
+	stage:addChild(eventSprite)
+	table.insert(self.eventSprites, eventSprite)
 end
 
-function InputEngine:removeEvent(eventobj)
-	local eventnum = eventobj.objindex
+function InputEngine:removeEvent(eventObj)
+	local eventNum = eventObj.objIndex
 	
-	self.topcluster:remove(eventobj)
-	stage:removeChild(self.eventsprites[eventnum])
-	table.remove(self.eventsprites, eventnum)
-	for i = eventnum, # self.topcluster.objs do
-		xpos = i * (width / 15)
-		ypos = 3 * height / 20
-		self.eventsprites[i]:setPosition(xpos, ypos)
+	self.topCluster:remove(eventObj)
+	stage:removeChild(self.eventSprites[eventNum])
+	table.remove(self.eventSprites, eventNum)
+	for i = eventNum, # self.topCluster.objs do
+		xPos = i * (width / 15)
+		yPos = 3 * height / 20
+		self.eventSprites[i]:setPosition(xPos, yPos)
 	end
 end
 
 function InputEngine:runEvents()
-	self.topcluster:execute()
+	self.topCluster:execute()
 end
 
 

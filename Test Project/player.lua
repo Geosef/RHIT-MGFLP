@@ -16,68 +16,68 @@ setmetatable(Player, {
 
 function Player:_init(grid)
 	self.score = 0
-	self.loadedmoves = {}
-	local textfield = TextField.new(nil, "Score: " .. self.score)
-	textfield:setX(10)
-	textfield:setY(10)
-	stage:addChild(textfield)
-	self.scorefield = textfield
+	self.loadedMoves = {}
+	local textField = TextField.new(nil, "Score: " .. self.score)
+	textField:setX(10)
+	textField:setY(10)
+	stage:addChild(textField)
+	self.scoreField = textField
 	
 	
 	self.x = 1
 	self.y = 1
 	self.grid = grid
-	imagescale = width / grid.numrows
-	inc = 1 / grid.numrows
+	imageScale = width / grid.numRows
+	inc = 1 / grid.numRows
 	startY = height / 4
-	local playerimage = Bitmap.new(Texture.new("images/player.jpg"))
-	scalex = imagescale / playerimage:getWidth()
-	scaley = imagescale / playerimage:getHeight()
+	local playerImage = Bitmap.new(Texture.new("images/player.jpg"))
+	scaleX = imageScale / playerImage:getWidth()
+	scaleY = imageScale / playerImage:getHeight()
 			
-	playerimage:setScale(scalex, scaley)
-	self.xposStart = (inc * (self.x-1)) * width
-	self.yposStart = (inc * (self.y-1)) * width + startY
-	playerimage:setPosition(self.xposStart, self.yposStart)
-	stage:addChild(playerimage)
-	self.playerimage = playerimage
-	self.playerimage.xdirection = 0
-	self.playerimage.ydirection = 0
-	self.playerimage.xspeed = 0
-	self.playerimage.yspeed = 0
+	playerImage:setScale(scaleX, scaleY)
+	self.xPosStart = (inc * (self.x-1)) * width
+	self.yPosStart = (inc * (self.y-1)) * width + startY
+	playerImage:setPosition(self.xPosStart, self.yPosStart)
+	stage:addChild(playerImage)
+	self.playerImage = playerImage
+	self.playerImage.xDirection = 0
+	self.playerImage.yDirection = 0
+	self.playerImage.xSpeed = 0
+	self.playerImage.ySpeed = 0
 end
 
 function Player:reset()
 	self.score = 0
-	self.playerimage:setPosition(self.xposStart, self.yposStart)
+	self.playerImage:setPosition(self.xPosStart, self.yPosStart)
 	self.x = 1
 	self.y = 1
 end
 
 
 
-function Player:finishmove()
+function Player:finishMove()
 	cell = self.grid.rows[self.y][self.x]
 	if cell.gold then
 		print("Player picked up gold!")
 		self.score = self.score + 1
-		self.scorefield:setText("Score: " .. self.score)
+		self.scoreField:setText("Score: " .. self.score)
 		cell.gold = false
-		stage:removeChild(cell.goldimage)
+		stage:removeChild(cell.goldImage)
 	end
 end
 
 function Player:moveRight()
-	if self.x >= self.grid.numrows then
+	if self.x >= self.grid.numRows then
 		return
 	end
 	self.x = self.x + 1
-	self.playerimage.xdirection = 1
-	self.playerimage.ydirection = 0
-	self.playerimage.xspeed = 2
-	self.playerimage.yspeed = 0
+	self.playerImage.xDirection = 1
+	self.playerImage.yDirection = 0
+	self.playerImage.xSpeed = 2
+	self.playerImage.ySpeed = 0
 	--self:finishmove()
-	self.cellcheck = function(x, y)
-		return x >= ((self.x - 1) / self.grid.numrows) * width
+	self.cellCheck = function(x, y)
+		return x >= ((self.x - 1) / self.grid.numRows) * width
 	end
 end
 
@@ -86,14 +86,14 @@ function Player:moveLeft()
 		return
 	end
 	self.x = self.x - 1
-	self.playerimage.xdirection = -1
-	self.playerimage.ydirection = 0
-	self.playerimage.xspeed = 2
-	self.playerimage.yspeed = 0
-	self.cellcheck = function(x, y)
-		return x <= ((self.x - 1) / self.grid.numrows) * width
+	self.playerImage.xDirection = -1
+	self.playerImage.yDirection = 0
+	self.playerImage.xSpeed = 2
+	self.playerImage.ySpeed = 0
+	self.cellCheck = function(x, y)
+		return x <= ((self.x - 1) / self.grid.numRows) * width
 	end
-	self:finishmove()
+	self:finishMove()
 end
 
 function Player:moveUp()
@@ -101,39 +101,39 @@ function Player:moveUp()
 		return
 	end
 	self.y = self.y - 1
-	self.playerimage.xdirection = 0
-	self.playerimage.ydirection = -1
-	self.playerimage.xspeed = 0
-	self.playerimage.yspeed = 2
+	self.playerImage.xDirection = 0
+	self.playerImage.yDirection = -1
+	self.playerImage.xSpeed = 0
+	self.playerImage.ySpeed = 2
 	--self:finishmove()
-	self.cellcheck = function(x, y)
-		return y <= ((self.y - 1) / self.grid.numrows) * width + (height / 4)
+	self.cellCheck = function(x, y)
+		return y <= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
 end
 
 
 
 function Player:moveDown()
-	if self.y >= self.grid.numrows then
+	if self.y >= self.grid.numRows then
 		return
 	end
 	self.y = self.y + 1
-	self.playerimage.xdirection = 0
-	self.playerimage.ydirection = 1
-	self.playerimage.xspeed = 0
-	self.playerimage.yspeed = 2
+	self.playerImage.xDirection = 0
+	self.playerImage.yDirection = 1
+	self.playerImage.xSpeed = 0
+	self.playerImage.ySpeed = 2
 --	self:finishmove()
-	self.cellcheck = function(x, y)
-		return y >= ((self.y - 1) / self.grid.numrows) * width + (height / 4)
+	self.cellCheck = function(x, y)
+		return y >= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
 end
 
 function Player:update()
 	
-	if self.playerimage.xspeed == 0 and self.playerimage.yspeed == 0 then
-		if # self.loadedmoves ~= 0 then
-			move = self.loadedmoves[1]
-			table.remove(self.loadedmoves, 1)
+	if self.playerImage.xSpeed == 0 and self.playerImage.ySpeed == 0 then
+		if # self.loadedMoves ~= 0 then
+			move = self.loadedMoves[1]
+			table.remove(self.loadedMoves, 1)
 			move()
 		end
 		return
@@ -142,41 +142,41 @@ function Player:update()
 	
 	--print(self.playerimage.xspeed .. " " .. self.playerimage.yspeed)
 	
-	local x,y = self.playerimage:getPosition()
-	if self.cellcheck(x, y) then
-		self:finishmove()
-		if # self.loadedmoves == 0 then
-			self.xspeed = 0
-			self.yspeed = 0
+	local x,y = self.playerImage:getPosition()
+	if self.cellCheck(x, y) then
+		self:finishMove()
+		if # self.loadedMoves == 0 then
+			self.xSpeed = 0
+			self.ySpeed = 0
 		else
-			move = self.loadedmoves[1]
-			table.remove(self.loadedmoves, 1)
+			move = self.loadedMoves[1]
+			table.remove(self.loadedMoves, 1)
 			move()
 		end
 		return
 	end
  
-	x = x + (self.playerimage.xspeed * self.playerimage.xdirection)
-	y = y + (self.playerimage.yspeed * self.playerimage.ydirection)
+	x = x + (self.playerImage.xSpeed * self.playerImage.xDirection)
+	y = y + (self.playerImage.ySpeed * self.playerImage.yDirection)
  
  
 	if x < 0 then
-		self.playerimage.xdirection = 1
+		self.playerImage.xDirection = 1
 	end
  
-	if x > width - self.playerimage:getWidth() then
-		self.playerimage.xdirection = -1
+	if x > width - self.playerImage:getWidth() then
+		self.playerImage.xDirection = -1
 	end
  
 	if y < 0 then
-		self.playerimage.ydirection = 1
+		self.playerImage.yDirection = 1
 	end
  
-	if y > height - self.playerimage:getHeight() then
-		self.playerimage.ydirection = -1
+	if y > height - self.playerImage:getHeight() then
+		self.playerImage.yDirection = -1
 	end
  
-	self.playerimage:setPosition(x, y)
+	self.playerImage:setPosition(x, y)
 --	print(x .. " " .. y)
 end
 

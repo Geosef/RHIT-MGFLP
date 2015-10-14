@@ -1,4 +1,5 @@
 M = {}
+listMod = require('list')
 
 local InputObject = {}
 InputObject.__index = InputObject
@@ -30,23 +31,24 @@ setmetatable(EventObject, {
   end,
 })
 
-function EventObject:_init(func, objindex)
+-- func must be function that takes one parameter
+function EventObject:_init(func, param, objIndex)
 	self.func = func
-	self.objindex = objindex
+	self.objIndex = objIndex
+	self.param = param
 end
 
-function EventObject:setfunc(func)
+-- func must be function that takes one parameter
+function EventObject:setFunc(func)
 	self.func = func
 end
 
-function EventObject:setobjindex(objindex)
-	self.objindex = objindex
+function EventObject:setObjIndex(objIndex)
+	self.objIndex = objIndex
 end
-
 
 function EventObject:execute()
-	--local timer = Timer.delayedCall(1000, self.func)
-	self.func()
+	self.func(self.param)
 end
 
 ScriptObject = {}
@@ -61,37 +63,28 @@ setmetatable(ScriptObject, {
   end,
 })
 
-function ScriptObject:_init(objs)
-	self.objs = objs
+function ScriptObject:_init()
+	self.objs = listMod.List(nil)
 end
 
 function ScriptObject:execute()
-	for index,value in ipairs(self.objs) do
-		value:execute()
-	end
+	self.objs:iterate(function(command) command:execute() end)
 end
 
-function ScriptObject:removeindex(objindex)
-	for i = objindex + 1, # self.objs do
-		self.objs[i].objindex = self.objs[i].objindex - 1
-	end
-	table.remove(self.objs, objindex)
+function ScriptObject:removeIndex(objIndex)
+	self.objs:removeIndex(objindex)
 end
 
 function ScriptObject:remove(obj)
-	self:removeindex(obj.objindex)
+	self:removeIndex(obj.objIndex)
 end
 
 function ScriptObject:append(obj)
-	table.insert(self.objs, obj)
-	obj.objindex = # self.objs
+	self.objs:append(obj)
 end
 
-function ScriptObject:insert(obj, objindex)
-	table.insert(self.objs, objindex, obj)
-	for i = objindex + 1, # self.objs do
-		self.objs[i].objindex = self.objs[i].objindex + 1
-	end
+function ScriptObject:insert(obj, objIndex)
+	self.objs:insert(obj, objIndex)
 end
 
 LoopObject = {}
@@ -106,17 +99,36 @@ setmetatable(LoopObject, {
   end,
 })
 
-function LoopObject:_init(obj, numruns)
-	self.obj = obj
-	self.numruns = numruns
+function LoopObject:_init(objs, numRuns, objIndex)
+	if obs == null then
+		self.objs = listMod.List(nil)
+	else
+		self.objs = objs
+	self.numRuns = numRuns
+	self.objIndex = objIndex
 end
 
 function LoopObject:execute()
-	for i = 1, self.numruns do
-		self.obj:execute()
+	for i = 1, self.numRuns do
+		self.objs:iterate(function(command) command:execute() end)
 	end
 end
 
+function LoopObject:append(obj)
+	self.objs:append(obj)
+end
+
+function LoopObject:removeIndex(objIndex)
+	self.objs:removeIndex(obj.objIndex)
+end
+
+function LoopObject:remove(obj)
+	self:removeIndex(obj.objIndex)
+end
+
+function LoopObject:setObjIndex(objIndex)
+	self.objIndex = objIndex
+end
 
 M.EventObject = EventObject
 M.ScriptObject = ScriptObject
