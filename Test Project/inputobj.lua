@@ -64,15 +64,15 @@ setmetatable(ScriptObject, {
 })
 
 function ScriptObject:_init()
-	self.objs = listMod.List(nil)
+	self.list = listMod.List(nil)
 end
 
 function ScriptObject:execute()
-	self.objs:iterate(function(command) command:execute() end)
+	self.list:iterate(function(command) command:execute() end)
 end
 
 function ScriptObject:removeIndex(objIndex)
-	self.objs:removeIndex(objindex)
+	self.list:removeIndex(objIndex)
 end
 
 function ScriptObject:remove(obj)
@@ -80,11 +80,15 @@ function ScriptObject:remove(obj)
 end
 
 function ScriptObject:append(obj)
-	self.objs:append(obj)
+	self.list:append(obj)
 end
 
 function ScriptObject:insert(obj, objIndex)
-	self.objs:insert(obj, objIndex)
+	self.list:insert(obj, objIndex)
+end
+
+function ScriptObject:length()
+	return self.list:length()
 end
 
 local LoopObject = {}
@@ -100,10 +104,11 @@ setmetatable(LoopObject, {
 })
 
 function LoopObject:_init(objs, numRuns, objIndex)
-	if obs == null then
+	if objs == null then
 		self.objs = listMod.List(nil)
 	else
 		self.objs = objs
+	end
 	self.numRuns = numRuns
 	self.objIndex = objIndex
 end

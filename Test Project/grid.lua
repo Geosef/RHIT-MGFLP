@@ -27,10 +27,10 @@ function Cell:setGold()
 	imageScale = width / self.numRows
 	if ((self.x + self.y) % 2) == 0 and (self.x ~= 1 or self.y ~= 1) then
 		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
-		scaleX = imageScale / goldimage:getWidth() / 2
-		scaleY = imageScale / goldimage:getHeight() / 2
+		scaleX = imageScale / goldImage:getWidth() / 2
+		scaleY = imageScale / goldImage:getHeight() / 2
 		
-		goldImage:setScale(scaleX, scaleY0
+		goldImage:setScale(scaleX, scaleY)
 		xPos = (inc * (self.x-1)) * width + imageScale / 4
 		yPos = (inc * (self.y-1)) * width + startY + (imageScale / 4)
 		goldImage:setPosition(xPos, yPos)

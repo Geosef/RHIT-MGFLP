@@ -25,27 +25,15 @@ function CollectGame:_init(numrows)
 end
 
 function CollectGame:setupButtons()
-	rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png", function()
-		print("right")
-		--self.player:moveRight()
-		table.insert(self.player.loadedMoves, function() self.player:moveRight() end)
-		end, 1)
-	downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", function()
-		--self.player:moveDown()
-		print("down")
-		table.insert(self.player.loadedMoves, function() self.player:moveDown() end)
-		end, 2)
-	leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", function()
-		print("left")
-		--self.player:moveLeft()
-		table.insert(self.player.loadedMoves, function() self.player:moveLeft() end)
-		end, 3)
-	upButton = buttonmod.InputButton(self.engine, "images/arrow-up.png", function()
-		--self.player:moveUp()
-		table.insert(self.player.loadedMoves, function() self.player:moveUp() end)
-		print("up")
-		end, 4)
-		
+	rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png",
+	"RightMove", 1)
+	downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", 
+	"DownMove", 2)
+	leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", 
+	"LeftMove", 3)
+	upButton = buttonMod.InputButton(self.engine, "images/arrow-up.png", 
+	"UpMove", 4)
+
 	local buttonImage = Bitmap.new(Texture.new("images/go.png"))
 	scaleX = width / buttonImage:getWidth() / 7
 	scaleY = height / buttonImage:getHeight() / 10

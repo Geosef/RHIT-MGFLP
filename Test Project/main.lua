@@ -1,5 +1,4 @@
 require('inputobj')
-local oldmain = require('oldmain')
 --oldmain.run()
 local gameMod = require('collectgame')
 

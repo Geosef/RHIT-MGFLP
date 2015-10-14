@@ -41,7 +41,7 @@ function List:removeIndex(objIndex)
 	for i = objIndex + 1, # self.objs do
 		self.objs[i].objIndex = self.objs[i].objIndex - 1
 	end
-	table.remove(self.objs, objindex)
+	table.remove(self.objs, objIndex)
 end
 
 function List:remove(obj)
@@ -59,6 +59,10 @@ function List:insert(obj, objIndex)
 	for i = objIndex + 1, # self.objs do
 		self.objs[i].objIndex = self.objs[i].objIndex + 1
 	end
+end
+
+function List:length()
+	return # self.objs
 end
 
 M.List = List
