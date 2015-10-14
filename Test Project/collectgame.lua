@@ -1,9 +1,9 @@
-M = {}
+local M = {}
 
-gridMod = require('grid')
-playerMod = require('player')
-engineMod = require('inputengine')
-buttonMod = require('inputbutton')
+local gridMod = require('grid')
+local playerMod = require('player')
+local engineMod = require('inputengine')
+local buttonMod = require('inputbutton')
 
 
 local CollectGame = {}

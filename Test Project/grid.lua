@@ -1,7 +1,7 @@
-M = {}
+local M = {}
 
-width = application:getLogicalWidth()
-height = application:getLogicalHeight()
+local width = application:getLogicalWidth()
+local height = application:getLogicalHeight()
 
 
 local Cell = {}

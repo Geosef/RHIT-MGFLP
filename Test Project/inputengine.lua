@@ -1,9 +1,9 @@
-M = {}
+local M = {}
 
-inputMod = require('inputobj')
+local inputMod = require('inputobj')
 
-width = application:getLogicalWidth()
-height = application:getLogicalHeight()
+local width = application:getLogicalWidth()
+local height = application:getLogicalHeight()
 
 local InputEngine = {}
 InputEngine.__index = InputEngine

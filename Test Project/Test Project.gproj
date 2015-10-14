@@ -2,6 +2,7 @@
  <properties iosDevice="0" logicalHeight="480" fps="60" win_domain="giderosmobile.com" encryptAssets="0" packageName="edu.rosehulman.runcoderrun" touchToMouse="1" autorotation="0" orientation="0" mouseTouchOrder="0" windowWidth="0" retinaDisplay="0" encryptCode="0" mouseToTouch="1" logicalWidth="320" osx_domain="giderosmobile.com" win_org="GiderosMobile" android_template="0" assetsOnly="0" windowHeight="0" architecture="1" scaleMode="5" osx_org="GiderosMobile">
   <imageScales/>
  </properties>
+ <file source="movement.lua"/>
  <file source="list.lua"/>
  <file source="button.lua"/>
  <file source="collectgame.lua"/>

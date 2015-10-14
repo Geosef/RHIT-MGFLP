@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 local List = {}
 
 -- Any object that uses this list must have the objindex property defined for it. 

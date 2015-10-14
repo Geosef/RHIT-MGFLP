@@ -1,7 +1,7 @@
-M = {}
+local M = {}
 
-width = application:getLogicalWidth()
-height = application:getLogicalHeight()
+local width = application:getLogicalWidth()
+local height = application:getLogicalHeight()
 
 local Player = {}
 Player.__index = Player
@@ -66,7 +66,7 @@ function Player:finishMove()
 	end
 end
 
-function Player:moveRight()
+function Player:moveRight(param)
 	if self.x >= self.grid.numRows then
 		return
 	end
@@ -81,7 +81,7 @@ function Player:moveRight()
 	end
 end
 
-function Player:moveLeft()
+function Player:moveLeft(param)
 	if self.x <= 1 then
 		return
 	end
@@ -96,7 +96,7 @@ function Player:moveLeft()
 	self:finishMove()
 end
 
-function Player:moveUp()
+function Player:moveUp(param)
 	if self.y <= 1 then
 		return
 	end
@@ -111,9 +111,7 @@ function Player:moveUp()
 	end
 end
 
-
-
-function Player:moveDown()
+function Player:moveDown(param)
 	if self.y >= self.grid.numRows then
 		return
 	end

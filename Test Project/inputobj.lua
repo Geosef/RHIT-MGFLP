@@ -1,5 +1,5 @@
-M = {}
-listMod = require('list')
+local M = {}
+local listMod = require('list')
 
 local InputObject = {}
 InputObject.__index = InputObject
@@ -19,7 +19,7 @@ function InputObject:execute()
 end
 
 
-EventObject = {}
+local EventObject = {}
 EventObject.__index = EventObject
 
 setmetatable(EventObject, {
@@ -51,7 +51,7 @@ function EventObject:execute()
 	self.func(self.param)
 end
 
-ScriptObject = {}
+local ScriptObject = {}
 ScriptObject.__index = ScriptObject
 
 setmetatable(ScriptObject, {
@@ -87,7 +87,7 @@ function ScriptObject:insert(obj, objIndex)
 	self.objs:insert(obj, objIndex)
 end
 
-LoopObject = {}
+local LoopObject = {}
 LoopObject.__index = LoopObject
 
 setmetatable(LoopObject, {
