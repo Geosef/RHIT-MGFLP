@@ -1,5 +1,4 @@
 local networkModule = require('networkadapter')
-require('inputobj')
 require('printer')
 local gameMod = require('collectgame')
 
@@ -9,10 +8,7 @@ JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
 
 
-
-
-
-local game = gameMod.CollectGame(6, playerIndex, netAdapter)
+local game = gameMod.CollectGame(10, playerIndex, netAdapter)
 
 
 function onEnterFrame(event)

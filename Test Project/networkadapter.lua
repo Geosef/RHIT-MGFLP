@@ -55,7 +55,7 @@ function NetworkAdapter:sendMoves(game, packet)
 		print('MOVE VALID')
 		line, err, rBuf = self.socket:receive("*l", rBuf)
 		inPacket = JSON:decode(line)
-		self:runEvents(inPacket)
+		game:runEvents(inPacket)
 	else
 		print('MOVE INVALID')
 	end
