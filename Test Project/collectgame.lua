@@ -18,32 +18,19 @@ setmetatable(CollectGame, {
   end,
 })
 
-function CollectGame:_init(numRows, playerIndex, socket)
+function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.grid = gridMod.Grid(numRows)
 	self.player1 = playerMod.Player(self.grid, true)
 	self.player2 = playerMod.Player(self.grid, false)
 	self.engine = engineMod.InputEngine()
 	self:setupButtons()
-	self.socket = socket
+	self.netAdapter = netAdapter
 end
 
 function CollectGame:sendMoves()
 	local packet = {type="events"}
 	packet.events = self.engine:getEvents()
-	local jsonstring = JSON:encode(packet)
-	self.socket:send(jsonstring)
-	local rBuf = ""
-	local line, err, rBuf = self.socket:receive("*l", rBuf)
-	--local line, err = self.socket:receive()
-	local inPacket = JSON:decode(line)
-	if inPacket.valid == true then
-		print('MOVE VALID')
-		line, err, rBuf = self.socket:receive("*l", rBuf)
-		inPacket = JSON:decode(line)
-		self:runEvents(inPacket)
-	else
-		print('MOVE INVALID')
-	end
+	self.netAdapter:sendMoves(self, packet)
 end
 
 function CollectGame:runEvents(events)
