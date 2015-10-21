@@ -23,6 +23,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.grid = gridMod.Grid(numRows, "images/dirtcell.png")
 	self.player1 = playerMod.Player(self.grid, true)
 	self.player2 = playerMod.Player(self.grid, false)
+	self.leprechaun = playerMod.Leprechaun(self.grid)
 	self.engine = engineMod.InputEngine()
 	self.numButtons = 8
 	self:setupButtons()
@@ -49,6 +50,11 @@ function CollectGame:runEvents(events)
 		local eventObjConst = commandMod.getEvent(value)
 		local eventObj = eventObjConst(self.player2, 1, index)
 		table.insert(self.player2.loadedMoves, eventObj)
+	end
+	for index,value in ipairs(events.lep) do
+		local eventObjConst = commandMod.getEvent(value)
+		local eventObj = eventObjConst(self.leprechaun, 1, index)
+		table.insert(self.leprechaun.loadedMoves, eventObj)
 	end
 	self:reset()
 end
@@ -89,6 +95,7 @@ function CollectGame:reset()
 	--self.player1:reset()
 	self.player1.action = true
 	self.player2.action = true
+	self.leprechaun.action = true
 	--self.player2:reset()
 	--self.engine:runEvents()
 end
@@ -96,6 +103,7 @@ end
 function CollectGame:update()
 	self.player1:update()
 	self.player2:update()
+	self.leprechaun:update()
 end
 function CollectGame:exit()
 	self.grid:destroy()
@@ -105,3 +113,6 @@ end
 
 M.CollectGame = CollectGame
 return M
+
+
+

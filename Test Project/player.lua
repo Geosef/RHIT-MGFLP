@@ -224,6 +224,48 @@ function Player:destroy()
 	end
 	
 end
+
+local Leprechaun = {}
+Leprechaun.__index = Leprechaun
+setmetatable(Leprechaun, {
+  __index = Player,
+  __call = function (cls, ...)
+    local self = setmetatable({}, cls)
+    self:_init(...)
+    return self
+  end,
+})
+function Leprechaun:_init(grid)
+	self.score = 0
+	self.loadedMoves = {}
+	self.action = false
+	self.initX = 5
+	self.initY = 6
+	self.name = "Leprechaun"
+	
+	self.x = self.initX
+	self.y = self.initY
+	self.grid = grid
+	imageScale = width / grid.numRows
+	inc = 1 / grid.numRows
+	startY = height / 4
+	local lepImage = Bitmap.new(Texture.new("images/leprechaun.png"))
+	scaleX = imageScale / lepImage:getWidth()
+	scaleY = imageScale / lepImage:getHeight()
+
+	lepImage:setScale(scaleX, scaleY)
+	self.xPosStart = (inc * (self.x-1)) * width
+	self.yPosStart = (inc * (self.y-1)) * width + startY
+	lepImage:setPosition(self.xPosStart, self.yPosStart)
+	stage:addChild(lepImage)
+	self.playerImage = lepImage
+	self.playerImage.xDirection = 0
+	self.playerImage.yDirection = 0
+	self.playerImage.xSpeed = 0
+	self.playerImage.ySpeed = 0
+end
+
 M.Player = Player
+M.Leprechaun = Leprechaun
 
 return M

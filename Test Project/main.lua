@@ -10,9 +10,7 @@ local multiplayerMode = false
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
 
-
 local game = gameMod.CollectGame(10, playerIndex, netAdapter)
-
 
 function onEnterFrame(event)
     game:update()
