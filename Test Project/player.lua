@@ -175,6 +175,14 @@ function Player:dig()
 	end
 end
 
+function Player:loopStart()
+	print("Loop started")
+end
+
+function Player:loopEnd()
+	print("Loop ended")
+end
+
 function Player:update()
 	if not self.action then return end
 	

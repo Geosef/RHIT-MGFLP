@@ -1,7 +1,8 @@
 <project>
- <properties android_template="0" logicalHeight="480" osx_domain="giderosmobile.com" scaleMode="5" encryptAssets="0" win_org="GiderosMobile" assetsOnly="0" mouseToTouch="1" iosDevice="0" osx_org="GiderosMobile" logicalWidth="320" packageName="edu.rosehulman.runcoderrun" retinaDisplay="0" windowHeight="0" architecture="1" fps="60" orientation="0" mouseTouchOrder="0" win_domain="giderosmobile.com" windowWidth="0" touchToMouse="1" encryptCode="0" autorotation="0">
+ <properties iosDevice="0" logicalWidth="320" mouseToTouch="1" osx_domain="giderosmobile.com" windowHeight="0" windowWidth="0" win_org="GiderosMobile" encryptCode="0" assetsOnly="0" architecture="1" logicalHeight="480" osx_org="GiderosMobile" encryptAssets="0" touchToMouse="1" android_template="0" win_domain="giderosmobile.com" autorotation="0" mouseTouchOrder="0" retinaDisplay="0" orientation="0" fps="60" packageName="edu.rosehulman.runcoderrun" scaleMode="5">
   <imageScales/>
  </properties>
+ <file source="controlstatements.lua"/>
  <file source="networkadapter.lua"/>
  <folder name="http">
   <file source="http/mime.lua"/>
@@ -41,13 +42,15 @@
   <file source="luaunit.lua"/>
  </folder>
  <folder name="images">
-  <file source="../../diggingActionCell.png"/>
-  <file source="../../leprechaun.png"/>
-  <file source="../../shovel.png"/>
-  <file source="../../grassbackground.png"/>
-  <file source="../../gem.png"/>
-  <file source="../../dirtcell.png"/>
-  <file source="../../brokenshovel.png"/>
+  <file source="loop-start.png"/>
+  <file source="loop-end.png"/>
+  <file source="shovel.png"/>
+  <file source="leprechaun.png"/>
+  <file source="grassbackground.png"/>
+  <file source="gem.png"/>
+  <file source="dirtcell.png"/>
+  <file source="diggingActionCell.png"/>
+  <file source="brokenshovel.png"/>
   <file source="arrow-right.png"/>
   <file source="arrow-down.png"/>
   <file source="arrow-left.png"/>

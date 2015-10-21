@@ -24,7 +24,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.player1 = playerMod.Player(self.grid, true)
 	self.player2 = playerMod.Player(self.grid, false)
 	self.engine = engineMod.InputEngine()
-	self.numButtons = 6
+	self.numButtons = 8
 	self:setupButtons()
 	self.netAdapter = netAdapter
 end
@@ -62,7 +62,12 @@ function CollectGame:setupButtons()
 	"LeftMove", 3, self.numButtons)
 	upButton = buttonMod.InputButton(self.engine, "images/arrow-up.png", 
 	"UpMove", 4, self.numButtons)
-	digButton = buttonMod.InputButton(self.engine, "images/shovel.png", "Dig", 5, self.numButtons)
+	digButton = buttonMod.InputButton(self.engine, "images/shovel.png", 
+	"Dig", 5, self.numButtons)
+	loopStart = buttonMod.InputButton(self.engine, "images/loop-start.png", 
+	"LoopStart", 6, self.numButtons)
+	loopEnd = buttonMod.InputButton(self.engine, "images/loop-end.png", 
+	"LoopEnd", 7, self.numButtons)
 	
 	local buttonImage = Bitmap.new(Texture.new("images/go.png"))
 	scaleX = width / buttonImage:getWidth() / 10.5

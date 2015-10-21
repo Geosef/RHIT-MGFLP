@@ -18,8 +18,8 @@ function InputButton:_init(engine, imagePath, eventName, buttonNum, numButtons)
 	self.engine = engine
 	self.eventName = eventName
 	local buttonImage = Bitmap.new(Texture.new(imagePath))
-	local scaleX = width / buttonImage:getWidth() / 10
-	local scaleY = height / buttonImage:getHeight() / 10
+	local scaleX = width / buttonImage:getWidth() / 15
+	local scaleY = height / buttonImage:getHeight() / 15
 	
 	local button = Button.new(buttonImage, buttonImage, function() self:click() end)
 	button:setScale(scaleX, scaleY)
