@@ -89,7 +89,6 @@ function Player:moveRight(param)
 	self.playerImage.yDirection = 0
 	self.playerImage.xSpeed = 2
 	self.playerImage.ySpeed = 0
-	--self:finishmove()
 	self.cellCheck = function(x, y)
 		return x >= ((self.x - 1) / self.grid.numRows) * width
 	end
@@ -107,7 +106,6 @@ function Player:moveLeft(param)
 	self.cellCheck = function(x, y)
 		return x <= ((self.x - 1) / self.grid.numRows) * width
 	end
-	self:finishMove()
 end
 
 function Player:moveUp(param)
@@ -119,7 +117,6 @@ function Player:moveUp(param)
 	self.playerImage.yDirection = -1
 	self.playerImage.xSpeed = 0
 	self.playerImage.ySpeed = 2
-	--self:finishmove()
 	self.cellCheck = function(x, y)
 		return y <= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
@@ -134,7 +131,6 @@ function Player:moveDown(param)
 	self.playerImage.yDirection = 1
 	self.playerImage.xSpeed = 0
 	self.playerImage.ySpeed = 2
---	self:finishmove()
 	self.cellCheck = function(x, y)
 		return y >= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
