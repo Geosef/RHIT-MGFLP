@@ -4,8 +4,7 @@ local gridMod = require('grid')
 local playerMod = require('player')
 local engineMod = require('inputengine')
 local buttonMod = require('inputbutton')
-local movementMod = require('movement')
-
+local commandMod = require('command')
 
 local CollectGame = {}
 CollectGame.__index = CollectGame
@@ -19,10 +18,13 @@ setmetatable(CollectGame, {
 })
 
 function CollectGame:_init(numRows, playerIndex, netAdapter)
-	self.grid = gridMod.Grid(numRows)
+	background = Bitmap.new(Texture.new("images/grassbackground.png"))
+	stage:addChild(background)
+	self.grid = gridMod.Grid(numRows, "images/dirtcell.png")
 	self.player1 = playerMod.Player(self.grid, true)
 	self.player2 = playerMod.Player(self.grid, false)
 	self.engine = engineMod.InputEngine()
+	self.numButtons = 6
 	self:setupButtons()
 	self.netAdapter = netAdapter
 end
@@ -39,12 +41,12 @@ function CollectGame:runEvents(events)
 		return
 	end
 	for index,value in ipairs(events.p1) do
-		local eventObjConst = movementMod.getEvent(value)
+		local eventObjConst = commandMod.getEvent(value)
 		local eventObj = eventObjConst(self.player1, 1, index)
 		table.insert(self.player1.loadedMoves, eventObj)
 	end
 	for index,value in ipairs(events.p2) do
-		local eventObjConst = movementMod.getEvent(value)
+		local eventObjConst = commandMod.getEvent(value)
 		local eventObj = eventObjConst(self.player2, 1, index)
 		table.insert(self.player2.loadedMoves, eventObj)
 	end
@@ -53,33 +55,36 @@ end
 
 function CollectGame:setupButtons()
 	rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png",
-	"RightMove", 1)
+	"RightMove", 1, self.numButtons)
 	downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", 
-	"DownMove", 2)
+	"DownMove", 2, self.numButtons)
 	leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", 
-	"LeftMove", 3)
+	"LeftMove", 3, self.numButtons)
 	upButton = buttonMod.InputButton(self.engine, "images/arrow-up.png", 
-	"UpMove", 4)
-
+	"UpMove", 4, self.numButtons)
+	digButton = buttonMod.InputButton(self.engine, "images/shovel.png", "Dig", 5, self.numButtons)
+	
 	local buttonImage = Bitmap.new(Texture.new("images/go.png"))
-	scaleX = width / buttonImage:getWidth() / 7
-	scaleY = height / buttonImage:getHeight() / 10
+	scaleX = width / buttonImage:getWidth() / 10.5
+	scaleY = height / buttonImage:getHeight() / 15
 	
 	local button = Button.new(buttonImage, buttonImage, function()
 		--self:reset() 
 		self:sendMoves()
 		end)
 	button:setScale(scaleX, scaleY)
-	xPos = 5 * (width / 6)
+	xPos = self.numButtons * (width / (self.numButtons + 1))
 	yPos = height / 20
 	button:setPosition(xPos, yPos)
 	stage:addChild(button)
 end
 
 function CollectGame:reset()
-	self.grid:reset()
-	self.player1:reset()
-	self.player2:reset()
+	--self.grid:reset()
+	--self.player1:reset()
+	self.player1.action = true
+	self.player2.action = true
+	--self.player2:reset()
 	--self.engine:runEvents()
 end
 

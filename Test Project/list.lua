@@ -37,6 +37,13 @@ function List:iterate(func)
 	end
 end
 
+function List:backwardsIterate(func)
+	for i = # self.objs, 1, -1 do
+		func(self.objs[i])
+	end
+end
+
+
 function List:removeIndex(objIndex)
 	for i = objIndex + 1, # self.objs do
 		self.objs[i].objIndex = self.objs[i].objIndex - 1

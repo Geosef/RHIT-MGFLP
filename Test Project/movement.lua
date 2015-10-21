@@ -77,10 +77,4 @@ M.RightMove = MoveRightCommand
 M.UpMove = MoveUpCommand
 M.DownMove = MoveDownCommand
 
-function getEvent(name)
-	return M[name]
-end
-
-M.getEvent = getEvent
-
 return M

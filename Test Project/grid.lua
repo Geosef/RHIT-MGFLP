@@ -20,12 +20,12 @@ function Cell:_init(x, y, sprite, numRows)
 	self.y = y
 	self.sprite = sprite
 	self.numRows = numRows
-	self:setGold()	
+	self.hiddenTreasure = false
 end
 
 function Cell:setGold()
 	imageScale = width / self.numRows
-	if ((self.x + self.y) % 2) == 0 and (self.x ~= 1 or self.y ~= 1) and (self.x ~= self.numRows or self.y ~= self.numRows) then
+	if not self.gold then
 		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
 		scaleX = imageScale / goldImage:getWidth() / 2
 		scaleY = imageScale / goldImage:getHeight() / 2
@@ -42,12 +42,22 @@ function Cell:setGold()
 	end
 end
 
+function Cell:toggleHiddenTreasure()
+	if self.hiddenTreasure then
+		self.hiddenTreasure = false
+	else
+		self.hiddenTreasure = true
+	end
+end
+
 function Cell:reset()
 	if self.gold then
 		self.gold = false
 		stage:removeChild(self.goldImage)
 	end
-	self:setGold()
+	if self.hiddenTreasure then
+		self:toggleHiddenTreasure()
+	end
 end
 
 local Grid = {}
@@ -61,7 +71,7 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(numRows)
+function Grid:_init(numRows, imagePath)
 	imageScale = width / numRows
 	inc = 1 / numRows
 	startY = height / 4	
@@ -72,7 +82,7 @@ function Grid:_init(numRows)
 		
 		row = {}
 		for j=1, numRows do
-			local cellImage = Bitmap.new(Texture.new("images/square.png"))
+			local cellImage = Bitmap.new(Texture.new(imagePath))
 			scaleX = imageScale / cellImage:getWidth()
 			scaleY = imageScale / cellImage:getHeight()
 			

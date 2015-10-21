@@ -61,16 +61,16 @@ end
 function Player:reset()
 	self.score = 0
 	self.scoreField:setText("Score: " .. self.score)
-	self.playerImage:setPosition(self.xPosStart, self.yPosStart)
-	self.x = self.initX
-	self.y = self.initY
+	self.playerImage:setPosition(self.x, self.y)
 	self.action = true
 end
 
-
-
 function Player:finishMove()
 	cell = self.grid.rows[self.y][self.x]
+	self.playerImage.xDirection = 0
+	self.playerImage.yDirection = 0
+	self.playerImage.xSpeed = 0
+	self.playerImage.ySpeed = 0
 	if cell.gold then
 		print(self.name .. " picked up gold!")
 		self.score = self.score + 1
@@ -140,10 +140,45 @@ function Player:moveDown(param)
 	end
 end
 
+function Player:dig()
+	local cell = self.grid.rows[self.y][self.x]
+	if cell.hiddenTreasure then
+		print(self.name .. " dug up treasure!")
+		self.score = self.score + 5
+		self.scoreField:setText("Score: " .. self.score)
+		cell:toggleHiddenTreasure()
+	else
+		print(self.name .. " found nothing.")
+	end
+	self.digging = true
+	local frameCounter = 30
+	local imageScale = width / self.grid.numRows
+	local startY = height / 4
+	local digImage = Bitmap.new(Texture.new("images/diggingActionCell.png"))
+	local scaleX = imageScale / digImage:getWidth()
+	local scaleY = imageScale / digImage:getHeight()
+	digImage:setScale(scaleX, scaleY)
+	local xPos = (inc * (self.x-1)) * width
+	local yPos = (inc * (self.y-1)) * width + startY
+	digImage:setPosition(xPos, yPos)
+	print(digImage:getWidth())
+	stage:addChild(digImage)
+	self.cellCheck = function(x, y)
+		if frameCounter == 0 then
+			stage:removeChild(digImage)
+			self.digging = false
+			return true
+		else 
+			frameCounter = frameCounter - 1
+			return false
+		end
+	end
+end
+
 function Player:update()
 	if not self.action then return end
 	
-	if self.playerImage.xSpeed == 0 and self.playerImage.ySpeed == 0 then
+	if (self.playerImage.xSpeed == 0 and self.playerImage.ySpeed == 0) and not self.digging then
 		if # self.loadedMoves ~= 0 then
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
@@ -151,7 +186,6 @@ function Player:update()
 		end
 		return
 	end
-		
 	
 	--print(self.playerimage.xspeed .. " " .. self.playerimage.yspeed)
 	
