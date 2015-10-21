@@ -47,13 +47,13 @@ function NetworkAdapter:sendMoves(game, packet)
 	end
 	
 	local jsonstring = JSON:encode(packet)
-	self.socket:send(jsonstring)
+	self.sock:send(jsonstring)
 	local rBuf = ""
-	local line, err, rBuf = self.socket:receive("*l", rBuf)
+	local line, err, rBuf = self.sock:receive("*l", rBuf)
 	local inPacket = JSON:decode(line)
 	if inPacket.valid == true then
 		print('MOVE VALID')
-		line, err, rBuf = self.socket:receive("*l", rBuf)
+		line, err, rBuf = self.sock:receive("*l", rBuf)
 		inPacket = JSON:decode(line)
 		game:runEvents(inPacket)
 	else
