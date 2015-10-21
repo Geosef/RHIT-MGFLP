@@ -1,6 +1,9 @@
 local networkModule = require('networkadapter')
 require('printer')
 local gameMod = require('collectgame')
+local tests = require('runtests')
+
+--tests.run()
 
 local multiplayerMode = false
 

@@ -52,10 +52,10 @@ function Player:_init(grid, player1)
 	playerImage:setPosition(self.xPosStart, self.yPosStart)
 	stage:addChild(playerImage)
 	self.playerImage = playerImage
-	self.playerImage.xDirection = 0
-	self.playerImage.yDirection = 0
-	self.playerImage.xSpeed = 0
-	self.playerImage.ySpeed = 0
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
 end
 
 function Player:reset()
@@ -67,10 +67,10 @@ end
 
 function Player:finishMove()
 	cell = self.grid.rows[self.y][self.x]
-	self.playerImage.xDirection = 0
-	self.playerImage.yDirection = 0
-	self.playerImage.xSpeed = 0
-	self.playerImage.ySpeed = 0
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
 	if cell.gold then
 		print(self.name .. " picked up gold!")
 		self.score = self.score + 1
@@ -85,10 +85,10 @@ function Player:moveRight(param)
 		return
 	end
 	self.x = self.x + 1
-	self.playerImage.xDirection = 1
-	self.playerImage.yDirection = 0
-	self.playerImage.xSpeed = 2
-	self.playerImage.ySpeed = 0
+	self.xDirection = 1
+	self.yDirection = 0
+	self.xSpeed = 2
+	self.ySpeed = 0
 	self.cellCheck = function(x, y)
 		return x >= ((self.x - 1) / self.grid.numRows) * width
 	end
@@ -99,10 +99,10 @@ function Player:moveLeft(param)
 		return
 	end
 	self.x = self.x - 1
-	self.playerImage.xDirection = -1
-	self.playerImage.yDirection = 0
-	self.playerImage.xSpeed = 2
-	self.playerImage.ySpeed = 0
+	self.xDirection = -1
+	self.yDirection = 0
+	self.xSpeed = 2
+	self.ySpeed = 0
 	self.cellCheck = function(x, y)
 		return x <= ((self.x - 1) / self.grid.numRows) * width
 	end
@@ -113,10 +113,10 @@ function Player:moveUp(param)
 		return
 	end
 	self.y = self.y - 1
-	self.playerImage.xDirection = 0
-	self.playerImage.yDirection = -1
-	self.playerImage.xSpeed = 0
-	self.playerImage.ySpeed = 2
+	self.xDirection = 0
+	self.yDirection = -1
+	self.xSpeed = 0
+	self.ySpeed = 2
 	self.cellCheck = function(x, y)
 		return y <= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
@@ -127,10 +127,10 @@ function Player:moveDown(param)
 		return
 	end
 	self.y = self.y + 1
-	self.playerImage.xDirection = 0
-	self.playerImage.yDirection = 1
-	self.playerImage.xSpeed = 0
-	self.playerImage.ySpeed = 2
+	self.xDirection = 0
+	self.yDirection = 1
+	self.xSpeed = 0
+	self.ySpeed = 2
 	self.cellCheck = function(x, y)
 		return y >= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
@@ -169,6 +169,7 @@ function Player:dig()
 			return false
 		end
 	end
+	self.digImage = digImage
 end
 
 function Player:loopStart()
@@ -182,7 +183,7 @@ end
 function Player:update()
 	if not self.action then return end
 	
-	if (self.playerImage.xSpeed == 0 and self.playerImage.ySpeed == 0) and not self.digging then
+	if (self.xSpeed == 0 and self.ySpeed == 0) and not self.digging then
 		if # self.loadedMoves ~= 0 then
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
@@ -191,7 +192,7 @@ function Player:update()
 		return
 	end
 	
-	--print(self.playerimage.xspeed .. " " .. self.playerimage.yspeed)
+	--print(self.xspeed .. " " .. self.yspeed)
 	
 	local x,y = self.playerImage:getPosition()
 	if self.cellCheck(x, y) then
@@ -208,30 +209,21 @@ function Player:update()
 		return
 	end
  
-	x = x + (self.playerImage.xSpeed * self.playerImage.xDirection)
-	y = y + (self.playerImage.ySpeed * self.playerImage.yDirection)
- 
- 
-	if x < 0 then
-		self.playerImage.xDirection = 1
-	end
- 
-	if x > width - self.playerImage:getWidth() then
-		self.playerImage.xDirection = -1
-	end
- 
-	if y < 0 then
-		self.playerImage.yDirection = 1
-	end
- 
-	if y > height - self.playerImage:getHeight() then
-		self.playerImage.yDirection = -1
-	end
+	x = x + (self.xSpeed * self.xDirection)
+	y = y + (self.ySpeed * self.yDirection)
  
 	self.playerImage:setPosition(x, y)
 --	print(x .. " " .. y)
 end
 
+function Player:destroy()
+	stage:removeChild(self.playerImage)
+	stage:removeChild(self.scoreField)
+	if self.digImage ~= nil then
+		stage:removeChild(self.digImage)
+	end
+	
+end
 M.Player = Player
 
 return M

@@ -60,6 +60,10 @@ function Cell:reset()
 	end
 end
 
+function Cell:destroy()
+	stage:removeChild(self.sprite)
+end
+
 local Grid = {}
 Grid.__index = Grid
 
@@ -108,6 +112,17 @@ function Grid:reset()
 		end
 	end
 end
+
+function Grid:destroy()
+	for i = 1,self.numRows do
+		row = self.rows[i]
+		for j = 1,self.numRows do
+			cell = row[j]
+			cell:destroy()
+		end
+	end
+end
+
 
 M.Cell = Cell
 M.Grid = Grid
