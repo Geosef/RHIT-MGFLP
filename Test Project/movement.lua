@@ -4,6 +4,8 @@ inputMod = require('inputobj')
 
 local EventObject = inputMod.EventObject
 
+
+
 local MoveLeftCommand = {}
 MoveLeftCommand.__index = MoveLeftCommand
 setmetatable(MoveLeftCommand, {
@@ -19,6 +21,7 @@ function MoveLeftCommand:_init(player, param, objIndex)
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'LeftMove'
+	self.frames = 16
 end
 
 local MoveRightCommand = {}
@@ -36,6 +39,7 @@ function MoveRightCommand:_init(player, param, objIndex)
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'RightMove'
+	self.frames = 16
 end
 
 local MoveUpCommand = {}
@@ -53,6 +57,7 @@ function MoveUpCommand:_init(player, param, objIndex)
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'UpMove'
+	self.frames = 16
 end
 
 local MoveDownCommand = {}
@@ -70,6 +75,7 @@ function MoveDownCommand:_init(player, param, objIndex)
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'DownMove'
+	self.frames = 16
 end
 
 M.LeftMove = MoveLeftCommand

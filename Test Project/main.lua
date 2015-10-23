@@ -1,3 +1,6 @@
+WINDOW_WIDTH = application:getLogicalWidth()
+WINDOW_HEIGHT = application:getLogicalHeight()
+
 local networkModule = require('networkadapter')
 require('printer')
 local gameMod = require('collectgame')

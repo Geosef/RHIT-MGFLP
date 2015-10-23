@@ -1,5 +1,5 @@
 <project>
- <properties iosDevice="0" logicalWidth="320" mouseToTouch="1" osx_domain="giderosmobile.com" windowHeight="0" windowWidth="0" win_org="GiderosMobile" encryptCode="0" assetsOnly="0" architecture="1" logicalHeight="480" osx_org="GiderosMobile" encryptAssets="0" touchToMouse="1" android_template="0" win_domain="giderosmobile.com" autorotation="0" mouseTouchOrder="0" retinaDisplay="0" orientation="0" fps="60" packageName="edu.rosehulman.runcoderrun" scaleMode="5">
+ <properties iosDevice="0" touchToMouse="1" autorotation="3" logicalHeight="480" osx_domain="giderosmobile.com" win_org="GiderosMobile" encryptAssets="0" assetsOnly="0" orientation="0" android_template="0" packageName="edu.rosehulman.runcoderrun" mouseToTouch="1" logicalWidth="320" osx_org="GiderosMobile" fps="60" retinaDisplay="3" win_domain="giderosmobile.com" windowWidth="0" windowHeight="0" architecture="1" scaleMode="5" mouseTouchOrder="0" encryptCode="0">
   <imageScales/>
  </properties>
  <file source="controlstatements.lua"/>

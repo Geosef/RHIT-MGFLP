@@ -3,6 +3,8 @@ local M = {}
 local width = application:getLogicalWidth()
 local height = application:getLogicalHeight()
 
+
+
 local Player = {}
 Player.__index = Player
 
@@ -14,10 +16,14 @@ setmetatable(Player, {
   end,
 })
 
+EVENT_DURATION = 16
+
 function Player:_init(grid, player1)
 	self.score = 0
 	self.loadedMoves = {}
 	local textField = TextField.new(nil, "Score: " .. self.score)
+	self.velocity = (width / grid.numRows) / 16
+	print("Velocity " .. self.velocity)
 	
 	stage:addChild(textField)
 	self.scoreField = textField
@@ -81,13 +87,14 @@ function Player:finishMove()
 end
 
 function Player:moveRight(param)
+	print("MOVE RIGHT")
 	if self.x >= self.grid.numRows then
 		return
 	end
 	self.x = self.x + 1
 	self.xDirection = 1
 	self.yDirection = 0
-	self.xSpeed = 2
+	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
 		return x >= ((self.x - 1) / self.grid.numRows) * width
@@ -101,7 +108,7 @@ function Player:moveLeft(param)
 	self.x = self.x - 1
 	self.xDirection = -1
 	self.yDirection = 0
-	self.xSpeed = 2
+	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
 		return x <= ((self.x - 1) / self.grid.numRows) * width
@@ -116,7 +123,7 @@ function Player:moveUp(param)
 	self.xDirection = 0
 	self.yDirection = -1
 	self.xSpeed = 0
-	self.ySpeed = 2
+	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
 		return y <= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
@@ -130,7 +137,7 @@ function Player:moveDown(param)
 	self.xDirection = 0
 	self.yDirection = 1
 	self.xSpeed = 0
-	self.ySpeed = 2
+	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
 		return y >= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
 	end
@@ -192,8 +199,6 @@ function Player:update()
 		return
 	end
 	
-	--print(self.xspeed .. " " .. self.yspeed)
-	
 	local x,y = self.playerImage:getPosition()
 	if self.cellCheck(x, y) then
 		self:finishMove()
@@ -242,7 +247,7 @@ function Leprechaun:_init(grid)
 	self.initX = 5
 	self.initY = 6
 	self.name = "Leprechaun"
-	
+	self.velocity = (width / grid.numRows) / 16
 	self.x = self.initX
 	self.y = self.initY
 	self.grid = grid
@@ -259,10 +264,10 @@ function Leprechaun:_init(grid)
 	lepImage:setPosition(self.xPosStart, self.yPosStart)
 	stage:addChild(lepImage)
 	self.playerImage = lepImage
-	self.playerImage.xDirection = 0
-	self.playerImage.yDirection = 0
-	self.playerImage.xSpeed = 0
-	self.playerImage.ySpeed = 0
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
 end
 
 M.Player = Player

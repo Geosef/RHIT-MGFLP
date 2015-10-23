@@ -18,6 +18,7 @@ function DigCommand:_init(player, objIndex)
 	self.param = nil
 	self.objIndex = objIndex
 	self.name = 'Dig'
+	self.frames = 32
 end
 
 M.Dig = DigCommand
