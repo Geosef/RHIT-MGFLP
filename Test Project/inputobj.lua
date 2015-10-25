@@ -51,6 +51,14 @@ function EventObject:execute()
 	self.func(self.param)
 end
 
+function EventObject:tick()
+	self.frames = self.frames - 1
+end
+
+function EventObject:isFinished()
+	return self.frames <= 0
+end
+
 local ScriptObject = {}
 ScriptObject.__index = ScriptObject
 

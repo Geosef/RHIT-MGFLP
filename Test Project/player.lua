@@ -21,6 +21,7 @@ EVENT_DURATION = 16
 function Player:_init(grid, player1)
 	self.score = 0
 	self.loadedMoves = {}
+	self.activeMove = nil
 	local textField = TextField.new(nil, "Score: " .. self.score)
 	self.velocity = (width / grid.numRows) / 16
 	print("Velocity " .. self.velocity)
@@ -194,25 +195,29 @@ function Player:update()
 		if # self.loadedMoves ~= 0 then
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
+			self.activeMove = move
 			move:execute()
 		end
 		return
 	end
 	
 	local x,y = self.playerImage:getPosition()
-	if self.cellCheck(x, y) then
+	if self.activeMove:isFinished() then
 		self:finishMove()
 		if # self.loadedMoves == 0 then
 			self.xSpeed = 0
 			self.ySpeed = 0
 			self.action = false
+			self.activeMove = nil
 		else
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
+			self.activeMove = move
 			move:execute()
 		end
 		return
 	end
+	self.activeMove:tick()
  
 	x = x + (self.xSpeed * self.xDirection)
 	y = y + (self.ySpeed * self.yDirection)
