@@ -68,7 +68,7 @@ function Player:_init(grid, player1, maxMoves)
 	local imageScale = width / grid.numRows
 	local inc = 1 / grid.numRows
 	startY = height / 4
-	local playerImage = Bitmap.new(Texture.new("images/player.jpg"))
+	local playerImage = Bitmap.new(Texture.new("images/player.png"))
 	local scaleX = imageScale / playerImage:getWidth()
 	local scaleY = imageScale / playerImage:getHeight()
 	
@@ -283,13 +283,13 @@ setmetatable(Leprechaun, {
     return self
   end,
 })
-function Leprechaun:_init(grid, maxMoves)
+function Leprechaun:_init(grid, maxMoves, init)
 	self.score = 0
 	self.loadedMoves = {}
 	self.maxMoves = maxMoves
 	self.action = false
-	self.initX = 5
-	self.initY = 6
+	self.initX = init[1]
+	self.initY = init[2]
 	self.name = "Leprechaun"
 	self.velocity = (width / grid.numRows) / 16
 	self.x = self.initX
@@ -308,6 +308,13 @@ function Leprechaun:_init(grid, maxMoves)
 	lepImage:setPosition(self.xPosStart, self.yPosStart)
 	stage:addChild(lepImage)
 	self.playerImage = lepImage
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
+end
+
+function Leprechaun:finishMove()
 	self.xDirection = 0
 	self.yDirection = 0
 	self.xSpeed = 0

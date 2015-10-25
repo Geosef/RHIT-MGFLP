@@ -4,7 +4,7 @@ WINDOW_HEIGHT = application:getLogicalHeight()
 local networkModule = require('networkadapter')
 require('printer')
 local gameMod = require('collectgame')
-local tests = require('runtests')
+--local tests = require('runtests')
 
 --tests.run()
 

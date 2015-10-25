@@ -1,5 +1,5 @@
 <project>
- <properties iosDevice="0" touchToMouse="1" autorotation="3" logicalHeight="480" osx_domain="giderosmobile.com" win_org="GiderosMobile" encryptAssets="0" assetsOnly="0" orientation="0" android_template="0" packageName="edu.rosehulman.runcoderrun" mouseToTouch="1" logicalWidth="320" osx_org="GiderosMobile" fps="60" retinaDisplay="3" win_domain="giderosmobile.com" windowWidth="0" windowHeight="0" architecture="1" scaleMode="5" mouseTouchOrder="0" encryptCode="0">
+ <properties encryptAssets="0" osx_domain="giderosmobile.com" mouseTouchOrder="0" touchToMouse="1" autorotation="3" assetsOnly="0" packageName="edu.rosehulman.runcoderrun" fps="60" retinaDisplay="3" orientation="0" mouseToTouch="1" win_domain="giderosmobile.com" windowWidth="0" logicalWidth="320" encryptCode="0" win_org="GiderosMobile" windowHeight="0" architecture="1" android_template="0" scaleMode="5" logicalHeight="480" iosDevice="0" osx_org="GiderosMobile">
   <imageScales/>
  </properties>
  <file source="controlstatements.lua"/>
@@ -42,6 +42,7 @@
   <file source="luaunit.lua"/>
  </folder>
  <folder name="images">
+  <file source="player.png"/>
   <file source="loop-start.png"/>
   <file source="loop-end.png"/>
   <file source="shovel.png"/>
@@ -59,7 +60,6 @@
   <file source="field.png"/>
   <file source="square.png"/>
   <file source="gold.png"/>
-  <file source="player.jpg"/>
   <file source="go.png"/>
  </folder>
  <file source="player.lua"/>

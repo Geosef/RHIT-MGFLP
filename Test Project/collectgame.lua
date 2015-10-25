@@ -20,16 +20,18 @@ setmetatable(CollectGame, {
 function CollectGame:_init(numRows, playerIndex, netAdapter)
 	background = Bitmap.new(Texture.new("images/grassbackground.png"))
 	stage:addChild(background)
-	self.grid = gridMod.Grid(numRows, "images/dirtcell.png")
+	self.netAdapter = netAdapter
+	local gameState = self.netAdapter:getGameState("Collect")
+	self.grid = gridMod.Grid(gameState.gridSize, "images/dirtcell.png", gameState.goldLocations, gameState.gemLocations, gameState.treasureLocations)
 	self.maxPlayerMoves = 8
 	self.player1 = playerMod.Player(self.grid, true, self.maxPlayerMoves)
 	self.player2 = playerMod.Player(self.grid, false, self.maxPlayerMoves)
-	self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1)
+	self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.lepStart)
 	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
-	--self:setupTreasure()
-	self.netAdapter = netAdapter
+	
+	
 end
 
 function CollectGame:sendMoves()

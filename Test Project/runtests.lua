@@ -6,7 +6,7 @@ local gridMod = require('grid')
 
 
 TestPlayer = {} --test class
-	local grid = gridMod.Grid(4, "images/dirtcell.png")
+	--local grid = gridMod.Grid(4, "images/dirtcell.png")
 	--local grid = {}
 	--grid.numRows = 4
 	

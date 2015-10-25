@@ -61,8 +61,11 @@ function NetworkAdapter:sendMoves(game, packet)
 	end
 end
 
-function NetworkAdapter:getGameState()
-	return {gridSize=10, lepStart={5, 6}}
+function NetworkAdapter:getGameState(gameType)
+	if gameType == "Collect" then
+		return {gridSize=10, lepStart={5, 6}, goldLocations={{2, 2}, {3,3}, {5,5}, {6,6}, {8,8}, {9,9}, {2,9}, {3,8}, {5,6}, {6,5}, {8,3}, {9,2}}, gemLocations={{4,4}, {7,7}, {4,7}, {7,4}}, treasureLocations={{1,10}, {10,1}} }
+	end
+	return {}
 end
 
 M.NetworkAdapter = NetworkAdapter

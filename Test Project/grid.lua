@@ -24,7 +24,7 @@ function Cell:_init(x, y, sprite, numRows)
 end
 
 function Cell:setGold()
-	imageScale = width / self.numRows
+	local imageScale = width / self.numRows
 	if not self.gold then
 		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
 		scaleX = imageScale / goldImage:getWidth() / 2
@@ -42,6 +42,25 @@ function Cell:setGold()
 	end
 end
 
+function Cell:setGem()
+	local imageScale = width / self.numRows
+	if not self.gem then
+		local gemImage = Bitmap.new(Texture.new("images/gem.png"))
+		scaleX = imageScale / gemImage:getWidth() / 2
+		scaleY = imageScale / gemImage:getHeight() / 2
+		
+		gemImage:setScale(scaleX, scaleY)
+		xPos = (inc * (self.x-1)) * width + imageScale / 4
+		yPos = (inc * (self.y-1)) * width + startY + (imageScale / 4)
+		gemImage:setPosition(xPos, yPos)
+		stage:addChild(gemImage)
+		self.gem = true
+		self.gem = gemImage
+	else
+		self.gem = false
+	end
+end
+
 function Cell:toggleHiddenTreasure()
 	if self.hiddenTreasure then
 		self.hiddenTreasure = false
@@ -54,6 +73,9 @@ function Cell:reset()
 	if self.gold then
 		self.gold = false
 		stage:removeChild(self.goldImage)
+	end
+	if self.gem then
+		self.gem = false
 	end
 	if self.hiddenTreasure then
 		self:toggleHiddenTreasure()
@@ -75,7 +97,8 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(numRows, imagePath)
+function Grid:_init(numRows, imagePath, goldLocations, gemLocations, treasureLocations)
+	print("Grid Size" .. imagePath)
 	imageScale = width / numRows
 	inc = 1 / numRows
 	startY = height / 4	
@@ -101,6 +124,34 @@ function Grid:_init(numRows, imagePath)
 		table.insert(rows, row)
 	end
 	self.rows = rows
+	if goldLocations == nil or gemLocations == nil or treasureLocations == nil then
+		print("unsupported grid setup")
+		return
+	end
+	self:setGoldAt(goldLocations)
+	self:setGemsAt(gemLocations)
+	self:setHiddenTreasureAt(treasureLocations)
+end
+
+function Grid:setGoldAt(goldLocations)
+	for index,value in ipairs(goldLocations) do
+		cell = self.rows[value[2]][value[1]]
+		cell:setGold()
+	end
+end
+
+function Grid:setGemsAt(gemLocations)
+	for index,value in ipairs(gemLocations) do
+		cell = self.rows[value[2]][value[1]]
+		cell:setGem()
+	end
+end
+
+function Grid:setHiddenTreasureAt(treasureLocations) 
+	for index,value in ipairs(treasureLocations) do
+		cell = self.rows[value[2]][value[1]]
+		cell:toggleHiddenTreasure()
+	end
 end
 
 function Grid:reset()
