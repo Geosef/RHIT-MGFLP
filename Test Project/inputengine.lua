@@ -58,7 +58,12 @@ function InputEngine:removeEvent(eventObj)
 end
 
 function InputEngine:clearBuffer()
-	self.script.list:backwardsIterate(function(command) self:removeEvent(command) end)
+	self.script.list:backwardsIterate(function(command) 
+		local eventNum = command.objIndex
+		self.script:remove(command)
+		stage:removeChild(self.eventSprites[eventNum])
+		table.remove(self.eventSprites, eventNum)
+		end)
 end
 
 function InputEngine:runEvents()
@@ -67,9 +72,25 @@ end
 
 function InputEngine:getEvents()
 	local events = {}
-	self.script.list:iterate(function(elem)
-		table.insert(events, elem.name)
-	end)
+	local baseList = self.script.list.objs
+	for i = 1, # baseList do
+		local event = baseList[i]
+		if event.name == "LoopStart" then
+			event.iterations = 2
+			for looper = 1, event.iterations do
+				for j = i + 1, # baseList do
+					local innerEvent = baseList[j]
+					if innerEvent.name == "LoopEnd" then
+						i = j + 1
+						break
+					end
+					table.insert(events, innerEvent.name)
+				end
+			end
+		else
+			table.insert(events, event.name)
+		end
+	end
 	return events
 end
 
