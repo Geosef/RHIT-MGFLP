@@ -102,6 +102,10 @@ function Player:finishMove()
 		stage:removeChild(self.digImage)
 		self.digging = false
 	end
+	if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
+		self.digs = 3
+		self.shovelCount:setText(self.digs)
+	end
 	if cell.gold then
 		print(self.name .. " picked up gold!")
 		self.score = self.score + 1
@@ -230,7 +234,6 @@ function Player:update()
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
 			self.activeMove = move
-			print("exec 1 " .. self.name)
 			move:execute()
 		end
 		return
@@ -248,7 +251,6 @@ function Player:update()
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
 			self.activeMove = move
-			print("exec 2 "  .. self.name)
 			move:execute()
 		end
 		return

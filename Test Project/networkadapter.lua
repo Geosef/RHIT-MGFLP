@@ -61,5 +61,9 @@ function NetworkAdapter:sendMoves(game, packet)
 	end
 end
 
+function NetworkAdapter:getGameState()
+	return {gridSize=10, lepStart={5, 6}}
+end
+
 M.NetworkAdapter = NetworkAdapter
 return M
