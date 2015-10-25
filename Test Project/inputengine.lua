@@ -18,7 +18,7 @@ setmetatable(InputEngine, {
   end,
 })
 
-function InputEngine:_init()
+function InputEngine:_init(game)
 	self.script = inputMod.ScriptObject({})
 	self.eventSprites = {}
 end

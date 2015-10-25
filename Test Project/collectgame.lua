@@ -21,12 +21,14 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	background = Bitmap.new(Texture.new("images/grassbackground.png"))
 	stage:addChild(background)
 	self.grid = gridMod.Grid(numRows, "images/dirtcell.png")
-	self.player1 = playerMod.Player(self.grid, true)
-	self.player2 = playerMod.Player(self.grid, false)
-	self.leprechaun = playerMod.Leprechaun(self.grid)
+	self.maxPlayerMoves = 8
+	self.player1 = playerMod.Player(self.grid, true, self.maxPlayerMoves)
+	self.player2 = playerMod.Player(self.grid, false, self.maxPlayerMoves)
+	self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1)
 	self.engine = engineMod.InputEngine()
 	self.numButtons = 8
 	self:setupButtons()
+	--self:setupTreasure()
 	self.netAdapter = netAdapter
 end
 

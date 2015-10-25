@@ -18,10 +18,12 @@ setmetatable(Player, {
 
 EVENT_DURATION = 16
 
-function Player:_init(grid, player1)
+function Player:_init(grid, player1, maxMoves)
 	self.score = 0
 	self.loadedMoves = {}
 	self.activeMove = nil
+	self.digs = 3
+	self.maxMoves = maxMoves
 	local textField = TextField.new(nil, "Score: " .. self.score)
 	self.velocity = (width / grid.numRows) / 16
 	print("Velocity " .. self.velocity)
@@ -29,30 +31,47 @@ function Player:_init(grid, player1)
 	stage:addChild(textField)
 	self.scoreField = textField
 	self.action = false
-	
+	self.shovelImage = Bitmap.new(Texture.new("images/shovel.png"))
+	self.brokenShovelImage = Bitmap.new(Texture.new("images/brokenshovel.png"))
+	self.shovelCount = TextField.new(nil, self.digs)
+	local scaleX = width / self.shovelImage:getWidth() / 12
+	local scaleY = height / self.shovelImage:getHeight() / 15
+	self.shovelCount:setScale(2.5)
+	self.shovelCount:setAlpha(0.3)
+	self.shovelImage:setScale(scaleX, scaleY)
+	self.brokenShovelImage:setScale(scaleX, scaleY)
 	if player1 then
 		self.initX = 1
 		self.initY = 1
 		self.name = "Player 1"
 		textField:setX(10)
 		textField:setY(10)
+		shovelImageXPos = 5
+		shovelImageYPos = height - 35
 	else
 		self.initX = grid.numRows
 		self.initY = grid.numRows
 		self.name = "Player 2"
 		textField:setX(10)
 		textField:setY(20)
+		shovelImageXPos = width - 35
+		shovelImageYPos = height - 35
 	end
+	self.shovelImage:setPosition(shovelImageXPos, shovelImageYPos)
+	self.brokenShovelImage:setPosition(shovelImageXPos, shovelImageYPos)
+	self.shovelCount:setPosition(shovelImageXPos + 6, shovelImageYPos + 25)
+	stage:addChild(self.shovelImage)
+	stage:addChild(self.shovelCount)
 	self.x = self.initX
 	self.y = self.initY
 	self.grid = grid
-	imageScale = width / grid.numRows
-	inc = 1 / grid.numRows
+	local imageScale = width / grid.numRows
+	local inc = 1 / grid.numRows
 	startY = height / 4
 	local playerImage = Bitmap.new(Texture.new("images/player.jpg"))
-	scaleX = imageScale / playerImage:getWidth()
-	scaleY = imageScale / playerImage:getHeight()
-			
+	local scaleX = imageScale / playerImage:getWidth()
+	local scaleY = imageScale / playerImage:getHeight()
+	
 	playerImage:setScale(scaleX, scaleY)
 	self.xPosStart = (inc * (self.x-1)) * width
 	self.yPosStart = (inc * (self.y-1)) * width + startY
@@ -63,6 +82,7 @@ function Player:_init(grid, player1)
 	self.yDirection = 0
 	self.xSpeed = 0
 	self.ySpeed = 0
+	
 end
 
 function Player:reset()
@@ -78,6 +98,10 @@ function Player:finishMove()
 	self.yDirection = 0
 	self.xSpeed = 0
 	self.ySpeed = 0
+	if self.digging then
+		stage:removeChild(self.digImage)
+		self.digging = false
+	end
 	if cell.gold then
 		print(self.name .. " picked up gold!")
 		self.score = self.score + 1
@@ -145,6 +169,10 @@ function Player:moveDown(param)
 end
 
 function Player:dig()
+	if self.digs == 0 then
+		print(self.name .. " out of digs!")
+		return
+	end
 	local cell = self.grid.rows[self.y][self.x]
 	if cell.hiddenTreasure then
 		print(self.name .. " dug up treasure!")
@@ -178,6 +206,12 @@ function Player:dig()
 		end
 	end
 	self.digImage = digImage
+	self.digs = self.digs - 1
+	self.shovelCount:setText(self.digs)
+	if self.digs == 0 then
+		stage:removeChild(self.shovelImage)
+		stage:addChild(self.brokenShovelImage)
+	end
 end
 
 function Player:loopStart()
@@ -196,6 +230,7 @@ function Player:update()
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
 			self.activeMove = move
+			print("exec 1 " .. self.name)
 			move:execute()
 		end
 		return
@@ -213,6 +248,7 @@ function Player:update()
 			move = self.loadedMoves[1]
 			table.remove(self.loadedMoves, 1)
 			self.activeMove = move
+			print("exec 2 "  .. self.name)
 			move:execute()
 		end
 		return
@@ -245,9 +281,10 @@ setmetatable(Leprechaun, {
     return self
   end,
 })
-function Leprechaun:_init(grid)
+function Leprechaun:_init(grid, maxMoves)
 	self.score = 0
 	self.loadedMoves = {}
+	self.maxMoves = maxMoves
 	self.action = false
 	self.initX = 5
 	self.initY = 6
