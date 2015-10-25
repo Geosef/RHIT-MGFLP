@@ -25,7 +25,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.player1 = playerMod.Player(self.grid, true, self.maxPlayerMoves)
 	self.player2 = playerMod.Player(self.grid, false, self.maxPlayerMoves)
 	self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1)
-	self.engine = engineMod.InputEngine()
+	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
 	--self:setupTreasure()
@@ -35,6 +35,10 @@ end
 function CollectGame:sendMoves()
 	local packet = {type="events"}
 	packet.events = self.engine:getEvents()
+	if # packet.events > self.maxPlayerMoves then
+		print("That's too many moves! Check your loops to see how many instructions are being run.")
+		return
+	end
 	self.netAdapter:sendMoves(self, packet)
 end
 

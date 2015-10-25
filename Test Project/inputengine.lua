@@ -20,11 +20,16 @@ setmetatable(InputEngine, {
 
 function InputEngine:_init(game)
 	self.script = inputMod.ScriptObject({})
+	self.game = game
 	self.eventSprites = {}
 end
 
 function InputEngine:addEvent(button, param)
 	local eventNum = self.script:length() + 1
+	if eventNum > self.game.maxPlayerMoves then
+		print("Can't do anymore moves!")
+		return
+	end
 	
 	local eventObjConst = commandMod.getEvent(button.eventName)
 	local eventObj = eventObjConst(nil, 1, eventNum)
@@ -67,6 +72,7 @@ function InputEngine:clearBuffer()
 end
 
 function InputEngine:runEvents()
+	
 	self.script:execute()
 end
 
@@ -91,6 +97,7 @@ function InputEngine:getEvents()
 			table.insert(events, event.name)
 		end
 	end
+	
 	return events
 end
 
