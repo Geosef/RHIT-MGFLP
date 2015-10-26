@@ -10,25 +10,25 @@
  </folder>
  <file source="printer.lua"/>
  <file source="JSON.lua"/>
- <file source="http/socket.lua"/>
+ <file source="socket.lua"/>
  <folder name="socket">
-  <file source="http/socket/url.lua"/>
-  <file source="http/socket/tp.lua"/>
-  <file source="http/socket/smtp.lua"/>
-  <file source="http/socket/http.lua"/>
-  <file source="http/socket/ftp.lua"/>
+  <file source="socket/url.lua"/>
+  <file source="socket/tp.lua"/>
+  <file source="socket/smtp.lua"/>
+  <file source="socket/http.lua"/>
+  <file source="socket/ftp.lua"/>
  </folder>
  <folder name="luacov">
   <folder name="reporter">
-   <file source="luacov-0.8/src/luacov/reporter/default.lua"/>
+   <file source="luacov/reporter/default.lua"/>
   </folder>
-  <file source="luacov-0.8/src/luacov/stats.lua"/>
-  <file source="luacov-0.8/src/luacov/runner.lua"/>
-  <file source="luacov-0.8/src/luacov/reporter.lua"/>
-  <file source="luacov-0.8/src/luacov/defaults.lua"/>
-  <file source="luacov-0.8/src/luacov/tick.lua"/>
+  <file source="luacov/stats.lua"/>
+  <file source="luacov/runner.lua"/>
+  <file source="luacov/reporter.lua"/>
+  <file source="luacov/defaults.lua"/>
+  <file source="luacov/tick.lua"/>
  </folder>
- <file source="luacov-0.8/src/luacov.lua"/>
+ <file source="luacov.lua"/>
  <file source="command.lua"/>
  <file source="movement.lua"/>
  <file source="specialmoves.lua"/>
@@ -38,29 +38,27 @@
  <file source="inputengine.lua"/>
  <file source="inputbutton.lua"/>
  <folder name="test">
-  <file source="test1.lua"/>
-  <file source="luaunit.lua"/>
+  <file source="test/test1.lua"/>
+  <file source="test/luaunit.lua"/>
  </folder>
  <folder name="images">
-  <file source="player.png"/>
-  <file source="loop-start.png"/>
-  <file source="loop-end.png"/>
-  <file source="shovel.png"/>
-  <file source="leprechaun.png"/>
-  <file source="grassbackground.png"/>
-  <file source="gem.png"/>
-  <file source="dirtcell.png"/>
-  <file source="diggingActionCell.png"/>
-  <file source="brokenshovel.png"/>
-  <file source="arrow-right.png"/>
-  <file source="arrow-down.png"/>
-  <file source="arrow-left.png"/>
-  <file source="arrow-up.png"/>
-  <file source="ball.png"/>
-  <file source="field.png"/>
-  <file source="square.png"/>
-  <file source="gold.png"/>
-  <file source="go.png"/>
+  <file source="images/diggingActionCell.png"/>
+  <file source="images/leprechaun.png"/>
+  <file source="images/shovel.png"/>
+  <file source="images/grassbackground.png"/>
+  <file source="images/gem.png"/>
+  <file source="images/dirtcell.png"/>
+  <file source="images/brokenshovel.png"/>
+  <file source="images/arrow-right.png"/>
+  <file source="images/arrow-down.png"/>
+  <file source="images/arrow-left.png"/>
+  <file source="images/arrow-up.png"/>
+  <file source="images/ball.png"/>
+  <file source="images/field.png"/>
+  <file source="images/square.png"/>
+  <file source="images/gold.png"/>
+  <file source="images/player.jpg"/>
+  <file source="images/go.png"/>
  </folder>
  <file source="player.lua"/>
  <file source="grid.lua"/>
