@@ -3,8 +3,6 @@ local M = {}
 local width = application:getLogicalWidth()
 local height = application:getLogicalHeight()
 
-
-
 local Player = {}
 Player.__index = Player
 
@@ -113,6 +111,14 @@ function Player:finishMove()
 		cell.gold = false
 		stage:removeChild(cell.goldImage)
 	end
+	if cell.gem then
+		print (self.name .. " picked up a gem!")
+		self.score = self.score + 4
+		self.scoreField:setText("Score: " .. self.score)
+		cell.gem = false
+		stage:removeChild(cell.gemImage)
+	end
+	
 end
 
 function Player:moveRight(param)
@@ -180,7 +186,7 @@ function Player:dig()
 	local cell = self.grid.rows[self.y][self.x]
 	if cell.hiddenTreasure then
 		print(self.name .. " dug up treasure!")
-		self.score = self.score + 5
+		self.score = self.score + 8
 		self.scoreField:setText("Score: " .. self.score)
 		cell:toggleHiddenTreasure()
 	else

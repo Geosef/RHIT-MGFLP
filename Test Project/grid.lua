@@ -55,7 +55,7 @@ function Cell:setGem()
 		gemImage:setPosition(xPos, yPos)
 		stage:addChild(gemImage)
 		self.gem = true
-		self.gem = gemImage
+		self.gemImage = gemImage
 	else
 		self.gem = false
 	end
@@ -67,6 +67,14 @@ function Cell:toggleHiddenTreasure()
 	else
 		self.hiddenTreasure = true
 	end
+end
+
+function Cell:setPowerup(powerup)
+	if self.powerup ~= nil then
+		return
+	end
+	self.powerupImage = powerup.Image
+	self.powerup = powerup
 end
 
 function Cell:reset()
