@@ -25,6 +25,15 @@ function InputEngine:_init(game)
 end
 
 function InputEngine:addEvent(button, param)
+	if button.eventName == "LoopStart" and # self.script.list.objs > 0 then
+		local previousEvent = self.script.list.objs[# self.script.list.objs]
+		if previousEvent.name == "LoopStart" then
+			local prevIter = previousEvent.iterations
+			previousEvent.iterations = prevIter + 1
+			return
+		end
+	end
+	
 	local eventNum = self.script:length() + 1
 	if eventNum > self.game.maxPlayerMoves then
 		print("Can't do anymore moves!")
@@ -82,12 +91,14 @@ function InputEngine:getEvents()
 	for i = 1, # baseList do
 		local event = baseList[i]
 		if event.name == "LoopStart" then
-			event.iterations = 2
+			--event.iterations = 2
 			for looper = 1, event.iterations do
 				for j = i + 1, # baseList do
 					local innerEvent = baseList[j]
 					if innerEvent.name == "LoopEnd" then
-						i = j + 1
+						if looper == event.iterations then
+							i = j + 1
+						end
 						break
 					end
 					table.insert(events, innerEvent.name)

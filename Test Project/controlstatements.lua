@@ -15,7 +15,7 @@ setmetatable(LoopStartCommand, {
 })
 function LoopStartCommand:_init(player, objIndex)
 	self.func = function(x) player:loopStart() end
-	self.param = nil
+	self.iterations = 0
 	self.objIndex = objIndex
 	self.name = 'LoopStart'
 end
@@ -32,7 +32,7 @@ setmetatable(LoopEndCommand, {
 })
 function LoopEndCommand:_init(player, objIndex)
 	self.func = function(x) player:loopEnd() end
-	self.param = nil
+	self.iterations = 0
 	self.objIndex = objIndex
 	self.name = 'LoopEnd'
 end
