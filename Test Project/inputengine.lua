@@ -3,8 +3,6 @@ local M = {}
 local inputMod = require('inputobj')
 local commandMod = require('command')
 
-
-
 local InputEngine = {}
 InputEngine.__index = InputEngine
 
@@ -23,21 +21,19 @@ function InputEngine:_init(game)
 end
 
 function InputEngine:addEvent(button, param)
-	-- Loop Counter Text Field
-	--local loopCount = TextField.new(nil, self.digs)
+	local loopCount = nil
 	if button.eventName == "LoopStart" then
-		--loopCount:setScale(2.5)
-		--loopCount:setAlpha(0.3)
-		--loopCount:setText(1)
 		if # self.script.list.objs > 0 then
 			local previousEvent = self.script.list.objs[# self.script.list.objs]
 			if previousEvent.name == "LoopStart" then
 				local prevIter = previousEvent.iterations
 				previousEvent.iterations = prevIter + 1
-				--loopCount:setText(previousEvent.iterations)
+				previousEvent.sprite.loopCount:setText(previousEvent.iterations)
 				return
 			end
 		end
+		-- Loop Counter Text Field
+		loopCount = TextField.new(nil, 0)
 	end
 	
 	local eventNum = self.script:length() + 1
@@ -48,8 +44,6 @@ function InputEngine:addEvent(button, param)
 	
 	local eventObjConst = commandMod.getEvent(button.eventName)
 	local eventObj = eventObjConst(nil, 1, eventNum)
-	self.script:append(eventObj)
-	
 	
 	local buttonImage = Bitmap.new(Texture.new(button.imagePath))
 	local scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 20
@@ -61,22 +55,51 @@ function InputEngine:addEvent(button, param)
 	local xPos = eventNum * (WINDOW_WIDTH / 15)
 	local yPos = 3 * WINDOW_HEIGHT / 20
 	eventSprite:setPosition(xPos, yPos)
-	stage:addChild(eventSprite)
-	--loopCount:setPosition(xPos + 6, yPos + 25)
-	--eventSprite:addChild(loopCount)
-	table.insert(self.eventSprites, eventSprite)
+	if loopCount ~= nil then
+		loopCount:setScale(2.0)
+		loopCount:setAlpha(0.4)
+		loopCount:setText(1)
+		loopCount:setPosition(xPos + 5, yPos + 20)
+		eventSprite.loopCount = loopCount
+		stage:addChild(eventSprite.loopCount)
+	end
+	eventObj.sprite = eventSprite
+	stage:addChild(eventObj.sprite)
+	self.script:append(eventObj)
+	
+	
+	--table.insert(self.eventSprites, eventSprite)
 end
 
 function InputEngine:removeEvent(eventObj)
 	local eventNum = eventObj.objIndex
+	local eventSprite = eventObj.sprite
+	if eventObj.name == "LoopStart" then
+		if eventObj.iterations > 1 then
+			eventObj.iterations = eventObj.iterations - 1
+			eventSprite.loopCount:setText(eventObj.iterations)
+			return
+		else
+			stage:removeChild(eventSprite.loopCount)
+		end
+	end
 	self.script:remove(eventObj)
-	stage:removeChild(self.eventSprites[eventNum])
-	table.remove(self.eventSprites, eventNum)
+	stage:removeChild(eventSprite)
+	
+	--table.remove(self.eventSprites, eventNum)
+	local count = eventNum
+	self.script.list:iterate(function(command)
+		local xPos = count * (WINDOW_WIDTH / 15)
+		local yPos = 3 * WINDOW_HEIGHT / 20
+		command.sprite:setPosition(xPos, yPos)
+		count = count + 1
+		end)
+	--[[
 	for i = eventNum, self.script:length() do
 		local xPos = i * (WINDOW_WIDTH / 15)
 		local yPos = 3 * WINDOW_HEIGHT / 20
 		self.eventSprites[i]:setPosition(xPos, yPos)
-	end
+	end]]
 end
 
 function InputEngine:clearBuffer()

@@ -64,7 +64,7 @@ function Player:_init(grid, player1, maxMoves)
 	local imageScale = WINDOW_WIDTH / grid.numRows
 	local inc = 1 / grid.numRows
 	startY = WINDOW_HEIGHT / 4
-	local playerImage = Bitmap.new(Texture.new("images/player.jpg"))
+	local playerImage = Bitmap.new(Texture.new("images/player.png"))
 	local scaleX = imageScale / playerImage:getWidth()
 	local scaleY = imageScale / playerImage:getHeight()
 	

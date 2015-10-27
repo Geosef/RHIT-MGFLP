@@ -1,5 +1,7 @@
 local M = {}
 
+local width = application:getLogicalWidth()
+local height = application:getLogicalHeight()
 
 local Collectible = {}
 Collectible.__index = Collectible
@@ -23,6 +25,23 @@ function Collectible:destroy()
 	stage:removeChild(self.image)
 end
 
-
+local Leprechaun = {}
+Leprechaun.__index = Leprechaun
+setmetatable(Leprechaun, {
+  __index = Player,
+  __call = function (cls, ...)
+    local self = setmetatable({}, cls)
+    self:_init(...)
+    return self
+  end,
+})
 
 return M
+
+
+
+
+
+
+
+
