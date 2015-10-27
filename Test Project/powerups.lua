@@ -12,9 +12,17 @@ setmetatable(Collectible, {
   end,
 })
 
-function Collectible:_init(imagePath)
-	self.image = Bitmap.new(Texture.new(imagePath))
-	
+function Collectible:_init()
 end
+
+function Collectible:doFunc()
+	print("Not implemented!")
+end
+
+function Collectible:destroy()
+	stage:removeChild(self.image)
+end
+
+
 
 return M
