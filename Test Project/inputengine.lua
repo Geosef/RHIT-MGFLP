@@ -103,7 +103,9 @@ function InputEngine:getEvents()
 				end
 			end
 		else
-			table.insert(events, event.name)
+			if innerEvent.name ~= "LoopEnd" then
+				table.insert(events, event.name)
+			end
 		end
 	end
 	
