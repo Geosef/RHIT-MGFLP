@@ -18,8 +18,8 @@ setmetatable(CollectGame, {
 })
 
 function CollectGame:_init(numRows, playerIndex, netAdapter)
-	background = Bitmap.new(Texture.new("images/grassbackground.png"))
-	stage:addChild(background)
+	self.background = Bitmap.new(Texture.new("images/grassbackground.png"))
+	stage:addChild(self.background)
 	self.netAdapter = netAdapter
 	local gameState = self.netAdapter:getGameState("Collect")
 	self.grid = gridMod.Grid(gameState.gridSize, "images/dirtcell.png", gameState.goldLocations, gameState.gemLocations, gameState.treasureLocations)
@@ -115,9 +115,11 @@ function CollectGame:update()
 	self.leprechaun:update()
 end
 function CollectGame:exit()
+	stage:removeChild(self.background)
 	self.grid:destroy()
 	self.player1:destroy()
 	self.player2:destroy()
+	self.leprechaun:destroy()
 end
 
 M.CollectGame = CollectGame
