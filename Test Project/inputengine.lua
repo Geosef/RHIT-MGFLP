@@ -23,12 +23,20 @@ function InputEngine:_init(game)
 end
 
 function InputEngine:addEvent(button, param)
-	if button.eventName == "LoopStart" and # self.script.list.objs > 0 then
-		local previousEvent = self.script.list.objs[# self.script.list.objs]
-		if previousEvent.name == "LoopStart" then
-			local prevIter = previousEvent.iterations
-			previousEvent.iterations = prevIter + 1
-			return
+	-- Loop Counter Text Field
+	--local loopCount = TextField.new(nil, self.digs)
+	if button.eventName == "LoopStart" then
+		--loopCount:setScale(2.5)
+		--loopCount:setAlpha(0.3)
+		--loopCount:setText(1)
+		if # self.script.list.objs > 0 then
+			local previousEvent = self.script.list.objs[# self.script.list.objs]
+			if previousEvent.name == "LoopStart" then
+				local prevIter = previousEvent.iterations
+				previousEvent.iterations = prevIter + 1
+				--loopCount:setText(previousEvent.iterations)
+				return
+			end
 		end
 	end
 	
@@ -54,6 +62,8 @@ function InputEngine:addEvent(button, param)
 	local yPos = 3 * WINDOW_HEIGHT / 20
 	eventSprite:setPosition(xPos, yPos)
 	stage:addChild(eventSprite)
+	--loopCount:setPosition(xPos + 6, yPos + 25)
+	--eventSprite:addChild(loopCount)
 	table.insert(self.eventSprites, eventSprite)
 end
 
