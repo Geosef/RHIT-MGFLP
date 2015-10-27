@@ -1,7 +1,5 @@
 local M = {}
 
-local width = application:getLogicalWidth()
-local height = application:getLogicalHeight()
 
 local Player = {}
 Player.__index = Player
@@ -23,7 +21,7 @@ function Player:_init(grid, player1, maxMoves)
 	self.digs = 3
 	self.maxMoves = maxMoves
 	local textField = TextField.new(nil, "Score: " .. self.score)
-	self.velocity = (width / grid.numRows) / 16
+	self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
 	print("Velocity " .. self.velocity)
 	
 	stage:addChild(textField)
@@ -32,8 +30,8 @@ function Player:_init(grid, player1, maxMoves)
 	self.shovelImage = Bitmap.new(Texture.new("images/shovel.png"))
 	self.brokenShovelImage = Bitmap.new(Texture.new("images/brokenshovel.png"))
 	self.shovelCount = TextField.new(nil, self.digs)
-	local scaleX = width / self.shovelImage:getWidth() / 12
-	local scaleY = height / self.shovelImage:getHeight() / 15
+	local scaleX = WINDOW_WIDTH / self.shovelImage:getWidth() / 12
+	local scaleY = WINDOW_HEIGHT / self.shovelImage:getHeight() / 15
 	self.shovelCount:setScale(2.5)
 	self.shovelCount:setAlpha(0.3)
 	self.shovelImage:setScale(scaleX, scaleY)
@@ -45,15 +43,15 @@ function Player:_init(grid, player1, maxMoves)
 		textField:setX(10)
 		textField:setY(10)
 		shovelImageXPos = 5
-		shovelImageYPos = height - 35
+		shovelImageYPos = WINDOW_HEIGHT - 35
 	else
 		self.initX = grid.numRows
 		self.initY = grid.numRows
 		self.name = "Player 2"
 		textField:setX(10)
 		textField:setY(20)
-		shovelImageXPos = width - 35
-		shovelImageYPos = height - 35
+		shovelImageXPos = WINDOW_WIDTH - 35
+		shovelImageYPos = WINDOW_HEIGHT - 35
 	end
 	self.shovelImage:setPosition(shovelImageXPos, shovelImageYPos)
 	self.brokenShovelImage:setPosition(shovelImageXPos, shovelImageYPos)
@@ -63,16 +61,16 @@ function Player:_init(grid, player1, maxMoves)
 	self.x = self.initX
 	self.y = self.initY
 	self.grid = grid
-	local imageScale = width / grid.numRows
+	local imageScale = WINDOW_WIDTH / grid.numRows
 	local inc = 1 / grid.numRows
-	startY = height / 4
-	local playerImage = Bitmap.new(Texture.new("images/player.png"))
+	startY = WINDOW_HEIGHT / 4
+	local playerImage = Bitmap.new(Texture.new("images/player.jpg"))
 	local scaleX = imageScale / playerImage:getWidth()
 	local scaleY = imageScale / playerImage:getHeight()
 	
 	playerImage:setScale(scaleX, scaleY)
-	self.xPosStart = (inc * (self.x-1)) * width
-	self.yPosStart = (inc * (self.y-1)) * width + startY
+	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
+	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
 	playerImage:setPosition(self.xPosStart, self.yPosStart)
 	stage:addChild(playerImage)
 	self.playerImage = playerImage
@@ -122,7 +120,6 @@ function Player:finishMove()
 end
 
 function Player:moveRight(param)
-	print("MOVE RIGHT")
 	if self.x >= self.grid.numRows then
 		return
 	end
@@ -132,7 +129,7 @@ function Player:moveRight(param)
 	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
-		return x >= ((self.x - 1) / self.grid.numRows) * width
+		return x >= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
 	end
 end
 
@@ -146,7 +143,7 @@ function Player:moveLeft(param)
 	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
-		return x <= ((self.x - 1) / self.grid.numRows) * width
+		return x <= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
 	end
 end
 
@@ -160,7 +157,7 @@ function Player:moveUp(param)
 	self.xSpeed = 0
 	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
-		return y <= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
+		return y <= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
 	end
 end
 
@@ -174,7 +171,7 @@ function Player:moveDown(param)
 	self.xSpeed = 0
 	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
-		return y >= ((self.y - 1) / self.grid.numRows) * width + (height / 4)
+		return y >= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
 	end
 end
 
@@ -194,14 +191,14 @@ function Player:dig()
 	end
 	self.digging = true
 	local frameCounter = 30
-	local imageScale = width / self.grid.numRows
-	local startY = height / 4
+	local imageScale = WINDOW_WIDTH / self.grid.numRows
+	local startY = WINDOW_HEIGHT / 4
 	local digImage = Bitmap.new(Texture.new("images/diggingActionCell.png"))
 	local scaleX = imageScale / digImage:getWidth()
 	local scaleY = imageScale / digImage:getHeight()
 	digImage:setScale(scaleX, scaleY)
-	local xPos = (inc * (self.x-1)) * width
-	local yPos = (inc * (self.y-1)) * width + startY
+	local xPos = (inc * (self.x-1)) * WINDOW_WIDTH
+	local yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY
 	digImage:setPosition(xPos, yPos)
 	print(digImage:getWidth())
 	stage:addChild(digImage)
@@ -297,20 +294,20 @@ function Leprechaun:_init(grid, maxMoves, init)
 	self.initX = init[1]
 	self.initY = init[2]
 	self.name = "Leprechaun"
-	self.velocity = (width / grid.numRows) / 16
+	self.velocity = (WINDOW_WIDTH / grid.numRows) / 16
 	self.x = self.initX
 	self.y = self.initY
 	self.grid = grid
-	imageScale = width / grid.numRows
+	imageScale = WINDOW_WIDTH / grid.numRows
 	inc = 1 / grid.numRows
-	startY = height / 4
+	startY = WINDOW_HEIGHT / 4
 	local lepImage = Bitmap.new(Texture.new("images/leprechaun.png"))
 	scaleX = imageScale / lepImage:getWidth()
 	scaleY = imageScale / lepImage:getHeight()
 
 	lepImage:setScale(scaleX, scaleY)
-	self.xPosStart = (inc * (self.x-1)) * width
-	self.yPosStart = (inc * (self.y-1)) * width + startY
+	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
+	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
 	lepImage:setPosition(self.xPosStart, self.yPosStart)
 	stage:addChild(lepImage)
 	self.playerImage = lepImage

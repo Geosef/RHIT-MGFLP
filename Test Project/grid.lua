@@ -1,9 +1,5 @@
 local M = {}
 
-local width = application:getLogicalWidth()
-local height = application:getLogicalHeight()
-
-
 local Cell = {}
 Cell.__index = Cell
 
@@ -24,15 +20,15 @@ function Cell:_init(x, y, sprite, numRows)
 end
 
 function Cell:setGold()
-	local imageScale = width / self.numRows
+	local imageScale = WINDOW_WIDTH / self.numRows
 	if not self.gold then
 		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
 		scaleX = imageScale / goldImage:getWidth() / 2
 		scaleY = imageScale / goldImage:getHeight() / 2
 		
 		goldImage:setScale(scaleX, scaleY)
-		xPos = (inc * (self.x-1)) * width + imageScale / 4
-		yPos = (inc * (self.y-1)) * width + startY + (imageScale / 4)
+		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
+		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
 		goldImage:setPosition(xPos, yPos)
 		stage:addChild(goldImage)
 		self.gold = true
@@ -43,15 +39,15 @@ function Cell:setGold()
 end
 
 function Cell:setGem()
-	local imageScale = width / self.numRows
+	local imageScale = WINDOW_WIDTH / self.numRows
 	if not self.gem then
 		local gemImage = Bitmap.new(Texture.new("images/gem.png"))
 		scaleX = imageScale / gemImage:getWidth() / 2
 		scaleY = imageScale / gemImage:getHeight() / 2
 		
 		gemImage:setScale(scaleX, scaleY)
-		xPos = (inc * (self.x-1)) * width + imageScale / 4
-		yPos = (inc * (self.y-1)) * width + startY + (imageScale / 4)
+		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
+		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
 		gemImage:setPosition(xPos, yPos)
 		stage:addChild(gemImage)
 		self.gem = true
@@ -107,9 +103,9 @@ setmetatable(Grid, {
 
 function Grid:_init(numRows, imagePath, goldLocations, gemLocations, treasureLocations)
 	print("Grid Size" .. imagePath)
-	imageScale = width / numRows
+	imageScale = WINDOW_WIDTH / numRows
 	inc = 1 / numRows
-	startY = height / 4	
+	startY = WINDOW_HEIGHT / 4	
 	
 	self.numRows = numRows
 	rows = {}
@@ -122,8 +118,8 @@ function Grid:_init(numRows, imagePath, goldLocations, gemLocations, treasureLoc
 			scaleY = imageScale / cellImage:getHeight()
 			
 			cellImage:setScale(scaleX, scaleY)
-			xPos = (inc *  (j-1)) * width
-			yPos = (inc * (i-1)) * width + startY
+			xPos = (inc *  (j-1)) * WINDOW_WIDTH
+			yPos = (inc * (i-1)) * WINDOW_WIDTH + startY
 			cellImage:setPosition(xPos, yPos)
 			stage:addChild(cellImage)
 			cellObj = Cell(j, i, cellImage, numRows)

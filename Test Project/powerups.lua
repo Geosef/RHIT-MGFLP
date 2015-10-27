@@ -1,7 +1,5 @@
 local M = {}
 
-local width = application:getLogicalWidth()
-local height = application:getLogicalHeight()
 
 local Collectible = {}
 Collectible.__index = Collectible

@@ -4,8 +4,6 @@ local inputMod = require('inputobj')
 local commandMod = require('command')
 
 
-local width = application:getLogicalWidth()
-local height = application:getLogicalHeight()
 
 local InputEngine = {}
 InputEngine.__index = InputEngine
@@ -46,14 +44,14 @@ function InputEngine:addEvent(button, param)
 	
 	
 	local buttonImage = Bitmap.new(Texture.new(button.imagePath))
-	local scaleX = width / buttonImage:getWidth() / 20
-	local scaleY = height / buttonImage:getHeight() / 20
+	local scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 20
+	local scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 20
 	
 	local eventSprite = Button.new(buttonImage, buttonImage, function()
 	self:removeEvent(eventObj)	end)
 	eventSprite:setScale(scaleX, scaleY)
-	local xPos = eventNum * (width / 15)
-	local yPos = 3 * height / 20
+	local xPos = eventNum * (WINDOW_WIDTH / 15)
+	local yPos = 3 * WINDOW_HEIGHT / 20
 	eventSprite:setPosition(xPos, yPos)
 	stage:addChild(eventSprite)
 	table.insert(self.eventSprites, eventSprite)
@@ -65,8 +63,8 @@ function InputEngine:removeEvent(eventObj)
 	stage:removeChild(self.eventSprites[eventNum])
 	table.remove(self.eventSprites, eventNum)
 	for i = eventNum, self.script:length() do
-		local xPos = i * (width / 15)
-		local yPos = 3 * height / 20
+		local xPos = i * (WINDOW_WIDTH / 15)
+		local yPos = 3 * WINDOW_HEIGHT / 20
 		self.eventSprites[i]:setPosition(xPos, yPos)
 	end
 end

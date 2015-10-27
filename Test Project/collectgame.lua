@@ -84,8 +84,8 @@ function CollectGame:setupButtons()
 	"LoopEnd", 7, self.numButtons)
 	
 	local buttonImage = Bitmap.new(Texture.new("images/go.png"))
-	scaleX = width / buttonImage:getWidth() / 10.5
-	scaleY = height / buttonImage:getHeight() / 15
+	scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 10.5
+	scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 15
 	
 	local button = Button.new(buttonImage, buttonImage, function()
 		--self:reset() 
@@ -93,8 +93,8 @@ function CollectGame:setupButtons()
 		self.engine:clearBuffer()
 		end)
 	button:setScale(scaleX, scaleY)
-	xPos = self.numButtons * (width / (self.numButtons + 1))
-	yPos = height / 20
+	xPos = self.numButtons * (WINDOW_WIDTH / (self.numButtons + 1))
+	yPos = WINDOW_HEIGHT / 20
 	button:setPosition(xPos, yPos)
 	stage:addChild(button)
 end

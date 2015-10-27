@@ -1,5 +1,11 @@
-WINDOW_WIDTH = application:getLogicalWidth()
-WINDOW_HEIGHT = application:getLogicalHeight()
+local function setGlobals()
+	WINDOW_WIDTH = application:getLogicalWidth()
+	WINDOW_HEIGHT = application:getLogicalHeight()
+end
+
+setGlobals()
+
+
 
 local networkModule = require('networkadapter')
 require('printer')
