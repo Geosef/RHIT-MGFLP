@@ -5,6 +5,7 @@ local playerMod = require('player')
 local engineMod = require('inputengine')
 local buttonMod = require('inputbutton')
 local commandMod = require('command')
+local collectibleMod = require('collectible')
 
 local CollectGame = {}
 CollectGame.__index = CollectGame
@@ -30,8 +31,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
-	
-	
+	self.grid:setCollectibleAt(1, 4,  collectibleMod.SmallMoveBoostPowerUp())
 end
 
 function CollectGame:sendMoves()

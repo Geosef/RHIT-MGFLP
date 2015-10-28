@@ -67,7 +67,6 @@ function InputEngine:addEvent(button, param)
 	stage:addChild(eventObj.sprite)
 	self.script:append(eventObj)
 	
-	
 	--table.insert(self.eventSprites, eventSprite)
 end
 
