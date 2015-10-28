@@ -155,7 +155,11 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(numRows, imagePath, goldLocations, gemLocations, treasureLocations)
+function Grid:_init(imagePath, gameType, gameState, testing)
+	numRows = gameState.gridSize
+	goldLocations = gameState.goldLocations
+	gemLocations = gameState.gemLocations
+	treasureLocations = gameState.treasureLocations
 	print("Grid Size" .. imagePath)
 	imageScale = WINDOW_WIDTH / numRows
 	inc = 1 / numRows

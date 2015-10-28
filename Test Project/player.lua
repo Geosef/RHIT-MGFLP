@@ -14,7 +14,7 @@ setmetatable(Player, {
 
 EVENT_DURATION = 16
 
-function Player:_init(grid, player1, maxMoves)
+function Player:_init(grid, player1, maxMoves, testing)
 	self.score = 0
 	self.loadedMoves = {}
 	self.activeMove = nil
@@ -128,8 +128,6 @@ function Player:finishMove()
 	if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
 		self.digs = 3
 		self.shovelCount:setText(self.digs)
-		stage:removeChild(self.brokenShovelImage)
-		stage:addChild(self.shovelImage)
 	end
 	if cell.gold then
 		print(self.name .. " picked up gold!")
@@ -320,7 +318,7 @@ setmetatable(Leprechaun, {
     return self
   end,
 })
-function Leprechaun:_init(grid, maxMoves, init)
+function Leprechaun:_init(grid, maxMoves, init, testing)
 	self.score = 0
 	self.loadedMoves = {}
 	self.maxMoves = maxMoves

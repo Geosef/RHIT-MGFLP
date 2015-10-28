@@ -19,21 +19,31 @@ setmetatable(CollectGame, {
   end,
 })
 
-function CollectGame:_init(numRows, playerIndex, netAdapter)
+function CollectGame:_init(netAdapter)
+	self.gameType = "Collect"
+	-- set background
 	self.background = Bitmap.new(Texture.new("images/grassbackground.png"))
 	stage:addChild(self.background)
+	
+	-- set netAdapter
 	self.netAdapter = netAdapter
-	local gameState = self.netAdapter:getGameState("Collect")
-	self.grid = gridMod.Grid(gameState.gridSize, "images/dirtcell.png", gameState.goldLocations, gameState.gemLocations, gameState.treasureLocations)
+	local gameState = self.netAdapter:getGameState(self.gameType)
+	
+	-- set grid
+	self.grid = gridMod.Grid("images/dirtcell.png", self.gameType, gameState, false)
+	self.grid:setCollectibleAt(1, 4,  collectibleMod.ShovelRepairPowerUp())
+	self.grid:setCollectibleAt(4, 1,  collectibleMod.MetalDetectorPowerUp())
+	-- set players
 	self.maxPlayerMoves = 8
 	self.player1 = playerMod.Player(self.grid, true, self.maxPlayerMoves)
 	self.player2 = playerMod.Player(self.grid, false, self.maxPlayerMoves)
 	self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.lepStart)
+	-- set engine and buttons
 	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
-	self.grid:setCollectibleAt(1, 4,  collectibleMod.ShovelRepairPowerUp())
-	self.grid:setCollectibleAt(4, 1,  collectibleMod.MetalDetectorPowerUp())
+	
+	-- set sound
 	local music = musicMod.Music.new("audio/music.mp3")
 	music:on()
 end
