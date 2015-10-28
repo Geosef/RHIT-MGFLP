@@ -40,7 +40,6 @@
  <file source="list.lua"/>
  <file source="button.lua"/>
  <file source="game.lua"/>
- <file source="collectgame.lua"/>
  <file source="inputengine.lua"/>
  <file source="inputbutton.lua"/>
  <folder name="test">

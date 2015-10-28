@@ -200,8 +200,10 @@ function CollectGame(netAdapter)
 		self.player2:destroy()
 		self.leprechaun:destroy()
 	end
+	
 	self.runEvents = runEvents
 	self.resetTurn = resetTurn
+	
 	return {
 		runEvents = runEvents,
 		update = update,

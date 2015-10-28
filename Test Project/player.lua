@@ -14,19 +14,78 @@ setmetatable(Player, {
 
 EVENT_DURATION = 16
 
-function Player:_init(grid, player1, maxMoves, testing)
-	self.score = 0
-	self.loadedMoves = {}
-	self.activeMove = nil
-	self.digs = 3
-	self.maxMoves = maxMoves
-	local textField = TextField.new(nil, "Score: " .. self.score)
+function Player:_init(grid, isPlayer1, maxMoves, testing)
+	self:initPlayerAttributes(grid, isPlayer1)
+	self:initMoveBuffer()
+	self:enterGrid(grid)
+	self:setScoreField(isPlayer1)
+	self:setupPlayerGameRules()
+end
+
+function Player:initPlayerAttributes(grid, isPlayer1)
+	if isPlayer1 then
+		self.name = "Player 1"
+		self.initX = 1
+		self.initY = 1
+	else
+		self.name = "Player 2"
+		self.initX = grid.numRows
+		self.initY = grid.numRows
+	end
 	self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
-	print("Velocity " .. self.velocity)
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
 	
+end
+
+function Player:initMoveBuffer()
+	self.loadedMoves = {}
+	self.maxMoves = maxMoves
+	self.activeMove = nil
+	self.action = false
+end
+
+function Player:setScoreField(isPlayer1)
+	self.score = 0
+	local playerName = ""
+	local textField = TextField.new(nil, self.name .. ": " .. self.score)
+	if isPlayer1 then
+		textField:setX(10)
+		textField:setY(10)
+	else
+		textField:setX(10)
+		textField:setY(20)
+	end
 	stage:addChild(textField)
 	self.scoreField = textField
-	self.action = false
+end
+
+function Player:enterGrid(grid)
+	self.x = self.initX
+	self.y = self.initY
+	self.grid = grid
+	local imageScale = WINDOW_WIDTH / self.grid.numRows
+	local inc = 1 / self.grid.numRows
+	local startY = WINDOW_HEIGHT / 4
+	local playerImage = Bitmap.new(Texture.new("images/player.png"))
+	local scaleX = imageScale / playerImage:getWidth()
+	local scaleY = imageScale / playerImage:getHeight()
+	playerImage:setScale(scaleX, scaleY)
+	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
+	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
+	playerImage:setPosition(self.xPosStart, self.yPosStart)
+	stage:addChild(playerImage)
+	self.playerImage = playerImage
+end
+
+function Player:setupPlayerGameRules()
+	--Game specific
+	self.metalDetect = 0
+	
+	-- dig stuff
+	self.digs = 3
 	self.shovelImage = Bitmap.new(Texture.new("images/shovel.png"))
 	self.brokenShovelImage = Bitmap.new(Texture.new("images/brokenshovel.png"))
 	self.shovelCount = TextField.new(nil, self.digs)
@@ -36,50 +95,24 @@ function Player:_init(grid, player1, maxMoves, testing)
 	self.shovelCount:setAlpha(0.3)
 	self.shovelImage:setScale(scaleX, scaleY)
 	self.brokenShovelImage:setScale(scaleX, scaleY)
-	if player1 then
-		self.initX = 1
-		self.initY = 1
-		self.name = "Player 1"
-		textField:setX(10)
-		textField:setY(10)
+	
+	--player 1 vs player 2 init
+	if isPlayer1 then
 		shovelImageXPos = 5
 		shovelImageYPos = WINDOW_HEIGHT - 35
 	else
-		self.initX = grid.numRows
-		self.initY = grid.numRows
-		self.name = "Player 2"
-		textField:setX(10)
-		textField:setY(20)
 		shovelImageXPos = WINDOW_WIDTH - 35
 		shovelImageYPos = WINDOW_HEIGHT - 35
 	end
+	
 	self.shovelImage:setPosition(shovelImageXPos, shovelImageYPos)
 	self.brokenShovelImage:setPosition(shovelImageXPos, shovelImageYPos)
 	self.shovelCount:setPosition(shovelImageXPos + 6, shovelImageYPos + 25)
 	stage:addChild(self.shovelImage)
 	stage:addChild(self.shovelCount)
-	self.x = self.initX
-	self.y = self.initY
-	self.grid = grid
-	local imageScale = WINDOW_WIDTH / grid.numRows
-	local inc = 1 / grid.numRows
-	startY = WINDOW_HEIGHT / 4
-	local playerImage = Bitmap.new(Texture.new("images/player.png"))
-	local scaleX = imageScale / playerImage:getWidth()
-	local scaleY = imageScale / playerImage:getHeight()
-	
-	playerImage:setScale(scaleX, scaleY)
-	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
-	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
-	playerImage:setPosition(self.xPosStart, self.yPosStart)
-	stage:addChild(playerImage)
-	self.playerImage = playerImage
-	self.xDirection = 0
-	self.yDirection = 0
-	self.xSpeed = 0
-	self.ySpeed = 0
-	self.metalDetect = 0
 end
+
+
 
 function Player:reset()
 	self.score = 0
