@@ -105,6 +105,16 @@ function Player:setMetalDetection()
 	end
 end
 
+function Player:addDigs(numDigsToAdd)
+	self.digs = self.digs + numDigsToAdd
+	if self.digs > 0 then
+		self.shovelCount:setText(self.digs)
+	else
+		stage:removeChild(self.shovelImage)
+		stage:addChild(self.brokenShovelImage)
+	end
+end
+
 function Player:finishMove()
 	cell = self.grid.rows[self.y][self.x]
 	self.xDirection = 0

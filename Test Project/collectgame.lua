@@ -32,7 +32,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
-	self.grid:setCollectibleAt(1, 4,  collectibleMod.MetalDetectorPowerUp())
+	self.grid:setCollectibleAt(1, 4,  collectibleMod.ShovelRepairPowerUp())
 	local music = musicMod.Music.new("audio/music.mp3")
 	music:on()
 end

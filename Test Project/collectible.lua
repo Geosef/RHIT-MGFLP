@@ -42,7 +42,7 @@ setmetatable(ShovelRepairPowerUp, {
 
 function ShovelRepairPowerUp:_init()
 	self.image = Bitmap.new(Texture.new("images/shovelrepair.png"))
-	self.func = nil
+	self.func = function(player) player:addDigs(2) end
 end
 
 local MetalDetectorPowerUp = {}
