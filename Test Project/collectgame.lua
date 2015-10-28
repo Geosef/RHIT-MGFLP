@@ -6,6 +6,7 @@ local engineMod = require('inputengine')
 local buttonMod = require('inputbutton')
 local commandMod = require('command')
 local collectibleMod = require('collectible')
+local musicMod = require('music')
 
 local CollectGame = {}
 CollectGame.__index = CollectGame
@@ -32,6 +33,8 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.numButtons = 8
 	self:setupButtons()
 	self.grid:setCollectibleAt(1, 4,  collectibleMod.SmallMoveBoostPowerUp())
+	local music = musicMod.Music.new("audio/music.mp3")
+	music:on()
 end
 
 function CollectGame:sendMoves()
