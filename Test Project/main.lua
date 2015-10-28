@@ -10,7 +10,6 @@ setGlobals()
 local networkModule = require('networkadapter')
 require('printer')
 local gameMod = require('collectgame')
-local waitMod = require('WaitingForOpponent')
 --local tests = require('runtests')
 
 --tests.run()
@@ -21,7 +20,6 @@ JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
 
 local game = gameMod.CollectGame(10, playerIndex, netAdapter)
-local waitScreen = waitMod.WaitingForOpponent(netAdapter)
 
 function onEnterFrame(event)
     game:update()

@@ -1,8 +1,7 @@
 <project>
- <properties osx_org="GiderosMobile" mouseToTouch="1" encryptCode="0" logicalHeight="480" iosDevice="0" packageName="edu.rosehulman.runcoderrun" windowWidth="0" android_template="0" architecture="1" encryptAssets="0" mouseTouchOrder="0" retinaDisplay="3" win_domain="giderosmobile.com" autorotation="3" osx_domain="giderosmobile.com" scaleMode="5" touchToMouse="1" logicalWidth="320" assetsOnly="0" fps="60" windowHeight="0" orientation="0" win_org="GiderosMobile">
+ <properties architecture="1" retinaDisplay="3" win_domain="giderosmobile.com" packageName="edu.rosehulman.runcoderrun" osx_org="GiderosMobile" logicalHeight="480" windowHeight="0" mouseToTouch="1" touchToMouse="1" windowWidth="0" assetsOnly="0" encryptAssets="0" autorotation="3" win_org="GiderosMobile" android_template="0" fps="60" iosDevice="0" mouseTouchOrder="0" osx_domain="giderosmobile.com" scaleMode="5" logicalWidth="320" encryptCode="0" orientation="0">
   <imageScales/>
  </properties>
- <file source="WaitingForOpponent.lua"/>
  <file source="powerups.lua"/>
  <file source="controlstatements.lua"/>
  <file source="networkadapter.lua"/>
