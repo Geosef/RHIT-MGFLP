@@ -2,6 +2,10 @@
  <properties retinaDisplay="3" iosDevice="0" mouseToTouch="1" logicalWidth="320" packageName="edu.rosehulman.runcoderrun" win_domain="giderosmobile.com" win_org="GiderosMobile" orientation="0" architecture="1" windowHeight="0" android_template="0" windowWidth="0" osx_org="GiderosMobile" mouseTouchOrder="0" fps="60" logicalHeight="480" osx_domain="giderosmobile.com" encryptAssets="0" touchToMouse="1" autorotation="3" assetsOnly="0" encryptCode="0" scaleMode="5">
   <imageScales/>
  </properties>
+ <folder name="audio">
+  <file source="music.mp3"/>
+ </folder>
+ <file source="music.lua"/>
  <file source="collectible.lua"/>
  <file source="controlstatements.lua"/>
  <file source="networkadapter.lua"/>
