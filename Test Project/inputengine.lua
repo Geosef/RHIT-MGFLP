@@ -105,13 +105,11 @@ function InputEngine:clearBuffer()
 	self.script.list:backwardsIterate(function(command) 
 		local eventNum = command.objIndex
 		self.script:remove(command)
-		stage:removeChild(self.eventSprites[eventNum])
-		table.remove(self.eventSprites, eventNum)
+		stage:removeChild(command.sprite)
 		end)
 end
 
 function InputEngine:runEvents()
-	
 	self.script:execute()
 end
 
