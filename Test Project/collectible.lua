@@ -58,7 +58,7 @@ setmetatable(MetalDetectorPowerUp, {
 
 function MetalDetectorPowerUp:_init()
 	self.image = Bitmap.new(Texture.new("images/metaldetector.png"))
-	self.func = nil
+	self.func = function(player) player:setMetalDetection() end
 end
 
 local SmallMoveBoostPowerUp = {}

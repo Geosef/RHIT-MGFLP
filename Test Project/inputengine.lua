@@ -86,19 +86,11 @@ function InputEngine:removeEvent(eventObj)
 	stage:removeChild(eventSprite)
 	
 	--table.remove(self.eventSprites, eventNum)
-	local count = eventNum
-	self.script.list:iterate(function(command)
-		local xPos = count * (WINDOW_WIDTH / 15)
-		local yPos = 3 * WINDOW_HEIGHT / 20
-		command.sprite:setPosition(xPos, yPos)
-		count = count + 1
-		end)
-	--[[
 	for i = eventNum, self.script:length() do
 		local xPos = i * (WINDOW_WIDTH / 15)
 		local yPos = 3 * WINDOW_HEIGHT / 20
-		self.eventSprites[i]:setPosition(xPos, yPos)
-	end]]
+		self.script.list.objs[i].sprite:setPosition(xPos, yPos)
+	end
 end
 
 function InputEngine:clearBuffer()

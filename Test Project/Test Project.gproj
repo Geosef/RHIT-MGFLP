@@ -47,6 +47,7 @@
   <file source="luaunit.lua"/>
  </folder>
  <folder name="images">
+  <file source="images/treasure1.png"/>
   <file source="images/jetpack.png"/>
   <file source="images/shoes.png"/>
   <file source="images/rollerskates.png"/>

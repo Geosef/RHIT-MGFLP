@@ -5,8 +5,6 @@ end
 
 setGlobals()
 
-
-
 local networkModule = require('networkadapter')
 require('printer')
 local gameMod = require('collectgame')

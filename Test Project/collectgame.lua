@@ -32,7 +32,7 @@ function CollectGame:_init(numRows, playerIndex, netAdapter)
 	self.engine = engineMod.InputEngine(self)
 	self.numButtons = 8
 	self:setupButtons()
-	self.grid:setCollectibleAt(1, 4,  collectibleMod.SmallMoveBoostPowerUp())
+	self.grid:setCollectibleAt(1, 4,  collectibleMod.MetalDetectorPowerUp())
 	local music = musicMod.Music.new("audio/music.mp3")
 	music:on()
 end
@@ -108,6 +108,8 @@ function CollectGame:reset()
 	self.player1.action = true
 	self.player2.action = true
 	self.leprechaun.action = true
+	self.player1:endTurn()
+	self.player2:endTurn()
 	--self.player2:reset()
 	--self.engine:runEvents()
 end

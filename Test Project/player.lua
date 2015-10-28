@@ -78,7 +78,7 @@ function Player:_init(grid, player1, maxMoves)
 	self.yDirection = 0
 	self.xSpeed = 0
 	self.ySpeed = 0
-	
+	self.metalDetect = 0
 end
 
 function Player:reset()
@@ -86,6 +86,23 @@ function Player:reset()
 	self.scoreField:setText("Score: " .. self.score)
 	self.playerImage:setPosition(self.x, self.y)
 	self.action = true
+	self.metalDetect = 0
+	self.collectible = nil
+end
+
+function Player:endTurn()
+	if self.metalDetect > 0 then
+		self.metalDetect = self.metalDetect - 1
+		if self.metalDetect == 0 then
+			print("No more battery for metal detector!")
+		end
+	end	
+end
+
+function Player:setMetalDetection()
+	if self.metalDetect == 0 then
+		self.metalDetect = 3
+	end
 end
 
 function Player:finishMove()
@@ -118,7 +135,12 @@ function Player:finishMove()
 		cell.gem = false
 		stage:removeChild(cell.gemImage)
 	end
-	
+	if cell.collectible ~= nil then
+		print(self.name .. " picked up a powerup!")
+		collectible = cell:removeCollectible()
+		collectible:doFunc(self)
+	end
+	self.grid:metalDetect(cell)
 end
 
 function Player:moveRight(param)
