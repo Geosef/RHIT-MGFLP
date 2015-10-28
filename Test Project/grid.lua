@@ -17,6 +17,24 @@ function Cell:_init(x, y, sprite, numRows)
 	self.sprite = sprite
 	self.numRows = numRows
 	self.hiddenTreasure = false
+	self.collectible = nil
+end
+
+function Cell:setCollectible(collectible)
+	if self.collectible ~= nil then
+		return false
+	end
+	self.collectible = collectible
+	local imageScale = WINDOW_WIDTH / self.numRows
+	scaleX = imageScale / self.collectible.image:getWidth() / 1.25
+	scaleY = imageScale / self.collectible.image:getHeight()/ 1.25
+	
+	self.collectible.image:setScale(scaleX, scaleY)
+	xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 5
+	yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+	self.collectible.image:setPosition(xPos, yPos)
+	stage:addChild(self.collectible.image)
+	return true
 end
 
 function Cell:setGold()
@@ -156,6 +174,11 @@ function Grid:setHiddenTreasureAt(treasureLocations)
 		cell = self.rows[value[2]][value[1]]
 		cell:toggleHiddenTreasure()
 	end
+end
+
+function Grid:setCollectibleAt(x, y, collectible)
+	cell = self.rows[y][x]
+	cell:setCollectible(collectible)
 end
 
 function Grid:reset()
