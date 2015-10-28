@@ -50,7 +50,7 @@ function InputEngine:addEvent(button, param)
 	local scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 20
 	
 	local eventSprite = Button.new(buttonImage, buttonImage, function()
-	self:removeEvent(eventObj)	end)
+	self:removeEvent(eventObj, false)	end)
 	eventSprite:setScale(scaleX, scaleY)
 	local xPos = eventNum * (WINDOW_WIDTH / 15)
 	local yPos = 3 * WINDOW_HEIGHT / 20
@@ -70,16 +70,16 @@ function InputEngine:addEvent(button, param)
 	--table.insert(self.eventSprites, eventSprite)
 end
 
-function InputEngine:removeEvent(eventObj)
+function InputEngine:removeEvent(eventObj, submit)
 	local eventNum = eventObj.objIndex
 	local eventSprite = eventObj.sprite
 	if eventObj.name == "LoopStart" then
-		if eventObj.iterations > 1 then
+		if eventObj.iterations == 1 or submit then
+			stage:removeChild(eventSprite.loopCount)
+		else
 			eventObj.iterations = eventObj.iterations - 1
 			eventSprite.loopCount:setText(eventObj.iterations)
 			return
-		else
-			stage:removeChild(eventSprite.loopCount)
 		end
 	end
 	self.script:remove(eventObj)
@@ -89,15 +89,17 @@ function InputEngine:removeEvent(eventObj)
 	for i = eventNum, self.script:length() do
 		local xPos = i * (WINDOW_WIDTH / 15)
 		local yPos = 3 * WINDOW_HEIGHT / 20
-		self.script.list.objs[i].sprite:setPosition(xPos, yPos)
+		eventObj = self.script.list.objs[i]
+		eventObj.sprite:setPosition(xPos, yPos)
+		if eventObj.name == "LoopStart" then
+			eventObj.sprite.loopCount:setX(xPos + 5)
+		end
 	end
 end
 
 function InputEngine:clearBuffer()
 	self.script.list:backwardsIterate(function(command) 
-		local eventNum = command.objIndex
-		self.script:remove(command)
-		stage:removeChild(command.sprite)
+		self:removeEvent(command, true)
 		end)
 end
 

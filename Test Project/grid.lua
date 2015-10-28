@@ -361,7 +361,6 @@ function Grid:metalDetect(cell)
 		end
 	end
 	self.treasureCells = treasureCells
-	print_r(treasureCells)
 	self.treasureCells:iterate(function(cell) cell:addImage("images/treasure1.png") end)
 end
 
