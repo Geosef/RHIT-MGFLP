@@ -38,7 +38,7 @@ function NetworkAdapter:sendMoves(game, packet)
 	if not self.on then
 		local events = defaultMoves
 		events.p1 = packet.events
-		game:runEvents(events)
+		game.runEvents(events)
 		return
 	end
 	
@@ -51,7 +51,7 @@ function NetworkAdapter:sendMoves(game, packet)
 		print('MOVE VALID')
 		line, err, rBuf = self.sock:receive("*l", rBuf)
 		inPacket = JSON:decode(line)
-		game:runEvents(inPacket)
+		game.runEvents(inPacket)
 	else
 		print('MOVE INVALID')
 	end

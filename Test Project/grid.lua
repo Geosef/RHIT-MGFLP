@@ -1,4 +1,5 @@
 local M = {}
+local listMod = require('list')
 
 local Cell = {}
 Cell.__index = Cell
@@ -17,6 +18,59 @@ function Cell:_init(x, y, sprite, numRows)
 	self.sprite = sprite
 	self.numRows = numRows
 	self.hiddenTreasure = false
+	self.collectible = nil
+	self.image = nil
+end
+
+function Cell:addImage(imagePath)
+	if self.image == nil then
+		local image = Bitmap.new(Texture.new(imagePath))
+		scaleX = imageScale / image:getWidth() / 1.33
+		scaleY = imageScale / image:getHeight() / 1.33
+		
+		image:setScale(scaleX, scaleY)
+		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 4
+		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+		image:setPosition(xPos, yPos)
+		self.image = image
+		stage:addChild(self.image)
+	end
+	return
+end
+
+function Cell:removeImage()
+	if self.image == nil then
+		return
+	end
+	stage:removeChild(self.image)
+	self.image = nil
+end
+
+function Cell:setCollectible(collectible)
+	if self.collectible ~= nil then
+		return false
+	end
+	self.collectible = collectible
+	local imageScale = WINDOW_WIDTH / self.numRows
+	scaleX = imageScale / self.collectible.image:getWidth() / 1.25
+	scaleY = imageScale / self.collectible.image:getHeight()/ 1.25
+	
+	self.collectible.image:setScale(scaleX, scaleY)
+	xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 5
+	yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+	self.collectible.image:setPosition(xPos, yPos)
+	stage:addChild(self.collectible.image)
+	return true
+end
+
+function Cell:removeCollectible()
+	if self.collectible == nil then
+		return nil
+	end
+	stage:removeChild(self.collectible.image)
+	temp = self.collectible
+	self.collectible = nil
+	return temp
 end
 
 function Cell:setGold()
@@ -101,7 +155,11 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(numRows, imagePath, goldLocations, gemLocations, treasureLocations)
+function Grid:_init(imagePath, gameType, gameState, testing)
+	numRows = gameState.gridSize
+	goldLocations = gameState.goldLocations
+	gemLocations = gameState.gemLocations
+	treasureLocations = gameState.treasureLocations
 	print("Grid Size" .. imagePath)
 	imageScale = WINDOW_WIDTH / numRows
 	inc = 1 / numRows
@@ -156,6 +214,166 @@ function Grid:setHiddenTreasureAt(treasureLocations)
 		cell = self.rows[value[2]][value[1]]
 		cell:toggleHiddenTreasure()
 	end
+end
+
+function Grid:setCollectibleAt(x, y, collectible)
+	cell = self.rows[y][x]
+	cell:setCollectible(collectible)
+	self.treasureCells = nil
+end
+
+function Grid:metalDetect(cell)
+	self:resetHiddenTreasureImages()
+	local treasureCells = listMod.List(nil)
+	if cell.hiddenTreasure then
+		treasureCells:append(cell)
+	end
+	if cell.x == 1 then
+		if cell.y == 1 then
+			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+		elseif cell.y == 10 then
+			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+			end
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+		else
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+		end
+	elseif cell.x == 10 then
+		if cell.y == 1 then
+			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+		elseif cell.y == 10 then
+			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+			end
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+		else
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+			end
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+		end
+	else
+		if cell.y == 1 then
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+		elseif cell.y == 10 then
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+			end
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+		else
+			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x])
+			end
+			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+			end
+			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+			end
+			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x])
+			end
+			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+			end
+			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y][cell.x + 1])
+			end
+			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+			end
+		end
+	end
+	self.treasureCells = treasureCells
+	self.treasureCells:iterate(function(cell) cell:addImage("images/treasure1.png") end)
+end
+
+function Grid:resetHiddenTreasureImages()
+	if self.treasureCells == nil then
+		return
+	end
+	self.treasureCells:iterate(function(cell) cell:removeImage() end)
+	self.treasureCells = nil
 end
 
 function Grid:reset()

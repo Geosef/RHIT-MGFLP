@@ -5,11 +5,9 @@ end
 
 setGlobals()
 
-
-
 local networkModule = require('networkadapter')
 require('printer')
-local gameMod = require('collectgame')
+local gameMod = require('game')
 --local tests = require('runtests')
 
 --tests.run()
@@ -19,17 +17,17 @@ local multiplayerMode = false
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
 
-local game = gameMod.CollectGame(10, playerIndex, netAdapter)
+local collectGame = gameMod.CollectGame(netAdapter)
 
 function onEnterFrame(event)
-    game:update()
+    collectGame.update()
 end
 
 stage:addEventListener(Event.ENTER_FRAME, onEnterFrame)
 
 function routePacket(jsonObject)
 	if jsonObject.type == "events" then
-		game:runEvents(jsonObject)
+		collectGame.runEvents(jsonObject)
 	else
 		print("unsupported packet from server")
 		print_r(jsonObject)
