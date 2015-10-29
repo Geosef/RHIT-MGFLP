@@ -1,73 +1,101 @@
 __author__ = 'kochelmj'
 
 import json, threading
-import pprint
+from pprint import pprint
 
 receivedbools = []
 receivedevents = []
 lock = threading.Lock()
 
-clientthreads = []
+games = []
 
 
 class ClientThread(threading.Thread):
 
+    def __init__(self, sock, gameFactory):
+        super(ClientThread, self).__init__(target=self.handle)
+        self.sock = sock
+        self.gameFactory = gameFactory
+        self.loggedIn = False
+        self.userInfo = {}
+
+        self.methodRoutes = \
+        {
+            'Login': self.login,
+            'Create Game': self.createGame,
+            'Join Game': self.joinGame,
+            'Submit Move': self.submitMove,
+            'Update Locations': self.updateLocations,
+            'End Game': self.endGame,
+            'Quit': self.quit
+        }
+
     def handle(self):
-        global receivedbool
-        global receivedevents
-        jsonstring = self.sock.recv(1024)
-        data = json.loads(jsonstring)
-        pprint.pprint(data)
-        initinfo = {'playerIndex': self.index}
-        self.sendData(initinfo)
         while True:
             try:
                 jsonstring = self.sock.recv(1024)
-            except:
-                self.sock = None
-            data = json.loads(jsonstring)
-            pprint.pprint(data)
-            tosend = {'valid': True}
-            self.sock.send(json.dumps(tosend) + "\n")
-            events = data.get('events')
-            lock.acquire()
-            receivedbools[self.index // 2][self.index % 2] = True
-            receivedevents[self.index // 2][self.index % 2].extend(events)
-            if receivedbools[self.index // 2][0] and receivedbools[self.index // 2][1]:
-                print 'received both'
+                data = json.loads(jsonstring)
+            except Exception as e:
+                print(str(e))
+                break
 
-                eventstosend = {'p1': receivedevents[self.index // 2][0],
-                      'p2': receivedevents[self.index // 2][1]}
+            methodType = data.get('type', None)
+            if not methodType:
+                print('Invalid Client Data')
+                continue
 
-                index = self.index
-                if index % 2 == 1:
-                    index = index - 1
-
-                clientthreads[index].sendData(eventstosend)
-                clientthreads[index + 1].sendData(eventstosend)
-
-                receivedbools[self.index // 2] = [False, False]
-                receivedevents[self.index // 2] = [[], []]
-
+            method = self.methodRoutes.get(methodType, None)
+            if method:
+                if self.loggedIn:
+                    method(data)
+                else:
+                    if methodType == 'Login':
+                        method(data)
             else:
-                print 'not received yet'
-                print str(receivedbools[self.index // 2])
-                pass
+                print('Invalid Client Data')
+                continue
 
-
-            lock.release()
 
     def sendData(self, data):
-        if self.sock is not None:
+        try:
             self.sock.send(json.dumps(data) + "\n")
+        except Exception as e:
+            print(str(e))
+            #TODO: handle json error
+            #TODO: if socket is gone, clean up thread and game
 
 
-    def __init__(self, sock, index):
-        super(ClientThread, self).__init__(target=self.handle)
-        self.sock = sock
-        self.index = index
-        print(self.index)
-        if index %2 == 0:
-            receivedbools.append([False, False])
-            receivedevents.append([[], []])
-        clientthreads.append(self)
+    def quit(self, packet):
+        self.game.quit(self)
+        pprint(packet)
+
+    def endGame(self, packet):
+        self.game.endGame(self, packet)
+        pprint(packet)
+
+    def submitMove(self, packet):
+        moves = packet.get('events')
+        self.game.submitMove(moves)
+        pprint(packet)
+
+    def updateLocations(self, packet):
+        locations = packet.get('locations')
+        self.game.updateLocations(locations)
+        pprint(packet)
+
+    def joinGame(self, packet):
+        gameID = packet.get('gameID')
+        self.game = self.gameFactory.joinGame(self, gameID)
+        pprint(packet)
+
+    def createGame(self, packet):
+        pprint(packet)
+        self.game = self.gameFactory.createGame(self)
+        data = \
+        {
+            'type': 'Create Game',
+	        'success': True,
+	        'gameID': self.game.gameID
+        }
+        self.sendData(data)
+

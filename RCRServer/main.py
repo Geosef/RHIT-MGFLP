@@ -5,6 +5,9 @@ import socket, threading
 import pprint
 import json
 import clienthandler
+import gamefactory
+
+gameFactory = gamefactory.GameFactory()
 
 # host = 'localhost'
 # host = '192.168.254.21'
@@ -20,13 +23,12 @@ print 'Host: ' + host
 print 'Port: ' + str(port)
 
 
-
 index = 0
 while True:
     tcpsock.listen(4)
     print 'Listening'
     (clientsock, (ip, port)) = tcpsock.accept()
     print 'client {0} connected'.format(str(index))
-    t = clienthandler.ClientThread(clientsock, index)
+    t = clienthandler.ClientThread(clientsock, gameFactory)
     t.start()
     index += 1
