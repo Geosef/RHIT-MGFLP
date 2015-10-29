@@ -35,7 +35,7 @@ setmetatable(MoveRightCommand, {
   end,
 })
 function MoveRightCommand:_init(player, param, objIndex)
-	self.func = function(x) player:moveRight(x) end
+	self.func = function(x) player.moveRight(x) end
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'RightMove'
@@ -53,7 +53,7 @@ setmetatable(MoveUpCommand, {
   end,
 })
 function MoveUpCommand:_init(player, param, objIndex)
-	self.func = function(x) player:moveUp(x) end
+	self.func = function(x) player.moveUp(x) end
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'UpMove'
@@ -71,7 +71,7 @@ setmetatable(MoveDownCommand, {
   end,
 })
 function MoveDownCommand:_init(player, param, objIndex)
-	self.func = function(x) player:moveDown(x) end
+	self.func = function(x) player.moveDown(x) end
 	self.param = param
 	self.objIndex = objIndex
 	self.name = 'DownMove'

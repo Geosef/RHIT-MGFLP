@@ -42,7 +42,7 @@ setmetatable(ShovelRepairPowerUp, {
 
 function ShovelRepairPowerUp:_init()
 	self.image = Bitmap.new(Texture.new("images/shovelrepair.png"))
-	self.func = function(player) player:addDigs(2) end
+	self.func = function(player) player.addDigs(2) end
 end
 
 local MetalDetectorPowerUp = {}
@@ -58,7 +58,7 @@ setmetatable(MetalDetectorPowerUp, {
 
 function MetalDetectorPowerUp:_init()
 	self.image = Bitmap.new(Texture.new("images/metaldetector.png"))
-	self.func = function(player) player:setMetalDetection() end
+	self.func = function(player) player.setMetalDetection() end
 end
 
 local SmallMoveBoostPowerUp = {}

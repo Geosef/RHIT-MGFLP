@@ -14,7 +14,7 @@ setmetatable(DigCommand, {
   end,
 })
 function DigCommand:_init(player, objIndex)
-	self.func = function(x) player:dig() end
+	self.func = function(x) player.dig() end
 	self.param = nil
 	self.objIndex = objIndex
 	self.name = 'Dig'

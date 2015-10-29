@@ -105,8 +105,8 @@ function CollectGame(netAdapter)
 	
 	local setupPlayers = function(gameState, testing)
 		self.maxPlayerMoves = 8
-		self.player1 = playerMod.Player(self.grid, true, self.maxPlayerMoves, testing)
-		self.player2 = playerMod.Player(self.grid, false, self.maxPlayerMoves, testing)
+		self.player1 = playerMod.CollectPlayer(self.grid, 1, self.maxPlayerMoves, testing)
+		self.player2 = playerMod.CollectPlayer(self.grid, 2, self.maxPlayerMoves, testing)
 		self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.lepStart, testing)
 	end
 	
@@ -180,25 +180,25 @@ function CollectGame(netAdapter)
 	end
 	
 	local resetTurn = function()
-		self.player1.action = true
-		self.player2.action = true
-		self.leprechaun.action = true
-		self.player1:endTurn()
-		self.player2:endTurn()
+		self.player1.setAction(true)
+		self.player2.setAction(true)
+		self.leprechaun.setAction(true)
+		self.player1.endTurn()
+		self.player2.endTurn()
 	end
 	
 	local update = function()
-		self.player1:update()
-		self.player2:update()
-		self.leprechaun:update()
+		self.player1.update()
+		self.player2.update()
+		self.leprechaun.update()
 	end
 	
 	local exit = function()
 		stage:removeChild(self.background)
 		self.grid:destroy()
-		self.player1:destroy()
-		self.player2:destroy()
-		self.leprechaun:destroy()
+		self.player1.destroy()
+		self.player2.destroy()
+		self.leprechaun.destroy()
 	end
 	
 	self.runEvents = runEvents
