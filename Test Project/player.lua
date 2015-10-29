@@ -12,7 +12,6 @@ setmetatable(Character, {
 })
 
 function Character:__init()
-
 end
 
 function Character:moveRight(param)
@@ -118,7 +117,7 @@ function Player:_init(grid, playerNum, imagePath, maxMoves, testing)
 	self:initPlayerAttributes(grid, playerNum, maxMoves)
 	self:initMoveBuffer()
 	self:enterGrid(grid, imagePath, testing)
-	self:setScoreField(playerNum)
+	self:setScoreField(playerNum, testing)
 end
 
 function Player:initPlayerAttributes(grid, playerNum, maxMoves)
@@ -190,7 +189,7 @@ end
 function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 	local self = Player(grid, isPlayer1, "images/player.png", maxMoves, testing)
 	
-	local setupPlayerGameRules = function()
+	local setupPlayerGameRules = function(testing)
 		--Game specific
 		self.metalDetect = 0
 		
@@ -225,7 +224,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		stage:addChild(self.shovelCount)
 	end
 	
-	setupPlayerGameRules()
+	setupPlayerGameRules(testing)
 	
 	local finishMove = function()
 		local cell = self.grid.rows[self.y][self.x]
@@ -234,26 +233,37 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		self.xSpeed = 0
 		self.ySpeed = 0
 		if self.digging then
-			stage:removeChild(self.digImage)
+			if not testing then
+				stage:removeChild(self.digImage)
+			end
 			self.digging = false
 		end
 		if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
 			self.digs = 3
-			self.shovelCount:setText(self.digs)
+			if not testing then 
+				self.shovelCount:setText(self.digs)
+			end
+			
 		end
 		if cell.gold then
 			print(self.name .. " picked up gold!")
 			self.score = self.score + 1
-			self.scoreField:setText("Score: " .. self.score)
 			cell.gold = false
-			stage:removeChild(cell.goldImage)
+			if not testing then
+				self.scoreField:setText("Score: " .. self.score)
+				stage:removeChild(cell.goldImage)
+			end
+			
 		end
 		if cell.gem then
 			print (self.name .. " picked up a gem!")
 			self.score = self.score + 4
-			self.scoreField:setText("Score: " .. self.score)
 			cell.gem = false
-			stage:removeChild(cell.gemImage)
+			if not testing then
+				self.scoreField:setText("Score: " .. self.score)
+				stage:removeChild(cell.gemImage)
+			end
+			
 		end
 		if cell.collectible ~= nil then
 			print(self.name .. " picked up a powerup!")
