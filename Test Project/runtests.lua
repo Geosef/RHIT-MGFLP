@@ -3,12 +3,21 @@ M = {}
 luaUnit = require('test/luaunit')
 local playerMod = require('player')
 local gridMod = require('grid')
+local netMod = require('networkadapter')
+
+WINDOW_WIDTH = 320
+WINDOW_HEIGHT = 480
+
+
 
 
 TestPlayer = {} --test class
-	--local grid = gridMod.Grid(4, "images/dirtcell.png")
-	--local grid = {}
-	--grid.numRows = 4
+	local net = netMod.NetworkAdapter(false)
+	local col = "Collect"
+	local gameData = net.getGameState(col)
+	local grid = gridMod.Grid(gameData.gridSize, "images/dirtcell.png", gameData.goldLocations, gameData.gemLocations, gameData.treasureLocations)
+	print(gameData['goldLocations'])
+	
 	
 	function TestPlayer:testMoveLeft()
 		local player = playerMod.Player(grid, true)
@@ -30,8 +39,8 @@ TestPlayer = {} --test class
 		player:destroy()
 		
 		player = playerMod.Player(grid, false)
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -39,8 +48,8 @@ TestPlayer = {} --test class
 		
 		player:moveLeft()
 		
-		luaUnit.assertEquals(player.x, 3)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 9)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 2)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, -1)
@@ -68,8 +77,8 @@ TestPlayer = {} --test class
 		player:destroy()
 		
 		player = playerMod.Player(grid, false)
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -77,8 +86,8 @@ TestPlayer = {} --test class
 		
 		player:moveRight()
 		
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -106,8 +115,8 @@ TestPlayer = {} --test class
 		player:destroy()
 		
 		player = playerMod.Player(grid, false)
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -115,8 +124,8 @@ TestPlayer = {} --test class
 		
 		player:moveUp()
 		
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 3)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 9)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 2)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -144,8 +153,8 @@ TestPlayer = {} --test class
 		player:destroy()
 		
 		player = playerMod.Player(grid, false)
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -153,8 +162,8 @@ TestPlayer = {} --test class
 		
 		player:moveDown()
 		
-		luaUnit.assertEquals(player.x, 4)
-		luaUnit.assertEquals(player.y, 4)
+		luaUnit.assertEquals(player.x, 10)
+		luaUnit.assertEquals(player.y, 10)
 		luaUnit.assertEquals(player.xSpeed, 0)
 		luaUnit.assertEquals(player.ySpeed, 0)
 		luaUnit.assertEquals(player.xDirection, 0)
@@ -174,7 +183,7 @@ TestPlayer = {} --test class
 		
 		cell.hiddenTreasure = true
 		player:dig()
-		luaUnit.assertEquals(player.score, 5)
+		luaUnit.assertEquals(player.score, 8)
 		player:destroy()
 		grid:destroy()
 	end
@@ -182,5 +191,8 @@ TestPlayer = {} --test class
 function M.run()
 	luaUnit.LuaUnit.run()
 end
+
+M.run()
+--TestPlayer:testMoveLeft()
 
 return M
