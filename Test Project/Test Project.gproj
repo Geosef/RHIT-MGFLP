@@ -1,7 +1,9 @@
 <project>
- <properties retinaDisplay="3" iosDevice="0" mouseToTouch="1" logicalWidth="320" packageName="edu.rosehulman.runcoderrun" win_domain="giderosmobile.com" win_org="GiderosMobile" orientation="0" architecture="1" windowHeight="0" android_template="0" windowWidth="0" osx_org="GiderosMobile" mouseTouchOrder="0" fps="60" logicalHeight="480" osx_domain="giderosmobile.com" encryptAssets="0" touchToMouse="1" autorotation="3" assetsOnly="0" encryptCode="0" scaleMode="5">
+ <properties mouseTouchOrder="0" win_org="GiderosMobile" osx_org="GiderosMobile" windowWidth="0" orientation="0" architecture="1" windowHeight="0" touchToMouse="1" osx_domain="giderosmobile.com" win_domain="giderosmobile.com" mouseToTouch="1" retinaDisplay="3" fps="60" packageName="edu.rosehulman.runcoderrun" encryptAssets="0" iosDevice="0" logicalWidth="320" encryptCode="0" assetsOnly="0" logicalHeight="480" autorotation="3" android_template="0" scaleMode="5">
   <imageScales/>
  </properties>
+ <file source="runtests.lua"/>
+ <file source="mockobjects.lua"/>
  <folder name="audio">
   <file source="music.mp3"/>
  </folder>
@@ -52,30 +54,29 @@
   <file source="images/shoes.png"/>
   <file source="images/rollerskates.png"/>
   <file source="images/shovelrepair.png"/>
-  <file source="metaldetector.png"/>
-  <file source="player.png"/>
-  <file source="loop-start.png"/>
-  <file source="loop-end.png"/>
-  <file source="shovel.png"/>
-  <file source="leprechaun.png"/>
-  <file source="grassbackground.png"/>
-  <file source="gem.png"/>
-  <file source="dirtcell.png"/>
-  <file source="diggingActionCell.png"/>
-  <file source="brokenshovel.png"/>
-  <file source="arrow-right.png"/>
-  <file source="arrow-down.png"/>
-  <file source="arrow-left.png"/>
-  <file source="arrow-up.png"/>
-  <file source="ball.png"/>
-  <file source="field.png"/>
-  <file source="square.png"/>
-  <file source="gold.png"/>
-  <file source="go.png"/>
+  <file source="images/metaldetector.png"/>
+  <file source="images/player.png"/>
+  <file source="images/loop-start.png"/>
+  <file source="images/loop-end.png"/>
+  <file source="images/shovel.png"/>
+  <file source="images/leprechaun.png"/>
+  <file source="images/grassbackground.png"/>
+  <file source="images/gem.png"/>
+  <file source="images/dirtcell.png"/>
+  <file source="images/diggingActionCell.png"/>
+  <file source="images/brokenshovel.png"/>
+  <file source="images/arrow-right.png"/>
+  <file source="images/arrow-down.png"/>
+  <file source="images/arrow-left.png"/>
+  <file source="images/arrow-up.png"/>
+  <file source="images/ball.png"/>
+  <file source="images/field.png"/>
+  <file source="images/square.png"/>
+  <file source="images/gold.png"/>
+  <file source="images/go.png"/>
  </folder>
  <file source="player.lua"/>
  <file source="grid.lua"/>
  <file source="inputobj.lua"/>
  <file source="main.lua"/>
- <file source="runtests.lua"/>
 </project>

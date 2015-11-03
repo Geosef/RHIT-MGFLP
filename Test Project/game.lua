@@ -56,7 +56,7 @@ function Game:setSound()
 end
 
 function Game:sendMoves()
-	local packet = {type="events"}
+	local packet = {type="Submit Move"}
 	if self.engine == nil then
 		print("Engine hasn't been set!")
 		return
@@ -91,8 +91,7 @@ end
 
 function CollectGame(netAdapter)
 	local self = Game(netAdapter, "images/grassbackground.png", false)
-	self.gameType = "Collect"
-	local gameState = self.netAdapter:getGameState(self.gameType)
+	
 	local setupGrid = function(imagePath, gameState, testing)
 		if testing then
 			print("testing")
@@ -149,14 +148,10 @@ function CollectGame(netAdapter)
 		button:setPosition(xPos, yPos)
 		stage:addChild(button)
 	end
-	self.setupPanel = setupPanel
-	setupGrid("images/dirtcell.png", gameState, false)
-	setupPlayers(gameState, false)
-	self:setupEngine(8, false)
-	setSound(false)
+	
 	
 	local runEvents = function(events)
-		print_r(events)
+		--print_r(events)
 		if events.p1 == nil or events.p2 == nil then
 			print("unsupported event format")
 			return
@@ -187,10 +182,36 @@ function CollectGame(netAdapter)
 		self.player2.endTurn()
 	end
 	
+	local updateLocations = function()
+		self.netAdapter:updateMoves(self.player1, self.player2, self.leprechaun)
+	end
+	
+	local finished = {false, false, false}
 	local update = function()
+		
+		local p1ActionBefore = self.player1.getAction()
 		self.player1.update()
+		local p1ActionAfter = self.player1.getAction()
+		if p1ActionBefore and not p1ActionAfter then
+			finished[0] = true
+		end
+		local p2ActionBefore = self.player2.getAction()
 		self.player2.update()
+		local p2ActionAfter = self.player2.getAction()
+		if p1ActionBefore and not p1ActionAfter then
+			finished[1] = true
+		end
+		local leprechaunActionBefore = self.leprechaun.getAction()
 		self.leprechaun.update()
+		local leprechaunActionAfter = self.leprechaun.getAction()
+		if p1ActionBefore and not p1ActionAfter then
+			finished[2] = true
+		end
+		if finished[0] and finished[1] and finished[2] then
+			--if player one
+			finished = {false, false, false}
+			self.updateLocations()
+		end
 	end
 	
 	local exit = function()
@@ -201,13 +222,35 @@ function CollectGame(netAdapter)
 		self.leprechaun.destroy()
 	end
 	
+	local show = function()
+		self.grid:show()
+		self.player1.show()
+		self.player2.show()
+		self.leprechaun.show()
+	end
+	
+	local updateLocations = function()
+	
+	end
+	
+	self.gameType = "Collect"
+	local gameState = self.netAdapter:getGameState(self.gameType)
+	
+	self.setupPanel = setupPanel
+	setupGrid("images/dirtcell.png", gameState, false)
+	setupPlayers(gameState, false)
+	self:setupEngine(8, false)
+	setSound(false)
+	
+	self.updateLocations = updateLocations
 	self.runEvents = runEvents
 	self.resetTurn = resetTurn
 	
 	return {
 		runEvents = runEvents,
 		update = update,
-		exit = exit
+		exit = exit,
+		show = show
 	}
 	
 end

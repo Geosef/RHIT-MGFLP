@@ -422,6 +422,34 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		return self.action
 	end
 	
+	local getX = function()
+		return self.x
+	end
+	
+	local getY = function()
+		return self.y
+	end
+	
+	local getXSpeed = function()
+		return self.xSpeed
+	end
+	
+	local getYSpeed = function()
+		return self.ySpeed
+	end
+	
+	local getXDirection = function()
+		return self.xDirection
+	end
+	
+	local getYDirection = function()
+		return self.yDirection
+	end
+	
+	local getScore = function()
+		return self.score
+	end
+	
 	self.finishMove = finishMove
 	self.setMetalDetection = setMetalDetection
 	self.addDigs = addDigs
@@ -437,7 +465,15 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		update = update,
 		destroy = destroy,
 		setAction = setAction,
-		getAction = getAction
+		getAction = getAction,
+		getX = getX,
+		getY = getY,
+		getXSpeed = getXSpeed,
+		getYSpeed = getYSpeed,
+		getXDirection = getXDirection,
+		getYDirection = getYDirection,
+		getScore = getScore
+		
 	}
 end
 
