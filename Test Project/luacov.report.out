@@ -1,0 +1,3553 @@
+
+==============================================================================
+.\grid.lua
+==============================================================================
+   50	local M = {}
+   17	local listMod = require('list')
+     	
+   50	local Cell = {}
+   17	Cell.__index = Cell
+     	
+   34	setmetatable(Cell, {
+ 1120	  __call = function (cls, ...)
+ 2420	    local self = setmetatable({}, cls)
+ 2420	    self:_init(...)
+ 1333	    return self
+     	  end,
+     	})
+     	
+ 1137	function Cell:_init(x, y, sprite, numRows)
+ 2420		self.x = x
+ 2420		self.y = y
+ 2420		self.sprite = sprite
+ 2420		self.numRows = numRows
+ 2453		self.hiddenTreasure = false
+ 1300		self.collectible = nil
+ 1333		self.image = nil
+     	end
+     	
+   18	function Cell:addImage(imagePath)
+****0		if self.image == nil then
+****0			local image = Bitmap.new(Texture.new(imagePath))
+****0			scaleX = imageScale / image:getWidth() / 1.33
+****0			scaleY = imageScale / image:getHeight() / 1.33
+     			
+****0			image:setScale(scaleX, scaleY)
+****0			xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 4
+****0			yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+  139			image:setPosition(xPos, yPos)
+****0			self.image = image
+****0			stage:addChild(self.image)
+     		end
+****0		return
+     	end
+     	
+   50	function Cell:removeImage()
+   60		if self.image == nil then
+   60			return
+     		end
+****0		stage:removeChild(self.image)
+****0		self.image = nil
+     	end
+     	
+   17	function Cell:setCollectible(collectible)
+****0		if self.collectible ~= nil then
+****0			return false
+     		end
+   45		self.collectible = collectible
+****0		local imageScale = WINDOW_WIDTH / self.numRows
+****0		scaleX = imageScale / self.collectible.image:getWidth() / 1.25
+   15		scaleY = imageScale / self.collectible.image:getHeight()/ 1.25
+     		
+   93		self.collectible.image:setScale(scaleX, scaleY)
+****0		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 5
+   33		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+   34		self.collectible.image:setPosition(xPos, yPos)
+    4		stage:addChild(self.collectible.image)
+****0		return true
+     	end
+     	
+   84	function Cell:removeCollectible()
+****0		if self.collectible == nil then
+   33			return nil
+     		end
+****0		stage:removeChild(self.collectible.image)
+****0		temp = self.collectible
+****0		self.collectible = nil
+****0		return temp
+     	end
+     	
+   50	function Cell:setGold()
+  156		local imageScale = WINDOW_WIDTH / self.numRows
+  156		if not self.gold then
+  156			local goldImage = Bitmap.new(Texture.new("images/gold.png"))
+  156			scaleX = imageScale / goldImage:getWidth() / 2
+  156			scaleY = imageScale / goldImage:getHeight() / 2
+     			
+  156			goldImage:setScale(scaleX, scaleY)
+  156			xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
+  156			yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
+  156			goldImage:setPosition(xPos, yPos)
+  189			stage:addChild(goldImage)
+  156			self.gold = true
+  189			self.goldImage = goldImage
+     		else
+  233			self.gold = false
+     		end
+     	end
+     	
+   17	function Cell:setGem()
+  118		local imageScale = WINDOW_WIDTH / self.numRows
+   52		if not self.gem then
+   84			local gemImage = Bitmap.new(Texture.new("images/gem.png"))
+   84			scaleX = imageScale / gemImage:getWidth() / 2
+   78			scaleY = imageScale / gemImage:getHeight() / 2
+     			
+   52			gemImage:setScale(scaleX, scaleY)
+   52			xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
+   85			yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
+   84			gemImage:setPosition(xPos, yPos)
+   84			stage:addChild(gemImage)
+   83			self.gem = true
+   83			self.gemImage = gemImage
+     		else
+   30			self.gem = false
+     		end
+     	end
+     	
+  182	function Cell:toggleHiddenTreasure()
+ 1314		if self.hiddenTreasure then
+    4			self.hiddenTreasure = false
+     		else
+   26			self.hiddenTreasure = true
+     		end
+     	end
+     	
+ 1137	function Cell:setPowerup(powerup)
+****0		if self.powerup ~= nil then
+****0			return
+     		end
+ 1120		self.powerupImage = powerup.Image
+****0		self.powerup = powerup
+     	end
+     	
+   46	function Cell:reset()
+   29		if self.gold then
+   11			self.gold = false
+   11			stage:removeChild(self.goldImage)
+     		end
+****0		if self.gem then
+    8			self.gem = false
+     		end
+    7		if self.hiddenTreasure then
+   18			self:toggleHiddenTreasure()
+     		end
+     	end
+     	
+   17	function Cell:destroy()
+  326		stage:removeChild(self.sprite)
+     	end
+     	
+  209	local Grid = {}
+   17	Grid.__index = Grid
+     	
+   34	setmetatable(Grid, {
+   26	  __call = function (cls, ...)
+   99	    local self = setmetatable({}, cls)
+   77	    self:_init(...)
+   80	    return self
+     	  end,
+   41	})
+     	
+   43	function Grid:_init(imagePath, gameType, gameState, testing)
+   69		numRows = gameState.gridSize
+   47		goldLocations = gameState.goldLocations
+   54		gemLocations = gameState.gemLocations
+   17		treasureLocations = gameState.treasureLocations
+   58		print("Grid Size" .. imagePath)
+   17		imageScale = WINDOW_WIDTH / numRows
+   40		inc = 1 / numRows
+   14		startY = WINDOW_HEIGHT / 4	
+     		
+   14		self.numRows = numRows
+   21		rows = {}
+  144		for i=1, numRows do
+     			
+  131			row = {}
+ 1457			for j=1, numRows do
+ 1301				local cellImage = Bitmap.new(Texture.new(imagePath))
+ 1326				scaleX = imageScale / cellImage:getWidth()
+ 1323				scaleY = imageScale / cellImage:getHeight()
+     				
+ 1521				cellImage:setScale(scaleX, scaleY)
+ 1508				xPos = (inc *  (j-1)) * WINDOW_WIDTH
+ 1501				yPos = (inc * (i-1)) * WINDOW_WIDTH + startY
+ 1300				cellImage:setPosition(xPos, yPos)
+ 1307				stage:addChild(cellImage)
+ 1335				cellObj = Cell(j, i, cellImage, numRows)
+ 1300				table.insert(row, cellObj)			
+     			end
+  163			table.insert(rows, row)
+     		end
+   13		self.rows = rows
+   13		if goldLocations == nil or gemLocations == nil or treasureLocations == nil then
+   26			print("unsupported grid setup")
+****0			return
+     		end
+   13		self:setGoldAt(goldLocations)
+   13		self:setGemsAt(gemLocations)
+   13		self:setHiddenTreasureAt(treasureLocations)
+     	end
+     	
+   17	function Grid:setGoldAt(goldLocations)
+  169		for index,value in ipairs(goldLocations) do
+  156			cell = self.rows[value[2]][value[1]]
+  156			cell:setGold()
+     		end
+     	end
+     	
+   17	function Grid:setGemsAt(gemLocations)
+   65		for index,value in ipairs(gemLocations) do
+   52			cell = self.rows[value[2]][value[1]]
+   52			cell:setGem()
+     		end
+     	end
+     	
+   17	function Grid:setHiddenTreasureAt(treasureLocations) 
+   39		for index,value in ipairs(treasureLocations) do
+   26			cell = self.rows[value[2]][value[1]]
+   26			cell:toggleHiddenTreasure()
+     		end
+     	end
+     	
+   17	function Grid:setCollectibleAt(x, y, collectible)
+****0		cell = self.rows[y][x]
+****0		cell:setCollectible(collectible)
+****0		self.treasureCells = nil
+     	end
+     	
+   17	function Grid:metalDetect(cell)
+****0		self:resetHiddenTreasureImages()
+****0		local treasureCells = listMod.List(nil)
+****0		if cell.hiddenTreasure then
+****0			treasureCells:append(cell)
+     		end
+****0		if cell.x == 1 then
+****0			if cell.y == 1 then
+****0				if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+****0			elseif cell.y == 10 then
+****0				if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+     			else
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+     			end
+****0		elseif cell.x == 10 then
+****0			if cell.y == 1 then
+****0				if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+****0			elseif cell.y == 10 then
+****0				if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+     			else
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+     			end
+     		else
+****0			if cell.y == 1 then
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+****0				if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+****0			elseif cell.y == 10 then
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+****0				if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+     			else
+****0				if self.rows[cell.y - 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x])
+     				end
+****0				if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
+     				end
+****0				if self.rows[cell.y + 1][cell.x].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x])
+     				end
+****0				if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
+     				end
+****0				if self.rows[cell.y][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y][cell.x + 1])
+     				end
+****0				if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
+****0					treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
+     				end
+     			end
+     		end
+****0		self.treasureCells = treasureCells
+****0		self.treasureCells:iterate(function(cell) cell:addImage("images/treasure1.png") end)
+     	end
+     	
+   17	function Grid:resetHiddenTreasureImages()
+****0		if self.treasureCells == nil then
+****0			return
+     		end
+****0		self.treasureCells:iterate(function(cell) cell:removeImage() end)
+****0		self.treasureCells = nil
+     	end
+     	
+   17	function Grid:reset()
+****0		for i = 1,self.numRows do
+****0			row = self.rows[i]
+****0			for j = 1,self.numRows do
+****0				cell = row[j]
+****0				cell:reset()
+     			end
+     		end
+     	end
+     	
+   17	function Grid:destroy()
+   33		for i = 1,self.numRows do
+   30			row = self.rows[i]
+  330			for j = 1,self.numRows do
+  300				cell = row[j]
+  300				cell:destroy()
+     			end
+     		end
+     	end
+     	
+     	
+   17	M.Cell = Cell
+   17	M.Grid = Grid
+     	
+     	
+   17	return M
+
+==============================================================================
+.\list.lua
+==============================================================================
+   17	local M = {}
+   17	local List = {}
+     	
+     	-- Any object that uses this list must have the objindex property defined for it. 
+     	-- For simplicity sake, simply extend the InputObject table.
+     	
+   34	setmetatable(List, {
+     	  __call = function (cls, ...)
+****0	    local self = setmetatable({}, cls)
+****0	    self:_init(...)
+****0	    return self
+     	  end,
+     	})
+     	
+   17	List.__index = List
+     	
+   34	setmetatable(List, {
+   17	  __index = InputObject,
+     	  __call = function (cls, ...)
+****0	    local self = setmetatable({}, cls)
+****0	    self:_init(...)
+****0	    return self
+     	  end,
+     	})
+     	
+   17	function List:_init(objs)
+****0		if objs == nil	then
+****0			self.objs = {}
+     		else
+****0			self.objs = objs
+     		end
+     	end
+     	
+   17	function List:iterate(func)
+****0		for index,value in ipairs(self.objs) do
+****0			func(value)
+     		end
+     	end
+     	
+   17	function List:backwardsIterate(func)
+****0		for i = # self.objs, 1, -1 do
+****0			func(self.objs[i])
+     		end
+     	end
+     	
+     	
+   17	function List:removeIndex(objIndex)
+****0		for i = objIndex + 1, # self.objs do
+****0			self.objs[i].objIndex = self.objs[i].objIndex - 1
+     		end
+****0		table.remove(self.objs, objIndex)
+     	end
+     	
+   17	function List:remove(obj)
+****0		self:removeIndex(obj.objIndex)
+     	end
+     	
+   17	function List:append(obj)
+****0		table.insert(self.objs, obj)
+****0		obj.objIndex = # self.objs
+     	end
+     	
+   17	function List:insert(obj, objIndex)
+****0		obj.objIndex = objIndex
+****0		table.insert(self.objs, objIndex, obj)
+****0		for i = objIndex + 1, # self.objs do
+****0			self.objs[i].objIndex = self.objs[i].objIndex + 1
+     		end
+     	end
+     	
+   17	function List:length()
+****0		return # self.objs
+     	end
+     	
+   17	M.List = List
+   17	return M
+
+==============================================================================
+.\mockobjects.lua
+==============================================================================
+   17	local mockstage = {}
+     	
+   17	function mockstage:addChild(elem)
+     	
+     	end
+     	
+   17	function mockstage:removeChild(elem)
+     	
+     	end
+     	
+   17	function mockstage:addEventListener(ev, func)
+     	
+     	end
+     	
+     	
+     	
+     	
+   17	local mocksprite = {}
+   17	mocksprite.__index = mocksprite
+     	
+     	
+   17	function mocksprite.new(init)
+ 3382	  local self = setmetatable({}, mocksprite)
+ 3382	  return self
+     	end
+     	
+   17	function mocksprite:setText(text)
+     	end
+   17	function mocksprite:setX(text)
+     	end
+   17	function mocksprite:setY(text)
+     	end
+   17	function mocksprite:getWidth(text)
+ 1609	return 1
+     	end
+   17	function mocksprite:getHeight(text)
+ 1603	return 1
+     	end
+   17	function mocksprite:setScale(scale)
+     	end
+   17	function mocksprite:setPosition(pos)
+     	end
+   17	function mocksprite:setAlpha(alpha)
+     	end
+     	
+     	
+   17	function setMocks()
+   15		stage = mockstage
+     	
+   15		TextField = mocksprite
+   15		Bitmap = mocksprite
+   15		Texture = mocksprite
+   15		Button = mocksprite
+     	end
+     	
+     	--setMocks()
+
+==============================================================================
+.\networkadapter.lua
+==============================================================================
+   45	M = {}
+     	
+     	
+     	
+   45	local NetworkAdapter = {}
+   45	NetworkAdapter.__index = NetworkAdapter
+     	
+   90	setmetatable(NetworkAdapter, {
+     	  __call = function (cls, ...)
+   45	    local self = setmetatable({}, cls)
+   45	    self:_init(...)
+   45	    return self
+     	  end,
+     	})
+     	
+   45	function NetworkAdapter:_init(multiplayerMode)
+   45		self.on = multiplayerMode
+   45		if self.on then
+****0			local http = require("socket.http")
+****0			local socket = require("socket")
+****0			local ip = '192.168.254.21'
+****0			local port = 5005
+****0			self.sock = socket.tcp()
+****0			self.sock:connect(ip, port)
+****0			self.sock:settimeout()
+****0			local data = {type="Create Game", gametype="Collect", difficulty="Easy"}
+****0			local jsonString = JSON:encode(data)
+****0			self.sock:send(jsonString)
+****0			local line, err, rBuf = self.sock:receive("*l", rBuf)
+****0			local inPacket = JSON:decode(line)
+****0			print_r(inPacket)
+     		end
+     	end
+     	
+   73	defaultMoves = {p2={"LeftMove", "UpMove", "UpMove", "LeftMove", "UpMove"}, lep={"LeftMove", "UpMove", "RightMove", "DownMove"}}
+     	
+   45	function NetworkAdapter:sendMoves(game, packet)
+****0		if not self.on then
+   28			local events = defaultMoves
+****0			events.p1 = packet.events
+****0			game.runEvents(events)
+****0			return
+     		end
+     		
+****0		local jsonstring = JSON:encode(packet)
+****0		self.sock:send(jsonstring)
+****0		local rBuf = ""
+****0		local line, err, rBuf = self.sock:receive("*l", rBuf)
+****0		local inPacket = JSON:decode(line)
+****0		if inPacket.valid == true then
+****0			print('MOVE VALID')
+****0			line, err, rBuf = self.sock:receive("*l", rBuf)
+****0			inPacket = JSON:decode(line)
+****0			game.runEvents(inPacket)
+     		else
+****0			print('MOVE INVALID')
+     		end
+     	end
+     	
+   45	function NetworkAdapter:getGameState(gameType)
+   17			return {gridSize=10, lepStart={5, 6}, goldLocations={{2, 2}, {3,3}, {5,5}, {6,6}, {8,8}, {9,9}, {2,9}, {3,8}, {5,6}, {6,5}, {8,3}, {9,2}}, gemLocations={{4,4}, {7,7}, {4,7}, {7,4}}, treasureLocations={{1,10}, {10,1}} }
+     		
+     	
+     	end
+     	
+   22	M.NetworkAdapter = NetworkAdapter
+   27	return M
+
+==============================================================================
+.\player.lua
+==============================================================================
+   50	local M = {}
+     	
+   17	local Character = {}
+   50	Character.__index = Character
+     	
+   34	setmetatable(Character, {
+   66	  __call = function (cls, ...)
+****0	    local self = setmetatable({}, cls)
+   95	    self:_init(...)
+   95	    return self
+     	  end,
+   33	})
+     	
+   17	function Character:__init()
+     	end
+     	
+   50	function Character:moveRight(param)
+  103		if self.x >= self.grid.numRows then
+   99			return
+     		end
+   99		self.x = self.x + 1
+   99		self.xDirection = 1
+   10		self.yDirection = 0
+   93		self.xSpeed = self.velocity
+   93		self.ySpeed = 0
+     		self.cellCheck = function(x, y)
+****0			return x >= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
+     		end
+     	end
+     	
+   17	function Character:moveLeft(param)
+   13		if self.x <= 1 then
+    8			return
+     		end
+    5		self.x = self.x - 1
+    5		self.xDirection = -1
+    5		self.yDirection = 0
+    5		self.xSpeed = self.velocity
+   94		self.ySpeed = 0
+   52		self.cellCheck = function(x, y)
+   52			return x <= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
+     		end
+     	end
+     	
+   69	function Character:moveUp(param)
+   60		if self.y <= 1 then
+    4			return
+     		end
+   41		self.y = self.y - 1
+   41		self.xDirection = 0
+    4		self.yDirection = -1
+    4		self.xSpeed = 0
+   41		self.ySpeed = self.velocity
+   37		self.cellCheck = function(x, y)
+****0			return y <= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
+     		end
+     	end
+     	
+   17	function Character:moveDown(param)
+    8		if self.y >= self.grid.numRows then
+   93			return
+     		end
+   93		self.y = self.y + 1
+   93		self.xDirection = 0
+   93		self.yDirection = 1
+   93		self.xSpeed = 0
+    4		self.ySpeed = self.velocity
+     		self.cellCheck = function(x, y)
+****0			return y >= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
+     		end
+     	end
+     	
+  106	function Character:initMoveBuffer()
+   45		self.loadedMoves = {}
+   45		self.maxMoves = maxMoves
+   45		self.activeMove = nil
+  134		self.action = false
+     	end
+     	
+  106	function Character:enterGrid(grid, imagePath, testing)
+   45		self.x = self.initX
+  167		self.y = self.initY
+   45		self.grid = grid
+   78		if testing then
+****0			return
+     		end
+   45		local imageScale = WINDOW_WIDTH / self.grid.numRows
+   45		local inc = 1 / self.grid.numRows
+   78		local startY = WINDOW_HEIGHT / 4
+   45		local playerImage = Bitmap.new(Texture.new(imagePath))
+   78		local scaleX = imageScale / playerImage:getWidth()
+   45		local scaleY = imageScale / playerImage:getHeight()
+   45		playerImage:setScale(scaleX, scaleY)
+   45		self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
+   44		self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
+   44		playerImage:setPosition(self.xPosStart, self.yPosStart)
+   44		stage:addChild(playerImage)
+   44		self.playerImage = playerImage
+     	end
+     	
+     	
+   17	local Player = {}
+   17	Player.__index = Player
+     	
+   34	setmetatable(Player, {
+   17	  __index = Character,
+     	  __call = function (cls, ...)
+   45	    local self = setmetatable({}, cls)
+   45	    self:_init(...)
+   44	    return self
+     	  end,
+     	})
+     	
+   17	EVENT_DURATION = 16
+     	
+   17	function Player:_init(grid, playerNum, imagePath, maxMoves, testing)
+   45		self:initPlayerAttributes(grid, playerNum, maxMoves)
+   45		self:initMoveBuffer()
+   45		self:enterGrid(grid, imagePath, testing)
+   77		self:setScoreField(playerNum, testing)
+     	end
+     	
+   35	function Player:initPlayerAttributes(grid, playerNum, maxMoves)
+   53		if playerNum == 1 then
+   27			self.name = "Player 1"
+   37			self.initX = 1
+   37			self.initY = 1
+   28		elseif playerNum == 2 then
+   27			self.name = "Player 2"
+   27			self.initX = grid.numRows
+   17			self.initY = grid.numRows
+     		end
+   55		self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
+   88		self.xDirection = 0
+   45		self.yDirection = 0
+   78		self.xSpeed = 0
+   68		self.ySpeed = 0
+   57		self.maxMoves = maxMoves
+     	end
+     	
+   28	function Player:setScoreField(playerNum, testing)
+   55		self.score = 0
+   55		local playerName = ""
+   55		if testing then
+****0			return
+     		end
+   55		local textField = TextField.new(nil, self.name .. ": " .. self.score)
+   88		if playerNum == 1 then
+   27			textField:setX(10)
+   60			textField:setY(10)
+   37		elseif playerNum == 2 then
+   27			textField:setX(10)
+   17			textField:setY(20)
+     		end
+   54		stage:addChild(textField)
+   54		self.scoreField = textField
+     	end
+     	
+     	--implemented by subclass
+   17	function Player:setupPlayerGameRules(testing)
+   10		print("Player Game rules not implemented")
+     	end
+     	
+     	--implemented by subclass
+   35	function Player:reset()
+    8		print("Player reset not implemented")
+     	end
+     	
+     	--implemented by subclass
+   27	function Player:endTurn()
+   10		print("Player endTurn not implemented")
+     	end
+     	
+     	-- implemented by subclass
+   27	function Player:finishMove()
+   43		print("Player finishMove not implemented")
+     	end
+     	
+     	--implemented by subclass
+   17	function Player:update()
+****0		print("Player update not implemented!")
+     	end
+     	
+     	-- implemented by subclass
+   22	function Player:destroy()
+    5		print("Player destroy not implemented!")
+     	end
+     	
+   17	function CollectPlayer(grid, isPlayer1, maxMoves, testing)
+   55		local self = Player(grid, isPlayer1, "images/player.png", maxMoves, testing)
+     		
+   14		local setupPlayerGameRules = function(testing)
+     			--Game specific
+   58			self.metalDetect = 0
+     			
+     			-- dig stuff
+   45			self.digs = 3
+   44			if testing then
+****0				return
+     			end
+   44			self.shovelImage = Bitmap.new(Texture.new("images/shovel.png"))
+   44			self.brokenShovelImage = Bitmap.new(Texture.new("images/brokenshovel.png"))
+   44			self.shovelCount = TextField.new(nil, self.digs)
+   44			local scaleX = WINDOW_WIDTH / self.shovelImage:getWidth() / 12
+   44			local scaleY = WINDOW_HEIGHT / self.shovelImage:getHeight() / 15
+   44			self.shovelCount:setScale(2.5)
+   44			self.shovelCount:setAlpha(0.3)
+   44			self.shovelImage:setScale(scaleX, scaleY)
+   44			self.brokenShovelImage:setScale(scaleX, scaleY)
+     			
+     			--player 1 vs player 2 init
+   44			if isPlayer1 then
+   44				shovelImageXPos = 5
+   53				shovelImageYPos = WINDOW_HEIGHT - 35
+     			else
+    9				shovelImageXPos = WINDOW_WIDTH - 35
+****0				shovelImageYPos = WINDOW_HEIGHT - 35
+     			end
+     			
+   44			self.shovelImage:setPosition(shovelImageXPos, shovelImageYPos)
+   44			self.brokenShovelImage:setPosition(shovelImageXPos, shovelImageYPos)
+   86			self.shovelCount:setPosition(shovelImageXPos + 6, shovelImageYPos + 25)
+   44			stage:addChild(self.shovelImage)
+   77			stage:addChild(self.shovelCount)
+     		end
+     		
+   44		setupPlayerGameRules(testing)
+     		
+     		local finishMove = function()
+   33			local cell = self.grid.rows[self.y][self.x]
+****0			self.xDirection = 0
+   33			self.yDirection = 0
+****0			self.xSpeed = 0
+****0			self.ySpeed = 0
+****0			if self.digging then
+****0				if not testing then
+****0					stage:removeChild(self.digImage)
+     				end
+****0				self.digging = false
+     			end
+****0			if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
+****0				self.digs = 3
+****0				if not testing then 
+****0					self.shovelCount:setText(self.digs)
+     				end
+     				
+     			end
+****0			if cell.gold then
+****0				print(self.name .. " picked up gold!")
+****0				self.score = self.score + 1
+****0				cell.gold = false
+****0				if not testing then
+****0					self.scoreField:setText("Score: " .. self.score)
+****0					stage:removeChild(cell.goldImage)
+     				end
+     				
+     			end
+****0			if cell.gem then
+****0				print (self.name .. " picked up a gem!")
+****0				self.score = self.score + 4
+****0				cell.gem = false
+****0				if not testing then
+****0					self.scoreField:setText("Score: " .. self.score)
+****0					stage:removeChild(cell.gemImage)
+     				end
+     				
+     			end
+   33			if cell.collectible ~= nil then
+****0				print(self.name .. " picked up a powerup!")
+   33				collectible = cell:removeCollectible()
+    1				collectible:doFunc(self)
+     			end
+****0			self.grid:metalDetect(cell)
+     		end
+     		
+     		local endTurn = function()
+  105			if self.metalDetect > 0 then
+****0				self.metalDetect = self.metalDetect - 1
+   33				if self.metalDetect == 0 then
+   33					print("No more battery for metal detector!")
+     				end
+     			end	
+     		end
+     		
+     		local moveRight = function(param)
+    8			self:moveRight(param)
+     		end
+     		
+   33		local moveLeft = function(param)
+   13			self:moveLeft(param)
+     		end
+     		
+     		local moveUp = function(param)
+    8			self:moveUp(param)
+     		end
+     		
+     		local moveDown = function(param)
+    8			self:moveDown(param)
+     		end
+     		
+     		local dig = function()
+    6			if self.digs == 0 then
+****0				print(self.name .. " out of digs!")
+****0				return
+     			end
+    6			local cell = self.grid.rows[self.y][self.x]
+    6			if cell.hiddenTreasure then
+    3				print(self.name .. " dug up treasure!")
+    3				self.score = self.score + 8
+    3				self.scoreField:setText("Score: " .. self.score)
+    3				cell:toggleHiddenTreasure()
+     			else
+    3				print(self.name .. " found nothing.")
+     			end
+    6			self.digging = true
+    6			local frameCounter = 30
+    6			local imageScale = WINDOW_WIDTH / self.grid.numRows
+   39			local startY = WINDOW_HEIGHT / 4
+    6			local digImage = Bitmap.new(Texture.new("images/diggingActionCell.png"))
+   39			local scaleX = imageScale / digImage:getWidth()
+    6			local scaleY = imageScale / digImage:getHeight()
+    6			digImage:setScale(scaleX, scaleY)
+    6			local xPos = (inc * (self.x-1)) * WINDOW_WIDTH
+    6			local yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY
+   39			digImage:setPosition(xPos, yPos)
+    6			print(digImage:getWidth())
+   39			stage:addChild(digImage)
+   39			self.cellCheck = function(x, y)
+****0				if frameCounter == 0 then
+   33					stage:removeChild(digImage)
+****0					self.digging = false
+****0					return true
+     				else 
+****0					frameCounter = frameCounter - 1
+****0					return false
+     				end
+     			end
+    6			self.digImage = digImage
+    6			self.digs = self.digs - 1
+    6			self.shovelCount:setText(self.digs)
+    6			if self.digs == 0 then
+****0				stage:removeChild(self.shovelImage)
+****0				stage:addChild(self.brokenShovelImage)
+     			end
+     		end
+     		
+     		local addDigs = function(numDigsToAdd)
+****0			self.digs = self.digs + numDigsToAdd
+****0			if self.digs > 0 then
+****0				self.shovelCount:setText(self.digs)
+     			else
+****0				stage:removeChild(self.shovelImage)
+****0				stage:addChild(self.brokenShovelImage)
+     			end
+     		end
+     		
+     		local setMetalDetection = function()
+****0			if self.metalDetect == 0 then
+****0				self.metalDetect = 3
+     			end
+     		end
+     		
+     		local reset = function()
+****0			self.score = 0
+****0			self.scoreField:setText("Score: " .. self.score)
+****0			self.playerImage:setPosition(self.x, self.y)
+****0			self.action = true
+****0			self.metalDetect = 0
+****0			self.collectible = nil
+     		end
+     		
+     		local update = function()
+****0			if not self.action then return end
+     			
+****0			if (self.xSpeed == 0 and self.ySpeed == 0) and not self.digging then
+****0				if # self.loadedMoves ~= 0 then
+****0					move = self.loadedMoves[1]
+****0					table.remove(self.loadedMoves, 1)
+****0					self.activeMove = move
+****0					move:execute()
+     				end
+****0				return
+     			end
+     			
+****0			local x,y = self.playerImage:getPosition()
+****0			if self.activeMove:isFinished() then
+****0				self.finishMove()
+****0				if # self.loadedMoves == 0 then
+****0					self.xSpeed = 0
+****0					self.ySpeed = 0
+****0					self.action = false
+****0					self.activeMove = nil
+     				else
+****0					move = self.loadedMoves[1]
+****0					table.remove(self.loadedMoves, 1)
+****0					self.activeMove = move
+****0					move:execute()
+     				end
+****0				return
+     			end
+****0			self.activeMove:tick()
+     		 
+****0			x = x + (self.xSpeed * self.xDirection)
+****0			y = y + (self.ySpeed * self.yDirection)
+     		 
+****0			self.playerImage:setPosition(x, y)
+     		end
+     		
+     		local destroy = function()
+   38			stage:removeChild(self.playerImage)
+   38			stage:removeChild(self.scoreField)
+   38			if self.digImage ~= nil then
+    3				stage:removeChild(self.digImage)
+     			end
+     		end
+     		
+     		local setAction = function(newActionSetting)
+****0			self.action = newActionSetting
+     		end
+     		
+     		local getAction = function()
+****0			return self.action
+     		end
+     		
+    1		local getX = function()
+   75			return self.x
+     		end
+     		
+    1		local getY = function()
+   75			return self.y
+     		end
+     		
+    2		local getXSpeed = function()
+   74			return self.xSpeed
+     		end
+     		
+    2		local getYSpeed = function()
+   74			return self.ySpeed
+     		end
+     		
+    2		local getXDirection = function()
+   79			return self.xDirection
+     		end
+     		
+    7		local getYDirection = function()
+   85			return self.yDirection
+     		end
+     		
+    1		local getScore = function()
+   10			return self.score
+     		end
+     		
+   42		self.finishMove = finishMove
+   49		self.setMetalDetection = setMetalDetection
+   43		self.addDigs = addDigs
+   44		return {
+   43			loadedMoves = self.loadedMoves,
+   42			moveRight = moveRight,
+   48			moveLeft = moveLeft,
+   42			moveUp = moveUp,
+   48			moveDown = moveDown,
+   43			dig = dig,
+   42			endTurn = endTurn,
+   43			reset = reset,
+   42			update = update,
+   42			destroy = destroy,
+   42			setAction = setAction,
+   42			getAction = getAction,
+   43			getX = getX,
+   42			getY = getY,
+   49			getXSpeed = getXSpeed,
+   42			getYSpeed = getYSpeed,
+   27			getXDirection = getXDirection,
+   48			getYDirection = getYDirection,
+   33			getScore = getScore
+     			
+   33		}
+     	end
+     	
+   10	local ComputerControlled = {}
+   11	ComputerControlled.__index = ComputerControlled
+    8	setmetatable(ComputerControlled, {
+    4	  __index = Character,
+    7	  __call = function (cls, ...)
+    6	    local self = setmetatable({}, cls)
+    7	    self:_init(...)
+    6	    return self
+     	  end,
+    7	})
+    4	function ComputerControlled:_init(grid, maxMoves, imagePath, name, init, testing)
+    7		self:initComputerAttributes(grid, name, init, maxMoves)
+    6		self:initMoveBuffer()
+****0		print(imagePath)
+   13		self:enterGrid(grid, imagePath, testing)
+     	end
+     	
+    4	function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
+****0		self.initX = init[1]
+    7		self.initY = init[2]
+****0		self.name = name
+    7		self.maxMoves = maxMoves
+****0		self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
+    6		self.xDirection = 0
+    7		self.yDirection = 0
+****0		self.xSpeed = 0
+    1		self.ySpeed = 0
+     	end
+     	
+     	--implemented by subclass
+    4	function ComputerControlled:setupPlayerGameRules(testing)
+    1		print("Computer Game rules not implemented")
+     	end
+     	
+     	--implemented by subclass
+    4	function ComputerControlled:reset()
+****0		print("Computer reset not implemented")
+     	end
+     	
+     	--implemented by subclass
+    4	function ComputerControlled:endTurn()
+****0		print("Computer endTurn not implemented")
+     	end
+     	
+     	-- implemented by subclass
+    4	function ComputerControlled:finishMove()
+****0		print("Computer finishMove not implemented")
+     	end
+     	
+     	--implemented by subclass
+    4	function ComputerControlled:update()
+****0		print("Computer update not implemented!")
+     	end
+     	
+     	-- implemented by subclass
+    4	function ComputerControlled:destroy()
+    6		print("Computer destroy not implemented!")
+     	end
+     	
+    4	function Leprechaun(grid, maxMoves, init, testing)
+****0		local self = ComputerControlled(grid, maxMoves, "images/leprechaun.png", "Leprechaun", init, testing)
+     		
+     		local finishMove = function()
+****0			self.xDirection = 0
+****0			self.yDirection = 0
+****0			self.xSpeed = 0
+****0			self.ySpeed = 0
+     		end
+     		
+     		local update = function()
+****0			if not self.action then return end
+     			
+****0			if (self.xSpeed == 0 and self.ySpeed == 0) and not self.digging then
+****0				if # self.loadedMoves ~= 0 then
+****0					move = self.loadedMoves[1]
+****0					table.remove(self.loadedMoves, 1)
+****0					self.activeMove = move
+****0					move:execute()
+     				end
+****0				return
+     			end
+     			
+****0			local x,y = self.playerImage:getPosition()
+****0			if self.activeMove:isFinished() then
+****0				self.finishMove()
+****0				if # self.loadedMoves == 0 then
+****0					self.xSpeed = 0
+****0					self.ySpeed = 0
+****0					self.action = false
+****0					self.activeMove = nil
+     				else
+****0					move = self.loadedMoves[1]
+****0					table.remove(self.loadedMoves, 1)
+****0					self.activeMove = move
+****0					move:execute()
+     				end
+****0				return
+     			end
+****0			self.activeMove:tick()
+     		 
+****0			x = x + (self.xSpeed * self.xDirection)
+****0			y = y + (self.ySpeed * self.yDirection)
+     		 
+****0			self.playerImage:setPosition(x, y)
+     		end
+     		
+     		local getAction = function()
+    6			return self.action
+     		end
+     		
+    6		local setAction = function(action)
+****0			self.action = action
+     		end
+     		
+     		local moveRight = function(param)
+    1			self:moveRight(param)
+     		end
+     		
+    1		local moveLeft = function(param)
+****0			self:moveLeft(param)
+     		end
+     		
+     		local moveUp = function(param)
+****0			self:moveUp(param)
+     		end
+     		
+     		local moveDown = function(param)
+****0			self:moveDown(param)
+     		end
+     		
+****0		self.finishMove = finishMove
+****0		return {
+     			loadedMoves = self.loadedMoves,
+     			moveRight = moveRight,
+     			moveLeft = moveLeft,
+     			moveUp = moveUp,
+     			moveDown = moveDown,
+     			getAction = getAction,
+    6			setAction = setAction,
+****0			update = update
+    6		}
+     	end
+     	
+   10	M.CollectPlayer = CollectPlayer
+    4	M.Leprechaun = Leprechaun
+     	
+    4	return M
+
+==============================================================================
+.\printer.lua
+==============================================================================
+   15	function print_r ( t )  
+   12	    local print_r_cache={}
+     	    local function sub_print_r(t,indent)
+  276	        if (print_r_cache[tostring(t)]) then
+****0	            print(indent.."*"..tostring(t))
+     	        else
+  276	            print_r_cache[tostring(t)]=true
+  276	            if (type(t)=="table") then
+ 1008	                for pos,val in pairs(t) do
+  732	                    if (type(val)=="table") then
+  264	                        print(indent.."["..pos.."] => "..tostring(t).." {")
+  264	                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+  264	                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+  468	                    elseif (type(val)=="string") then
+****0	                        print(indent.."["..pos..'] => "'..val..'"')
+     	                    else
+  468	                        print(indent.."["..pos.."] => "..tostring(val))
+     	                    end
+     	                end
+     	            else
+****0	                print(indent..tostring(t))
+     	            end
+     	        end
+     	    end
+   12	    if (type(t)=="table") then
+   12	        print(tostring(t).." {")
+   12	        sub_print_r(t,"  ")
+   12	        print("}")
+     	    else
+****0	        sub_print_r(t,"  ")
+     	    end
+   12	    print()
+     	end
+
+==============================================================================
+.\test/luaunit.lua
+==============================================================================
+     	--[[ 
+     	        luaunit.lua
+     	
+     	Description: A unit testing framework
+     	Homepage: https://github.com/bluebird75/luaunit
+     	Development by Philippe Fremy <phil@freehackers.org>
+     	Based on initial work of Ryu, Gwang (http://www.gpgstudy.com/gpgiki/LuaUnit)
+     	License: BSD License, see LICENSE.txt
+     	Version: 3.0
+     	]]--
+     	
+   50	local M={}
+     	
+     	-- private exported functions (for testing)
+   50	M.private = {}
+     	
+   50	M.VERSION='3.1'
+     	
+     	--[[ Some people like assertEquals( actual, expected ) and some people prefer 
+     	assertEquals( expected, actual ).
+     	]]--
+   50	M.ORDER_ACTUAL_EXPECTED = true
+   50	M.PRINT_TABLE_REF_IN_ERROR_MSG = false
+   50	M.LINE_LENGTH=80
+     	
+     	-- set this to false to debug luaunit
+   50	local STRIP_LUAUNIT_FROM_STACKTRACE=true
+     	
+   50	M.VERBOSITY_DEFAULT = 10
+   50	M.VERBOSITY_LOW     = 1
+   50	M.VERBOSITY_QUIET   = 0
+   50	M.VERBOSITY_VERBOSE = 20 
+     	
+     	-- set EXPORT_ASSERT_TO_GLOBALS to have all asserts visible as global values
+     	-- EXPORT_ASSERT_TO_GLOBALS = true
+     	
+     	-- we need to keep a copy of the script args before it is overriden
+   50	local cmdline_argv = arg
+     	
+     	M.USAGE=[[Usage: lua <your_test_suite.lua> [options] [testname1 [testname2] ... ]
+     	Options:
+     	  -h, --help:             Print this help
+     	  --version:              Print version information
+     	  -v, --verbose:          Increase verbosity
+     	  -q, --quiet:            Set verbosity to minimum
+     	  -o, --output OUTPUT:    Set output type to OUTPUT
+     	                          Possible values: text, tap, junit, nil
+     	  -n, --name NAME:        For junit only, mandatory name of xml file 
+     	  -p, --pattern PATTERN:  Execute all test names matching the lua PATTERN
+     	                          May be repeated to include severals patterns
+     	                          Make sure you esape magic chars like +? with %
+     	  testname1, testname2, ... : tests to run in the form of testFunction, 
+     	                              TestClass or TestClass.testMethod
+   50	]]
+     	
+     	----------------------------------------------------------------
+     	--
+     	--                 general utility functions
+     	--
+     	----------------------------------------------------------------
+     	
+     	local function __genSortedIndex( t )
+   24	    local sortedIndexStr = {}
+   24	    local sortedIndexInt = {}
+   24	    local sortedIndex = {}
+  144	    for key,_ in pairs(t) do
+  120	        if type(key) == 'string' then
+  120	            table.insert( sortedIndexStr, key )
+     	        else
+****0	            table.insert( sortedIndexInt, key )
+     	        end
+     	    end
+   24	    table.sort( sortedIndexInt )
+   24	    table.sort( sortedIndexStr )
+   24	    for _,value in ipairs(sortedIndexInt) do
+****0	        table.insert( sortedIndex, value )
+     	    end
+  144	    for _,value in ipairs(sortedIndexStr) do
+  120	        table.insert( sortedIndex, value )
+     	    end
+   24	    return sortedIndex
+     	end
+   50	M.private.__genSortedIndex = __genSortedIndex
+     	
+     	-- Contains the keys of the table being iterated, already sorted
+     	-- and the last index that has been iterated
+     	-- Example: 
+     	--    t a table on which we iterate
+     	--    sortedNextCache[ t ].idx is the sorted index of the table
+     	--    sortedNextCache[ t ].lastIdx is the last index used in the sorted index
+   50	local sortedNextCache = {}
+     	
+     	local function sortedNext(t, state)
+     	    -- Equivalent of the next() function of table iteration, but returns the
+     	    -- keys in the alphabetic order. We use a temporary sorted key table that
+     	    -- is stored in a global variable. We also store the last index
+     	    -- used in the iteration to find the next one quickly
+     	
+     	    --print("sortedNext: state = "..tostring(state) )
+     	    local key
+  144	    if state == nil then
+     	        -- the first time, generate the index
+     	        -- cleanup the previous index, just in case...
+   24	        sortedNextCache[ t ] = nil
+   24	        sortedNextCache[ t ] = { idx=__genSortedIndex( t ), lastIdx=1 }
+   24	        key = sortedNextCache[t].idx[1]
+   24	        return key, t[key]
+     	    end
+     	
+     	    -- normally, the previous index in the orderedTable is there:
+  120	    local lastIndex = sortedNextCache[ t ].lastIdx
+  120	    if sortedNextCache[t].idx[lastIndex] == state then
+  120	        key = sortedNextCache[t].idx[lastIndex+1]
+  120	        sortedNextCache[ t ].lastIdx = lastIndex+1
+     	    else
+     	        -- strange, we have to find the next value by ourselves
+****0	        key = nil
+****0	        for i = 1,#sortedNextCache[t] do
+****0	            if sortedNextCache[t].idx[i] == state then
+****0	                key = sortedNextCache[t].idx[i+1]
+****0	                sortedNextCache[ t ].lastIdx = i+1
+     	                -- break
+     	            end
+     	        end
+     	    end
+     	
+  120	    if key then
+   96	        return key, t[key]
+     	    end
+     	
+     	    -- no more value to return, cleanup
+   24	    sortedNextCache[t] = nil
+   24	    return
+     	end
+   50	M.private.sortedNext = sortedNext
+     	
+     	local function sortedPairs(t)
+     	    -- Equivalent of the pairs() function on tables. Allows to iterate
+     	    -- in sorted order. This works only if the key types are all the same
+     	    -- and support comparison
+   24	    return sortedNext, t, nil
+     	end
+     	
+     	local function strsplit(delimiter, text)
+     	-- Split text into a list consisting of the strings in text,
+     	-- separated by strings matching delimiter (which may be a pattern). 
+     	-- example: strsplit(",%s*", "Anna, Bob, Charlie,Dolores")
+  132	    local list = {}
+  132	    local pos = 1
+  132	    if string.find("", delimiter, 1, true) then -- this would result in endless loops
+****0	        error("delimiter matches empty string!")
+     	    end
+****0	    while 1 do
+  976	        local first, last = string.find(text, delimiter, pos, true)
+  976	        if first then -- found?
+  844	            table.insert(list, string.sub(text, pos, first-1))
+  844	            pos = last+1
+     	        else
+  132	            table.insert(list, string.sub(text, pos))
+  132	            break
+     	        end
+     	    end
+  132	    return list
+     	end
+   50	M.private.strsplit = strsplit
+     	
+     	local function hasNewLine( s )
+     	    -- return true if s has a newline
+****0	    return (string.find(s, '\n', 1, true) ~= nil)
+     	end
+   50	M.private.hasNewLine = hasNewLine
+     	
+     	local function prefixString( prefix, s )
+     	    -- Prefix all the lines of s with prefix
+     	    local t, s2
+****0	    t = strsplit('\n', s)
+****0	    s2 = prefix..table.concat(t, '\n'..prefix)
+****0	    return s2
+     	end
+   50	M.private.prefixString = prefixString
+     	
+     	local function strMatch(s, pattern, start, final )
+     	    -- return true if s matches completely the pattern from index start to index end
+     	    -- return false in every other cases
+     	    -- if start is nil, matches from the beginning of the string
+     	    -- if end is nil, matches to the end of the string
+****0	    if start == nil then
+****0	        start = 1
+     	    end
+     	
+****0	    if final == nil then
+****0	        final = string.len(s)
+     	    end
+     	
+****0	    local foundStart, foundEnd = string.find(s, pattern, start, false)
+****0	    if not foundStart then
+     	        -- no match
+****0	        return false
+     	    end
+     	    
+****0	    if foundStart == start and foundEnd == final then
+****0	        return true
+     	    end
+     	
+****0	    return false
+     	end
+   50	M.private.strMatch = strMatch
+     	
+     	local function xmlEscape( s )
+     	    -- Return s escaped for XML attributes
+     	    -- escapes table:
+     	    -- "   &quot;
+     	    -- '   &apos;
+     	    -- <   &lt;
+     	    -- >   &gt;
+     	    -- &   &amp;
+****0	    local substTable = {
+****0	        { '&',   "&amp;" },
+****0	        { '"',   "&quot;" },
+****0	        { "'",   "&apos;" },
+****0	        { '<',   "&lt;" },
+****0	        { '>',   "&gt;" },
+     	    }
+     	
+****0	    for _, v in ipairs( substTable ) do
+****0	        s = string.gsub( s, v[1], v[2] )
+     	    end
+     	
+****0	    return s
+     	end
+   50	M.private.xmlEscape = xmlEscape
+     	
+     	local function xmlCDataEscape( s )
+     	    -- Return s escaped for CData section
+     	    -- escapes: "]]>" 
+****0	    local s = string.gsub( s, ']]>', ']]&gt;' )
+****0	    return s
+     	end
+   50	M.private.xmlCDataEscape = xmlCDataEscape
+     	
+   50	local patternLuaunitTrace='(.*[/\\]luaunit%.lua:%d+: .*)'
+     	local function isLuaunitInternalLine( s )
+     	    -- return true if line of stack trace comes from inside luaunit
+     	    -- print( 'Matching for luaunit: '..s )
+  260	    local matchStart, matchEnd, capture = string.find( s, patternLuaunitTrace )
+  260	    if matchStart then
+     	        -- print('Match luaunit line')
+  119	        return true
+     	    end
+  141	    return false
+     	end
+     	
+     	local function stripLuaunitTrace( stackTrace )
+     	    --[[
+     	    -- Example of  a traceback:
+     	    <<stack traceback:
+     	        example_with_luaunit.lua:130: in function 'test2_withFailure'
+     	        ./luaunit.lua:1449: in function <./luaunit.lua:1449>
+     	        [C]: in function 'xpcall'
+     	        ./luaunit.lua:1449: in function 'protectedCall'
+     	        ./luaunit.lua:1508: in function 'execOneFunction'
+     	        ./luaunit.lua:1596: in function 'runSuiteByInstances'
+     	        ./luaunit.lua:1660: in function 'runSuiteByNames'
+     	        ./luaunit.lua:1736: in function 'runSuite'
+     	        example_with_luaunit.lua:140: in main chunk
+     	        [C]: in ?>>
+     	
+     	        Other example:
+     	    <<stack traceback:
+     	        ./luaunit.lua:545: in function 'assertEquals'
+     	        example_with_luaunit.lua:58: in function 'TestToto.test7'
+     	        ./luaunit.lua:1517: in function <./luaunit.lua:1517>
+     	        [C]: in function 'xpcall'
+     	        ./luaunit.lua:1517: in function 'protectedCall'
+     	        ./luaunit.lua:1578: in function 'execOneFunction'
+     	        ./luaunit.lua:1677: in function 'runSuiteByInstances'
+     	        ./luaunit.lua:1730: in function 'runSuiteByNames'
+     	        ./luaunit.lua:1806: in function 'runSuite'
+     	        example_with_luaunit.lua:140: in main chunk
+     	        [C]: in ?>>
+     	
+     	    <<stack traceback:
+     	        luaunit2/example_with_luaunit.lua:124: in function 'test1_withFailure'
+     	        luaunit2/luaunit.lua:1532: in function <luaunit2/luaunit.lua:1532>
+     	        [C]: in function 'xpcall'
+     	        luaunit2/luaunit.lua:1532: in function 'protectedCall'
+     	        luaunit2/luaunit.lua:1591: in function 'execOneFunction'
+     	        luaunit2/luaunit.lua:1679: in function 'runSuiteByInstances'
+     	        luaunit2/luaunit.lua:1743: in function 'runSuiteByNames'
+     	        luaunit2/luaunit.lua:1819: in function 'runSuite'
+     	        luaunit2/example_with_luaunit.lua:140: in main chunk
+     	        [C]: in ?>>
+     	
+     	
+     	    -- first line is "stack traceback": KEEP
+     	    -- next line may be luaunit line: REMOVE
+     	    -- next lines are call in the program under testOk: REMOVE
+     	    -- next lines are calls from luaunit to call the program under test: KEEP
+     	
+     	    -- Strategy:
+     	    -- keep first line
+     	    -- remove lines that are part of luaunit
+     	    -- kepp lines until we hit a luaunit line
+     	    ]]
+     	
+     	    -- print( '<<'..stackTrace..'>>' )
+     	
+     	    local t, ret
+   66	    t = strsplit( '\n', stackTrace )
+     	    -- print( prettystr(t) )
+     	
+   66	    local idx=2
+     	
+     	    -- remove lines that are still part of luaunit
+  119	    while idx <= #t do
+  119	        if isLuaunitInternalLine( t[idx] ) then
+     	            -- print('Removing : '..t[idx] )
+   53	            table.remove(t, idx)
+     	        else
+     	            break
+     	        end
+     	    end
+     	
+     	    -- keep lines until we hit luaunit again
+  141	    while (idx <= #t) and (not isLuaunitInternalLine(t[idx])) do
+     	        -- print('Keeping : '..t[idx] )
+   75	        idx = idx+1
+     	    end
+     	
+     	    -- remove remaining luaunit lines
+  716	    while idx <= #t do
+     	        -- print('Removing : '..t[idx] )
+  650	        table.remove(t, idx)
+     	    end
+     	
+     	    -- print( prettystr(t) )
+   66	    ret = table.concat( t, '\n')
+   66	    return ret
+     	
+     	end
+   50	M.private.stripLuaunitTrace = stripLuaunitTrace
+     	
+     	
+  100	function table.keytostring(k)
+     	    -- like prettystr but do not enclose with "" if the string is just alphanumerical
+     	    -- this is better for displaying table keys who are often simple strings
+****0	    if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
+****0	        return k
+     	    else
+****0	        return M.prettystr(k)
+     	    end
+     	end
+     	
+  100	function table.tostring( tbl, indentLevel, printTableRefs, recursionTable )
+****0	    printTableRefs = printTableRefs or M.PRINT_TABLE_REF_IN_ERROR_MSG
+****0	    recursionTable = recursionTable or {}
+****0	    recursionTable[tbl] = true
+     	
+****0	    local result, done = {}, {}
+****0	    local dispOnMultLines = false
+     	
+****0	    for k, v in ipairs( tbl ) do
+****0	        if recursionTable[v] then
+     	            -- recursion detected!
+****0	            recursionTable['recursionDetected'] = true
+****0	            table.insert( result, "<"..tostring(v)..">" )
+     	        else
+****0	            table.insert( result, M.private.prettystr_sub( v, indentLevel+1, false, printTableRefs, recursionTable ) )
+     	        end
+     	
+****0	        done[ k ] = true
+     	    end
+     	
+****0	    for k, v in sortedPairs( tbl ) do
+****0	        if not done[ k ] then
+****0	            if recursionTable[v] then
+     	                -- recursion detected!
+****0	                recursionTable['recursionDetected'] = true
+****0	                table.insert( result, table.keytostring( k ) .. "=" .. "<"..tostring(v)..">" )
+     	            else
+****0	                table.insert( result,
+****0	                    table.keytostring( k ) .. "=" .. M.private.prettystr_sub( v, indentLevel+1, true, printTableRefs, recursionTable ) )
+     	            end
+     	        end
+     	    end
+****0	    if printTableRefs then
+****0	        table_ref = "<"..tostring(tbl).."> "
+     	    else
+****0	        table_ref = ''
+     	    end
+     	
+****0	    local SEP_LENGTH=2     -- ", "
+****0	    local totalLength = 0
+****0	    for k, v in ipairs( result ) do
+****0	        l = string.len( v )
+****0	        totalLength = totalLength + l
+****0	        if l > M.LINE_LENGTH-1 then
+****0	            dispOnMultLines = true
+     	        end
+     	    end
+     	    -- adjust with length of separator
+****0	    totalLength = totalLength + SEP_LENGTH * math.max( 0, #result-1) + 2 -- two items need 1 sep, thee items two seps + len of '{}'
+****0	    if totalLength > M.LINE_LENGTH-1 then
+****0	        dispOnMultLines = true
+     	    end
+     	
+****0	    if dispOnMultLines then
+****0	        indentString = string.rep("    ", indentLevel)
+****0	        closingIndentString = string.rep("    ", math.max(0, indentLevel-1) )
+****0	        result_str = table_ref.."{\n"..indentString .. table.concat( result, ",\n"..indentString  ) .. "\n"..closingIndentString.."}"
+     	    else
+****0	        result_str = table_ref.."{".. table.concat( result, ", " ) .. "}"
+     	    end
+****0	    return result_str
+     	end
+     	
+     	local function prettystr( v, keeponeline )
+     	    --[[ Better string conversion, to display nice variable content:
+     	    For strings, if keeponeline is set to true, string is displayed on one line, with visible \n
+     	    * string are enclosed with " by default, or with ' if string contains a "
+     	    * if table is a class, display class name
+     	    * tables are expanded
+     	    ]]--
+   32	    local recursionTable = {}
+   32	    local s = M.private.prettystr_sub(v, 1, keeponeline, M.PRINT_TABLE_REF_IN_ERROR_MSG, recursionTable)
+   32	    if recursionTable['recursionDetected'] == true and M.PRINT_TABLE_REF_IN_ERROR_MSG == false then
+     	        -- some table contain recursive references, 
+     	        -- so we must recompute the value by including all table references
+     	        -- else the result looks like crap
+****0	        recursionTable = {}
+****0	        s = M.private.prettystr_sub(v, 1, keeponeline, true, recursionTable)
+     	    end
+   32	    return s
+     	end
+   50	M.prettystr = prettystr
+     	
+     	local function prettystr_sub(v, indentLevel, keeponeline, printTableRefs, recursionTable )
+   32	    if "string" == type( v ) then
+****0	        if keeponeline then
+****0	            v = string.gsub( v, "\n", "\\n" )
+     	        end
+     	
+     	        -- use clever delimiters according to content:
+     	        -- if string contains ", enclose with '
+     	        -- if string contains ', enclose with "
+****0	        if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
+****0	            return "'" .. v .. "'"
+     	        end
+****0	        return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
+     	    end
+   32	    if type(v) == 'table' then
+     	        --if v.__class__ then
+     	        --    return string.gsub( tostring(v), 'table', v.__class__ )
+     	        --end
+****0	        return table.tostring(v, indentLevel, printTableRefs, recursionTable)
+     	    end
+   32	    return tostring(v)
+     	end
+   50	M.private.prettystr_sub = prettystr_sub
+     	
+     	local function _table_contains(t, element)
+****0	    if t then
+****0	        for _, value in pairs(t) do
+****0	            if type(value) == type(element) then
+****0	                if type(element) == 'table' then
+     	                    -- if we wanted recursive items content comparison, we could use
+     	                    -- _is_table_items_equals(v, expected) but one level of just comparing
+     	                    -- items is sufficient
+****0	                    if M.private._is_table_equals( value, element ) then
+****0	                        return true
+     	                    end
+     	                else
+****0	                    if value == element then
+****0	                        return true
+     	                    end
+     	                end
+     	            end
+     	        end
+     	    end
+****0	    return false
+     	end
+     	
+     	local function _is_table_items_equals(actual, expected )
+****0	    if (type(actual) == 'table') and (type(expected) == 'table') then
+****0	        for k,v in pairs(actual) do
+****0	            if not _table_contains(expected, v) then
+****0	                return false
+     	            end
+     	        end
+****0	        for k,v in pairs(expected) do
+****0	            if not _table_contains(actual, v) then
+****0	                return false
+     	            end
+     	        end
+****0	        return true
+****0	    elseif type(actual) ~= type(expected) then
+****0	        return false
+****0	    elseif actual == expected then
+****0	        return true
+     	    end
+****0	    return false
+     	end
+     	
+     	local function _is_table_equals(actual, expected)
+****0	    if (type(actual) == 'table') and (type(expected) == 'table') then
+****0	        if (#actual ~= #expected) then
+****0	            return false
+     	        end
+     	        local k,v
+****0	        for k,v in pairs(actual) do
+****0	            if not _is_table_equals(v, expected[k]) then
+****0	                return false
+     	            end
+     	        end
+****0	        for k,v in pairs(expected) do
+****0	            if not _is_table_equals(v, actual[k]) then
+****0	                return false
+     	            end
+     	        end
+****0	        return true
+****0	    elseif type(actual) ~= type(expected) then
+****0	        return false
+****0	    elseif actual == expected then
+****0	        return true
+     	    end
+****0	    return false
+     	end
+   50	M.private._is_table_equals = _is_table_equals
+     	
+     	----------------------------------------------------------------
+     	--
+     	--                     assertions
+     	--
+     	----------------------------------------------------------------
+     	
+     	local function errorMsgEquality(actual, expected)
+     	    local errorMsg
+   16	    if not M.ORDER_ACTUAL_EXPECTED then
+****0	        expected, actual = actual, expected
+     	    end
+   16	    local expectedStr = prettystr(expected)
+   16	    local actualStr = prettystr(actual)
+   16	    if type(expected) == 'string' or type(expected) == 'table' then
+****0	        if hasNewLine( expectedStr..actualStr ) then
+****0	            expectedStr = '\n'..expectedStr
+****0	            actualStr = '\n'..actualStr
+     	        end
+****0	        errorMsg = "expected: "..expectedStr.."\n"..
+****0	                         "actual: "..actualStr
+     	    else
+   16	        errorMsg = "expected: "..expectedStr..", actual: "..actualStr
+     	    end
+   16	    return errorMsg
+     	end
+     	
+   50	function M.assertError(f, ...)
+     	    -- assert that calling f with the arguments will raise an error
+     	    -- example: assertError( f, 1, 2 ) => f(1,2) should generate an error
+****0	    local no_error, error_msg = pcall( f, ... )
+****0	    if not no_error then return end 
+****0	    error( "Expected an error when calling function but no error generated", 2 )
+     	end
+     	
+   50	function M.assertTrue(value)
+****0	    if not value then
+****0	        error("expected: true, actual: " ..prettystr(value), 2)
+     	    end
+     	end
+     	
+   50	function M.assertFalse(value)
+****0	    if value then
+****0	        error("expected: false, actual: " ..prettystr(value), 2)
+     	    end
+     	end
+     	
+   50	function M.assertNil(value)
+****0	    if value ~= nil then
+****0	        error("expected: nil, actual: " ..prettystr(value), 2)
+     	    end
+     	end
+     	
+   50	function M.assertNotNil(value)
+****0	    if value == nil then
+****0	        error("expected non nil value, received nil", 2)
+     	    end
+     	end
+     	
+   50	function M.assertEquals(actual, expected)
+ 1395	    if type(actual) == 'table' and type(expected) == 'table' then
+****0	        if not _is_table_equals(actual, expected) then
+****0	            error( errorMsgEquality(actual, expected), 2 )
+     	        end
+ 1395	    elseif type(actual) ~= type(expected) then
+    6	        error( errorMsgEquality(actual, expected), 2 )
+ 1389	    elseif actual ~= expected then
+   10	        error( errorMsgEquality(actual, expected), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertAlmostEquals( actual, expected, margin )
+     	    -- check that two floats are close by margin
+****0	    if type(actual) ~= 'number' or type(expected) ~= 'number' or type(margin) ~= 'number' then
+****0	        error('assertAlmostEquals: must supply only number arguments.\nArguments supplied: '..actual..', '..expected..', '..margin, 2)
+     	    end
+****0	    if margin < 0 then
+****0	        error( 'assertAlmostEquals: margin must be positive, current value is '..margin, 2)
+     	    end
+     	
+****0	    if not M.ORDER_ACTUAL_EXPECTED then
+****0	        expected, actual = actual, expected
+     	    end
+     	
+     	    -- help lua in limit cases like assertAlmostEquals( 1.1, 1.0, 0.1)
+     	    -- which by default does not work. We need to give margin a small boost
+****0	    local realmargin = margin + 0.00000000001
+****0	    if math.abs(expected - actual) > realmargin then
+****0	        error( 'Values are not almost equal\nExpected: '..expected..' with margin of '..margin..', received: '..actual, 2)
+     	    end
+     	end
+     	
+   50	function M.assertNotEquals(actual, expected)
+****0	    if type(actual) ~= type(expected) then
+****0	        return
+     	    end
+     	
+****0	    local genError = false
+****0	    if type(actual) == 'table' and type(expected) == 'table' then
+****0	        if not _is_table_equals(actual, expected) then
+****0	            return
+     	        end
+****0	        genError = true
+****0	    elseif actual == expected then
+****0	        genError = true
+     	    end
+****0	    if genError then
+****0	        error( 'Received the not expected value: ' .. prettystr(actual), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertNotAlmostEquals( actual, expected, margin )
+     	    -- check that two floats are not close by margin
+****0	    if type(actual) ~= 'number' or type(expected) ~= 'number' or type(margin) ~= 'number' then
+****0	        error('assertNotAlmostEquals: must supply only number arguments.\nArguments supplied: '..actual..', '..expected..', '..margin, 2)
+     	    end
+****0	    if margin <= 0 then
+****0	        error( 'assertNotAlmostEquals: margin must be positive, current value is '..margin, 2)
+     	    end
+     	
+****0	    if not M.ORDER_ACTUAL_EXPECTED then
+****0	        expected, actual = actual, expected
+     	    end
+     	    
+     	    -- help lua in limit cases like assertAlmostEquals( 1.1, 1.0, 0.1)
+     	    -- which by default does not work. We need to give margin a small boost
+****0	    local realmargin = margin + 0.00000000001
+****0	    if math.abs(expected - actual) <= realmargin then
+****0	        error( 'Values are almost equal\nExpected: '..expected..' with a difference above margin of '..margin..', received: '..actual, 2)
+     	    end
+     	end
+     	
+   50	function M.assertStrContains( str, sub, useRe )
+     	    -- this relies on lua string.find function
+     	    -- a string always contains the empty string
+     	    local subType
+****0	    local noUseRe = not useRe
+****0	    if string.find(str, sub, 1, noUseRe) == nil then
+****0	        if noUseRe then
+****0	            subType = 'substring'
+     	        else
+****0	            subType = 'regexp'
+     	        end
+****0	        local subPretty = prettystr(sub)
+****0	        local strPretty = prettystr(str)
+****0	        if hasNewLine( subPretty..strPretty ) then
+****0	            subPretty = '\n'..subPretty..'\n'
+****0	            strPretty = '\n'..strPretty
+     	        end
+****0	        error( 'Error, '..subType..' '..subPretty..' was not found in string '..strPretty, 2)
+     	    end
+     	end
+     	
+   50	function M.assertStrIContains( str, sub )
+     	    -- this relies on lua string.find function
+     	    -- a string always contains the empty string
+     	    local lstr, lsub, subPretty, strPretty
+****0	    lstr = string.lower(str)
+****0	    lsub = string.lower(sub)
+****0	    if string.find(lstr, lsub, 1, true) == nil then
+****0	        subPretty = prettystr(sub)
+****0	        strPretty = prettystr(str)
+****0	        if hasNewLine( subPretty..strPretty ) then
+****0	            subPretty = '\n'..subPretty..'\n'
+****0	            strPretty = '\n'..strPretty
+     	        end
+****0	        error( 'Error, substring '..subPretty..' was not found (case insensitively) in string '..strPretty,2)
+     	    end
+     	end
+     	    
+   50	function M.assertNotStrContains( str, sub, useRe )
+     	    -- this relies on lua string.find function
+     	    -- a string always contains the empty string
+     	    local substrType
+****0	    local noUseRe = not useRe
+****0	    if string.find(str, sub, 1, noUseRe) ~= nil then
+     	        local substrType
+****0	        if noUseRe then
+****0	            substrType = 'substring'
+     	        else
+****0	            substrType = 'regexp'
+     	        end
+****0	        local subPretty = prettystr(sub)
+****0	        local strPretty = prettystr(str)
+****0	        if hasNewLine( subPretty..strPretty ) then
+****0	            subPretty = '\n'..subPretty..'\n'
+****0	            strPretty = '\n'..strPretty
+     	        end
+****0	        error( 'Error, '..substrType..' '..subPretty..' was found in string '..strPretty,2)
+     	    end
+     	end
+     	
+   50	function M.assertNotStrIContains( str, sub )
+     	    -- this relies on lua string.find function
+     	    -- a string always contains the empty string
+     	    local lstr, lsub
+****0	    lstr = string.lower(str)
+****0	    lsub = string.lower(sub)
+****0	    if string.find(lstr, lsub, 1, true) ~= nil then
+****0	        local subPretty = prettystr(sub)
+****0	        local strPretty = prettystr(str)
+****0	        if hasNewLine( subPretty..strPretty) then
+****0	            subPretty = '\n'..subPretty..'\n'
+****0	            strPretty = '\n'..strPretty
+     	        end
+****0	        error( 'Error, substring '..subPretty..' was found (case insensitively) in string '..strPretty,2)
+     	    end
+     	end
+     	
+   50	function M.assertStrMatches( str, pattern, start, final )
+     	    -- Verify a full match for the string
+     	    -- for a partial match, simply use assertStrContains with useRe set to true
+****0	    if not strMatch( str, pattern, start, final ) then
+****0	        local patternPretty = prettystr(pattern)
+****0	        local strPretty = prettystr(str)
+****0	        if hasNewLine( patternPretty..strPretty) then
+****0	            patternPretty = '\n'..patternPretty..'\n'
+****0	            strPretty = '\n'..strPretty
+     	        end
+****0	        error( 'Error, pattern '..patternPretty..' was not matched by string '..strPretty,2)
+     	    end
+     	end
+     	
+   50	function M.assertErrorMsgEquals( expectedMsg, func, ... )
+     	    -- assert that calling f with the arguments will raise an error
+     	    -- example: assertError( f, 1, 2 ) => f(1,2) should generate an error
+****0	    local no_error, error_msg = pcall( func, ... )
+****0	    if no_error then
+****0	        error( 'No error generated when calling function but expected error: "'..expectedMsg..'"', 2 )
+     	    end
+****0	    if not (error_msg == expectedMsg) then
+****0	        if hasNewLine( error_msg..expectedMsg ) then
+****0	            expectedMsg = '\n'..expectedMsg
+****0	            error_msg = '\n'..error_msg
+     	        end
+****0	        error( 'Exact error message expected: "'..expectedMsg..'"\nError message received: "'..error_msg..'"\n',2)
+     	    end
+     	end
+     	
+   50	function M.assertErrorMsgContains( partialMsg, func, ... )
+     	    -- assert that calling f with the arguments will raise an error
+     	    -- example: assertError( f, 1, 2 ) => f(1,2) should generate an error
+****0	    local no_error, error_msg = pcall( func, ... )
+****0	    if no_error then
+****0	        error( 'No error generated when calling function but expected error containing: '..prettystr(partialMsg), 2 )
+     	    end
+****0	    if not string.find( error_msg, partialMsg, nil, true ) then
+****0	        local partialMsgStr = prettystr(partialMsg)
+****0	        local errorMsgStr = prettystr(error_msg)
+****0	        if hasNewLine(error_msg..partialMsg) then
+****0	            partialMsgStr = '\n'..partialMsgStr
+****0	            errorMsgStr = '\n'..errorMsgStr
+     	        end
+****0	        error( 'Error message does not contain: '..partialMsgStr..'\nError message received: '..errorMsgStr..'\n',2)
+     	    end
+     	end
+     	
+   50	function M.assertErrorMsgMatches( expectedMsg, func, ... )
+     	    -- assert that calling f with the arguments will raise an error
+     	    -- example: assertError( f, 1, 2 ) => f(1,2) should generate an error
+****0	    local no_error, error_msg = pcall( func, ... )
+****0	    if no_error then
+****0	        error( 'No error generated when calling function but expected error matching: "'..expectedMsg..'"', 2 )
+     	    end
+****0	    if not strMatch( error_msg, expectedMsg ) then
+****0	        if hasNewLine(error_msg..expectedMsg) then
+****0	            expectedMsg = '\n'..expectedMsg
+****0	            error_msg = '\n'..error_msg
+     	        end
+****0	        error( 'Error message does not match: "'..expectedMsg..'"\nError message received: "'..error_msg..'"\n',2)
+     	    end
+     	end
+     	
+     	local function errorMsgTypeMismatch( expectedType, actual )
+****0	    local actualStr = prettystr(actual)
+****0	    if hasNewLine(actualStr) then
+****0	        actualStr =  '\n'..actualStr
+     	    end
+****0	    return "Expected: a "..expectedType..' value, actual: type '..type(actual)..', value '..actualStr
+     	end
+     	
+   50	function M.assertIsNumber(value)
+****0	    if type(value) ~= 'number' then
+****0	        error( errorMsgTypeMismatch( 'number', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsString(value)
+****0	    if type(value) ~= "string" then
+****0	        error( errorMsgTypeMismatch( 'string', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsTable(value)
+****0	    if type(value) ~= 'table' then
+****0	        error( errorMsgTypeMismatch( 'table', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsBoolean(value)
+****0	    if type(value) ~= 'boolean' then
+****0	        error( errorMsgTypeMismatch( 'boolean', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsNil(value)
+****0	    if type(value) ~= "nil" then
+****0	        error( errorMsgTypeMismatch( 'nil', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsFunction(value)
+****0	    if type(value) ~= 'function' then
+****0	        error( errorMsgTypeMismatch( 'function', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsUserdata(value)
+****0	    if type(value) ~= 'userdata' then
+****0	        error( errorMsgTypeMismatch( 'userdata', value ), 2 )
+     	    end
+     	end
+     	
+   50	function M.assertIsCoroutine(value)
+****0	    if type(value) ~= 'thread' then
+****0	        error( errorMsgTypeMismatch( 'thread', value ), 2 )
+     	    end
+     	end
+     	
+   50	M.assertIsThread = M.assertIsCoroutine
+     	
+   50	function M.assertIs(actual, expected)
+****0	    if not M.ORDER_ACTUAL_EXPECTED then
+****0	        actual, expected = expected, actual
+     	    end
+****0	    if actual ~= expected then
+****0	        local expectedStr = prettystr(expected)
+****0	        local actualStr = prettystr(actual)
+****0	        if hasNewLine(expectedStr..actualStr) then
+****0	            expectedStr = '\n'..expectedStr..'\n'
+****0	            actualStr =  '\n'..actualStr
+     	        else
+****0	            expectedStr = expectedStr..', '
+     	        end
+****0	        error( 'Expected object and actual object are not the same\nExpected: '..expectedStr..'actual: '..actualStr, 2)
+     	    end
+     	end
+     	
+   50	function M.assertNotIs(actual, expected)
+****0	    if not M.ORDER_ACTUAL_EXPECTED then
+****0	        actual, expected = expected, actual
+     	    end
+****0	    if actual == expected then
+****0	        local expectedStr = prettystr(expected)
+****0	        if hasNewLine(expectedStr) then
+****0	            expectedStr = '\n'..expectedStr
+     	        end
+****0	        error( 'Expected object and actual object are the same object: '..expectedStr, 2 )
+     	    end
+     	end
+     	
+   50	function M.assertItemsEquals(actual, expected)
+     	    -- checks that the items of table expected
+     	    -- are contained in table actual. Warning, this function
+     	    -- is at least O(n^2)
+****0	    if not _is_table_items_equals(actual, expected ) then
+****0	        local expectedStr = prettystr(expected)
+****0	        local actualStr = prettystr(actual)
+****0	        if hasNewLine(expectedStr..actualStr) then
+****0	            expectedStr = '\n'..expectedStr
+****0	            actualStr =  '\n'..actualStr
+     	        end
+****0	        error( 'Contents of the tables are not identical:\nExpected: '..expectedStr..'\nActual: '..actualStr, 2 )
+     	    end
+     	end
+     	
+   50	M.assert_equals = M.assertEquals
+   50	M.assert_not_equals = M.assertNotEquals
+   50	M.assert_error = M.assertError
+   50	M.assert_true = M.assertTrue
+   50	M.assert_false = M.assertFalse
+   50	M.assert_is_number = M.assertIsNumber
+   50	M.assert_is_string = M.assertIsString
+   50	M.assert_is_table = M.assertIsTable
+   50	M.assert_is_boolean = M.assertIsBoolean
+   50	M.assert_is_nil = M.assertIsNil
+   50	M.assert_is_function = M.assertIsFunction
+   50	M.assert_is = M.assertIs
+   50	M.assert_not_is = M.assertNotIs
+     	
+     	
+   50	if EXPORT_ASSERT_TO_GLOBALS then
+****0	    assertError            = M.assertError
+****0	    assertTrue             = M.assertTrue
+****0	    assertFalse            = M.assertFalse
+****0	    assertNil              = M.assertNil
+****0	    assertNotNil           = M.assertNotNil
+****0	    assertEquals           = M.assertEquals
+****0	    assertAlmostEquals     = M.assertAlmostEquals
+****0	    assertNotEquals        = M.assertNotEquals
+****0	    assertNotAlmostEquals  = M.assertNotAlmostEquals
+****0	    assertStrContains      = M.assertStrContains
+****0	    assertStrIContains     = M.assertStrIContains
+****0	    assertNotStrContains   = M.assertNotStrContains
+****0	    assertNotStrIContains  = M.assertNotStrIContains
+****0	    assertStrMatches       = M.assertStrMatches
+****0	    assertErrorMsgEquals   = M.assertErrorMsgEquals
+****0	    assertErrorMsgContains = M.assertErrorMsgContains
+****0	    assertErrorMsgMatches  = M.assertErrorMsgMatches
+****0	    assertIsNumber         = M.assertIsNumber
+****0	    assertIsString         = M.assertIsString
+****0	    assertIsTable          = M.assertIsTable
+****0	    assertIsBoolean        = M.assertIsBoolean
+****0	    assertIsNil            = M.assertIsNil
+****0	    assertIsFunction       = M.assertIsFunction
+****0	    assertIsUserdata       = M.assertIsUserdata
+****0	    assertIsCoroutine      = M.assertIsCoroutine
+****0	    assertIs               = M.assertIs
+****0	    assertNotIs            = M.assertNotIs
+****0	    assertItemsEquals      = M.assertItemsEquals
+     	    -- aliases
+****0	    assert_equals          = M.assertEquals
+****0	    assert_not_equals      = M.assertNotEquals
+****0	    assert_error           = M.assertError
+****0	    assert_true            = M.assertTrue
+****0	    assert_false           = M.assertFalse
+****0	    assert_is_number       = M.assertIsNumber
+****0	    assert_is_string       = M.assertIsString
+****0	    assert_is_table        = M.assertIsTable
+****0	    assert_is_boolean      = M.assertIsBoolean
+****0	    assert_is_nil          = M.assertIsNil
+****0	    assert_is_function     = M.assertIsFunction
+****0	    assert_is              = M.assertIs
+****0	    assert_not_is          = M.assertNotIs
+     	end
+     	
+     	----------------------------------------------------------------
+     	--
+     	--                     Ouptutters
+     	--
+     	----------------------------------------------------------------
+     	
+     	----------------------------------------------------------------
+     	--                     class TapOutput
+     	----------------------------------------------------------------
+     	
+   50	local TapOutput = { -- class
+   50	    __class__ = 'TapOutput',
+   50	    runner = nil,
+   50	    result = nil,
+     	}
+   50	local TapOutput_MT = { __index = TapOutput }
+     	
+     	    -- For a good reference for TAP format, check: http://testanything.org/tap-specification.html
+     	
+   50	    function TapOutput:new()
+****0	        local t = {}
+****0	        t.verbosity = M.VERBOSITY_LOW
+****0	        setmetatable( t, TapOutput_MT )
+****0	        return t
+     	    end
+   50	    function TapOutput:startSuite() 
+****0	        print("1.."..self.result.testCount)
+****0	        print('# Started on '..self.result.startDate)
+     	    end
+   50	    function TapOutput:startClass(className) 
+****0	        if className ~= '[TestFunctions]' then
+****0	            print('# Starting class: '..className)
+     	        end
+     	    end
+   50	    function TapOutput:startTest(testName) end
+     	
+   50	    function TapOutput:addFailure( errorMsg, stackTrace )
+****0	        print(string.format("not ok %d\t%s", self.result.currentTestNumber, self.result.currentNode.testName ))
+****0	        if self.verbosity > M.VERBOSITY_LOW then
+****0	           print( prefixString( '    ', errorMsg ) )
+     	        end
+****0	        if self.verbosity > M.VERBOSITY_DEFAULT then
+****0	           print( prefixString( '    ', stackTrace ) )
+     	        end
+     	    end
+     	
+   50	    function TapOutput:endTest(testHasFailure)
+****0	        if not self.result.currentNode:hasFailure() then
+****0	            print(string.format("ok     %d\t%s", self.result.currentTestNumber, self.result.currentNode.testName ))
+     	        end
+     	    end
+     	
+   50	    function TapOutput:endClass() end
+     	
+   50	    function TapOutput:endSuite()
+****0	        local t = {}
+****0	        table.insert(t, string.format('# Ran %d tests in %0.3f seconds, %d successes, %d failures',
+****0	            self.result.testCount, self.result.duration, self.result.testCount-self.result.failureCount, self.result.failureCount ) )
+****0	        if self.result.nonSelectedCount > 0 then
+****0	            table.insert(t, string.format(", %d non selected tests", self.result.nonSelectedCount ) )
+     	        end
+****0	        print( table.concat(t) )
+****0	        return self.result.failureCount
+     	    end
+     	
+     	
+     	-- class TapOutput end
+     	
+     	----------------------------------------------------------------
+     	--                     class JUnitOutput
+     	----------------------------------------------------------------
+     	
+     	-- See directory junitxml for more information about the junit format
+   50	local JUnitOutput = { -- class
+   50	    __class__ = 'JUnitOutput',
+   50	    runner = nil,
+   50	    result = nil,
+     	}
+   50	local JUnitOutput_MT = { __index = JUnitOutput }
+     	
+   50	    function JUnitOutput:new()
+****0	        local t = {}
+****0	        t.testList = {}
+****0	        t.verbosity = M.VERBOSITY_LOW
+****0	        t.fd = nil
+****0	        t.fname = nil
+****0	        setmetatable( t, JUnitOutput_MT )
+****0	        return t
+     	    end
+   50	    function JUnitOutput:startSuite()
+     	
+     	        -- open xml file early to deal with errors
+****0	        if self.fname == nil then
+****0	            error('With Junit, an output filename must be supplied with --name!')
+     	        end
+****0	        if string.sub(self.fname,-4) ~= '.xml' then
+****0	            self.fname = self.fname..'.xml'
+     	        end
+****0	        self.fd = io.open(self.fname, "w")
+****0	        if self.fd == nil then
+****0	            error("Could not open file for writing: "..self.fname)
+     	        end
+     	
+****0	        print('# XML output to '..self.fname)
+****0	        print('# Started on '..self.result.startDate)
+     	    end
+   50	    function JUnitOutput:startClass(className) 
+****0	        if className ~= '[TestFunctions]' then
+****0	            print('# Starting class: '..className)
+     	        end
+     	    end
+   50	    function JUnitOutput:startTest(testName)
+****0	        print('# Starting test: '..testName)
+     	    end
+     	
+   50	    function JUnitOutput:addFailure( errorMsg, stackTrace )
+****0	        print('# Failure: '..errorMsg)
+     	        -- print('# '..stackTrace)
+     	    end
+     	
+   50	    function JUnitOutput:endTest(testHasFailure)
+     	    end
+     	
+   50	    function JUnitOutput:endClass()
+     	    end
+     	
+   50	    function JUnitOutput:endSuite()
+****0	        local t = {}
+****0	        table.insert(t, string.format('# Ran %d tests in %0.3f seconds, %d successes, %d failures',
+****0	            self.result.testCount, self.result.duration, self.result.testCount-self.result.failureCount, self.result.failureCount ) )
+****0	        if self.result.nonSelectedCount > 0 then
+****0	            table.insert(t, string.format(", %d non selected tests", self.result.nonSelectedCount ) )
+     	        end
+****0	        print( table.concat(t) )
+     	
+     	        -- XML file writing
+****0	        self.fd:write('<?xml version="1.0" encoding="UTF-8" ?>\n')
+****0	        self.fd:write('<testsuites>\n')
+****0	        self.fd:write(string.format(
+     	            '    <testsuite name="LuaUnit" id="00001" package="" hostname="localhost" tests="%d" timestamp="%s" time="%0.3f" errors="0" failures="%d">\n', 
+****0	            self.result.testCount, self.result.startIsodate, self.result.duration, self.result.failureCount ))
+****0	        self.fd:write("        <properties>\n")
+****0	        self.fd:write(string.format('            <property name="Lua Version" value="%s"/>\n', _VERSION ) )
+****0	        self.fd:write(string.format('            <property name="LuaUnit Version" value="%s"/>\n', M.VERSION) )
+     	        -- XXX please include system name and version if possible
+****0	        self.fd:write("        </properties>\n")
+     	
+****0	        for i,node in ipairs(self.result.tests) do
+****0	            self.fd:write(string.format('        <testcase classname="%s" name="%s" time="%0.3f">\n', 
+****0	                node.className, node.testName, node.duration ) )
+****0	            if node.status ~= M.NodeStatus.PASS then
+****0	                self.fd:write('            <failure type="' ..xmlEscape(node.msg) .. '">\n')  
+****0	                self.fd:write('                <![CDATA[' ..xmlCDataEscape(node.stackTrace) .. ']]></failure>\n')
+     	            end
+****0	            self.fd:write('        </testcase>\n')
+     	
+     	        end
+     	
+     	        -- Next to lines are Needed to validate junit ANT xsd but really not useful in general:
+****0	        self.fd:write('    <system-out/>\n')
+****0	        self.fd:write('    <system-err/>\n')
+     	
+****0	        self.fd:write('    </testsuite>\n')
+****0	        self.fd:write('</testsuites>\n') 
+****0	        self.fd:close()
+****0	        return self.result.failureCount
+     	    end
+     	
+     	
+     	-- class TapOutput end
+     	
+     	----------------------------------------------------------------
+     	--                     class TextOutput
+     	----------------------------------------------------------------
+     	
+     	--[[
+     	
+     	-- Python Non verbose:
+     	
+     	For each test: . or F or E
+     	
+     	If some failed tests:
+     	    ==============
+     	    ERROR / FAILURE: TestName (testfile.testclass)
+     	    ---------
+     	    Stack trace
+     	
+     	
+     	then --------------
+     	then "Ran x tests in 0.000s"
+     	then OK or FAILED (failures=1, error=1)
+     	
+     	-- Python Verbose:
+     	testname (filename.classname) ... ok
+     	testname (filename.classname) ... FAIL
+     	testname (filename.classname) ... ERROR
+     	
+     	then --------------
+     	then "Ran x tests in 0.000s"
+     	then OK or FAILED (failures=1, error=1)
+     	
+     	-- Ruby:
+     	Started
+     	 .
+     	 Finished in 0.002695 seconds.
+     	 
+     	 1 tests, 2 assertions, 0 failures, 0 errors
+     	
+     	-- Ruby:
+     	>> ruby tc_simple_number2.rb
+     	Loaded suite tc_simple_number2
+     	Started
+     	F..
+     	Finished in 0.038617 seconds.
+     	 
+     	  1) Failure:
+     	test_failure(TestSimpleNumber) [tc_simple_number2.rb:16]:
+     	Adding doesn't work.
+     	<3> expected but was
+     	<4>.
+     	 
+     	3 tests, 4 assertions, 1 failures, 0 errors
+     	
+     	-- Java Junit
+     	.......F.
+     	Time: 0,003
+     	There was 1 failure:
+     	1) testCapacity(junit.samples.VectorTest)junit.framework.AssertionFailedError
+     	    at junit.samples.VectorTest.testCapacity(VectorTest.java:87)
+     	    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     	    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+     	    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     	
+     	FAILURES!!!
+     	Tests run: 8,  Failures: 1,  Errors: 0
+     	
+     	
+     	-- Maven
+     	
+     	# mvn test
+     	-------------------------------------------------------
+     	 T E S T S
+     	-------------------------------------------------------
+     	Running math.AdditionTest
+     	Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 
+     	0.03 sec <<< FAILURE!
+     	
+     	Results :
+     	
+     	Failed tests: 
+     	  testLireSymbole(math.AdditionTest)
+     	
+     	Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+     	
+     	
+     	-- LuaUnit 
+     	---- non verbose
+     	* display . or F or E when running tests
+     	---- verbose
+     	* display test name + ok/fail
+     	----
+     	* blank line
+     	* number) ERROR or FAILURE: TestName
+     	   Stack trace
+     	* blank line
+     	* number) ERROR or FAILURE: TestName
+     	   Stack trace
+     	
+     	then --------------
+     	then "Ran x tests in 0.000s (%d not selected, %d skipped)"
+     	then OK or FAILED (failures=1, error=1)
+     	
+     	
+     	]]
+     	
+   50	local TextOutput = { __class__ = 'TextOutput' }
+   50	local TextOutput_MT = { -- class
+   50	    __index = TextOutput
+     	}
+     	
+   50	    function TextOutput:new()
+   24	        local t = {}
+   24	        t.runner = nil
+   24	        t.result = nil
+   24	        t.errorList ={}
+   24	        t.verbosity = M.VERBOSITY_DEFAULT
+   24	        setmetatable( t, TextOutput_MT )
+   24	        return t
+     	    end
+     	
+   50	    function TextOutput:startSuite()
+   24	        if self.verbosity > M.VERBOSITY_DEFAULT then
+****0	            print( 'Started on '.. self.result.startDate )
+     	        end
+     	    end
+     	
+   50	    function TextOutput:startClass(className)
+     	        -- display nothing when starting a new class
+     	    end
+     	
+   50	    function TextOutput:startTest(testName)
+  120	        if self.verbosity > M.VERBOSITY_DEFAULT then 
+****0	            io.stdout:write( "    ".. self.result.currentNode.testName.." ... " ) 
+     	        end 
+     	    end 
+     	
+   50	    function TextOutput:addFailure( errorMsg, stackTrace ) 
+     	        -- nothing
+     	    end
+     	
+   50	    function TextOutput:endTest(testHasFailure)
+  120	        if not testHasFailure then
+   54	            if self.verbosity > M.VERBOSITY_DEFAULT then
+****0	                io.stdout:write("Ok\n")
+     	            else 
+   54	                io.stdout:write(".")
+     	            end
+     	        else
+   66	            if self.verbosity > M.VERBOSITY_DEFAULT then
+****0	                io.stdout:write( 'FAIL\n' )
+****0	                print( self.result.currentNode.msg )
+     	                --[[
+     	                -- find out when to do this:
+     	                if self.verbosity > M.VERBOSITY_DEFAULT then
+     	                    print( self.result.currentNode.stackTrace )
+     	                end
+     	                ]]
+     	            else
+   66	                io.stdout:write("F") 
+     	            end
+     	        end
+     	    end
+     	
+   50	    function TextOutput:endClass()
+     	        -- nothing
+     	    end
+     	
+   50	    function TextOutput:displayOneFailedTest( index, failure )
+   66	        print(index..") "..failure.testName )
+   66	        print( failure.msg )
+   66	        print( failure.stackTrace )
+   66	        print()
+     	    end
+     	
+   50	    function TextOutput:displayFailedTests()
+   24	        if self.result.failureCount == 0 then return end
+   19	        print("Failed tests:")
+   19	        print("-------------")
+   85	        for i,v in ipairs(self.result.failures) do
+   66	            self:displayOneFailedTest( i, v )
+     	        end
+     	    end
+     	
+   50	    function TextOutput:endSuite()
+   24	        if self.verbosity > M.VERBOSITY_DEFAULT then
+****0	            print("=========================================================")
+     	        else
+   24	            print()
+     	        end
+   24	        self:displayFailedTests()
+   24	        local ignoredString = ""
+   24	        print( string.format("Ran %d tests in %0.3f seconds", self.result.testCount, self.result.duration ) )
+   24	        if self.result.failureCount == 0 then
+    5	            if self.result.nonSelectedCount > 0 then
+****0	                ignoredString = string.format('(ignored=%d)', self.result.nonSelectedCount )
+     	            end
+    5	            print('OK '.. ignoredString)
+     	        else
+   19	            if self.result.nonSelectedCount > 0 then
+****0	                ignoredString = ', '..ignoredString
+     	            end
+   19	            print(string.format('FAILED (failures=%d%s)', self.result.failureCount, ignoredString ) )
+     	        end
+     	    end
+     	
+     	
+     	-- class TextOutput end
+     	
+     	
+     	----------------------------------------------------------------
+     	--                     class NilOutput
+     	----------------------------------------------------------------
+     	
+     	local function nopCallable() 
+     	    --print(42) 
+****0	    return nopCallable
+     	end
+     	
+   50	local NilOutput = {
+   50	    __class__ = 'NilOuptut',    
+     	}
+   50	local NilOutput_MT = {
+   50	    __index = nopCallable,
+     	}
+   50	function NilOutput:new()
+****0	    local t = {}
+****0	    t.__class__ = 'NilOutput'
+****0	    setmetatable( t, NilOutput_MT )
+****0	    return t 
+     	end
+     	
+     	----------------------------------------------------------------
+     	--
+     	--                     class LuaUnit
+     	--
+     	----------------------------------------------------------------
+     	
+   50	M.LuaUnit = {
+   50	    outputType = TextOutput,
+   50	    verbosity = M.VERBOSITY_DEFAULT,
+   50	    __class__ = 'LuaUnit'
+   50	}
+     	
+   50	if EXPORT_ASSERT_TO_GLOBALS then
+****0	    LuaUnit = M.LuaUnit
+     	end
+   50	local LuaUnit_MT = { __index = M.LuaUnit }
+     	
+  100	    function M.LuaUnit:new()
+   24	        local t = {}
+   24	        setmetatable( t, LuaUnit_MT )
+   24	        return t
+     	    end
+     	
+     	    -----------------[[ Utility methods ]]---------------------
+     	
+  100	    function M.LuaUnit.isFunction(aObject) 
+     	        -- return true if aObject is a function
+  504	        return 'function' == type(aObject)
+     	    end
+     	
+  100	    function M.LuaUnit.isClassMethod(aName)
+     	        -- return true if aName contains a class + a method name in the form class:method
+  168	        return not not string.find(aName, '.', nil, true )
+     	    end
+     	
+  100	    function M.LuaUnit.splitClassMethod(someName)
+     	        -- return a pair className, methodName for a name in the form class:method
+     	        -- return nil if not a class + method name
+     	        -- name is class + method
+     	        local hasMethod, methodName, className
+  120	        hasMethod = string.find(someName, '.', nil, true )
+  120	        if not hasMethod then return nil end
+  120	        methodName = string.sub(someName, hasMethod+1)
+  120	        className = string.sub(someName,1,hasMethod-1)
+  120	        return className, methodName
+     	    end
+     	
+  100	    function M.LuaUnit.isMethodTestName( s )
+     	        -- return true is the name matches the name of a test method
+     	        -- default rule is that is starts with 'Test' or with 'test'
+  120	        if string.sub(s,1,4):lower() == 'test' then 
+  120	            return true
+     	        end
+****0	        return false
+     	    end
+     	
+  100	    function M.LuaUnit.isTestName( s )
+     	        -- return true is the name matches the name of a test
+     	        -- default rule is that is starts with 'Test' or with 'test'
+ 1440	        if string.sub(s,1,4):lower() == 'test' then 
+   24	            return true
+     	        end
+ 1416	        return false
+     	    end
+     	
+  100	    function M.LuaUnit.collectTests()
+     	        -- return a list of all test names in the global namespace
+     	        -- that match LuaUnit.isTestName
+     	
+   24	        local testNames = {}
+ 1464	        for k, v in pairs(_G) do 
+ 1440	            if M.LuaUnit.isTestName( k ) then
+   24	                table.insert( testNames , k )
+     	            end
+     	        end
+   24	        table.sort( testNames )
+   24	        return testNames 
+     	    end
+     	
+  100	    function M.LuaUnit.parseCmdLine( cmdLine )
+     	        -- parse the command line 
+     	        -- Supported command line parameters:
+     	        -- --verbose, -v: increase verbosity
+     	        -- --quiet, -q: silence output
+     	        -- --output, -o, + name: select output type
+     	        -- --pattern, -p, + pattern: run test matching pattern, may be repeated
+     	        -- --name, -n, + fname: name of output file for junit, default to stdout
+     	        -- [testnames, ...]: run selected test names
+     	        --
+     	        -- Returnsa table with the following fields:
+     	        -- verbosity: nil, M.VERBOSITY_DEFAULT, M.VERBOSITY_QUIET, M.VERBOSITY_VERBOSE
+     	        -- output: nil, 'tap', 'junit', 'text', 'nil'
+     	        -- testNames: nil or a list of test names to run
+     	        -- pattern: nil or a list of patterns
+     	
+   24	        local result = {}
+   24	        local state = nil
+   24	        local SET_OUTPUT = 1
+   24	        local SET_PATTERN = 2
+   24	        local SET_FNAME = 3
+     	
+   24	        if cmdLine == nil then
+****0	            return result
+     	        end
+     	
+     	        local function parseOption( option )
+****0	            if option == '--help' or option == '-h' then
+****0	                result['help'] = true
+****0	                return
+     	            end
+****0	            if option == '--version' then
+****0	                result['version'] = true
+****0	                return
+     	            end
+****0	            if option == '--verbose' or option == '-v' then
+****0	                result['verbosity'] = M.VERBOSITY_VERBOSE
+****0	                return
+     	            end
+****0	            if option == '--quiet' or option == '-q' then
+****0	                result['verbosity'] = M.VERBOSITY_QUIET
+****0	                return
+     	            end
+****0	            if option == '--output' or option == '-o' then
+****0	                state = SET_OUTPUT
+****0	                return state
+     	            end
+****0	            if option == '--name' or option == '-n' then
+****0	                state = SET_FNAME
+****0	                return state
+     	            end
+****0	            if option == '--pattern' or option == '-p' then
+****0	                state = SET_PATTERN
+****0	                return state
+     	            end
+****0	            error('Unknown option: '..option,3)
+     	        end
+     	
+     	        local function setArg( cmdArg, state )
+****0	            if state == SET_OUTPUT then
+****0	                result['output'] = cmdArg
+****0	                return
+     	            end
+****0	            if state == SET_FNAME then
+****0	                result['fname'] = cmdArg
+****0	                return
+     	            end
+****0	            if state == SET_PATTERN then
+****0	                if result['pattern'] then
+****0	                    table.insert( result['pattern'], cmdArg )
+     	                else
+****0	                    result['pattern'] = { cmdArg }
+     	                end
+****0	                return
+     	            end
+****0	            error('Unknown parse state: '.. state)
+     	        end
+     	
+     	
+   24	        for i, cmdArg in ipairs(cmdLine) do
+****0	            if state ~= nil then
+****0	                setArg( cmdArg, state, result )
+****0	                state = nil
+     	            else 
+****0	                if cmdArg:sub(1,1) == '-' then
+****0	                    state = parseOption( cmdArg )
+     	                else 
+****0	                    if result['testNames'] then
+****0	                        table.insert( result['testNames'], cmdArg )
+     	                    else
+****0	                        result['testNames'] = { cmdArg }
+     	                    end
+     	                end
+     	            end
+     	        end
+     	
+   24	        if result['help'] then
+****0	            M.LuaUnit.help()
+     	        end
+     	
+   24	        if result['version'] then
+****0	            M.LuaUnit.version()
+     	        end
+     	
+   24	        if state ~= nil then
+****0	            error('Missing argument after '..cmdLine[ #cmdLine ],2 )
+     	        end
+     	
+   24	        return result
+     	    end
+     	
+  100	    function M.LuaUnit.help()
+****0	        print(M.USAGE)
+****0	        os.exit(0)
+     	    end
+     	
+  100	    function M.LuaUnit.version()
+****0	        print('LuaUnit v'..M.VERSION..' by Philippe Fremy <phil@freehackers.org>')
+****0	        os.exit(0)
+     	    end
+     	
+  100	    function M.LuaUnit.patternInclude( patternFilter, expr )
+     	        -- check if any of patternFilter is contained in expr. If so, return true.
+     	        -- return false if None of the patterns are contained in expr
+     	        -- if patternFilter is nil, return true (no filtering)
+****0	        if patternFilter == nil then
+****0	            return true
+     	        end
+     	
+****0	        for i,pattern in ipairs(patternFilter) do
+****0	            if string.find(expr, pattern) then
+****0	                return true
+     	            end
+     	        end
+     	
+****0	        return false
+     	    end
+     	
+     	    --------------[[ Output methods ]]-------------------------
+     	
+     	
+   50	    local NodeStatus = { -- class
+   50	        __class__ = 'NodeStatus',
+     	    }
+   50	    M.NodeStatus = NodeStatus
+   50	    local NodeStatus_MT = { __index = NodeStatus }
+     	
+     	    -- values of status 
+   50	    NodeStatus.PASS='PASS'
+   50	    NodeStatus.FAIL='FAIL'
+     	
+   50	    function NodeStatus:new( number, testName, className )
+  120	        local t = {}
+  120	        t.number = number
+  120	        t.testName = testName
+  120	        t.className = className
+  120	        self:pass()
+  120	        setmetatable( t, NodeStatus_MT )
+  120	        return t
+     	    end
+     	
+   50	    function NodeStatus:pass()
+  120	        self.status = self.PASS
+     	        -- useless but we know it's the field we want to use
+  120	        self.msg = nil
+  120	        self.stackTrace = nil
+     	    end
+     	
+   50	    function NodeStatus:fail(msg, stackTrace)
+   66	        self.status = self.FAIL
+   66	        self.msg = msg
+   66	        self.stackTrace = stackTrace
+     	    end
+     	
+   50	    function NodeStatus:hasFailure()
+     	            -- print('hasFailure: '..prettystr(self))
+  240	            return (self.status ~= NodeStatus.PASS)
+     	    end
+     	
+  100	    function M.LuaUnit:startSuite(testCount, nonSelectedCount)
+   24	        self.result = {}
+   24	        self.result.failureCount = 0
+   24	        self.result.testCount = testCount
+   24	        self.result.nonSelectedCount = nonSelectedCount
+   24	        self.result.currentTestNumber = 0
+   24	        self.result.currentClassName = ""
+   24	        self.result.currentNode = nil
+   24	        self.result.suiteStarted = true
+   24	        self.result.startTime = os.clock()
+   24	        self.result.startDate = os.date()
+   24	        self.result.startIsodate = os.date('%Y-%m-%dT%H:%M:%S')
+   24	        self.result.patternFilter = self.patternFilter
+   24	        self.result.tests = {}
+   24	        self.result.failures = {}
+     	
+   24	        self.outputType = self.outputType or TextOutput
+   24	        self.output = self.outputType:new()
+   24	        self.output.runner = self
+   24	        self.output.result = self.result
+   24	        self.output.verbosity = self.verbosity
+   24	        self.output.fname = self.fname
+   24	        self.output:startSuite()
+     	    end
+     	
+  100	    function M.LuaUnit:startClass( className )
+   24	        self.result.currentClassName = className
+   24	        self.output:startClass( className )
+     	    end
+     	
+  100	    function M.LuaUnit:startTest( testName  )
+  120	        self.result.currentTestNumber = self.result.currentTestNumber + 1
+  240	        self.result.currentNode = NodeStatus:new(
+  120	            self.result.currentTestNumber,
+  120	            testName,
+  120	            self.result.currentClassName
+  240	        )
+  120	        self.result.currentNode.startTime = os.clock()
+  120	        table.insert( self.result.tests, self.result.currentNode )
+  120	        self.output:startTest( testName )
+     	    end
+     	
+  100	    function M.LuaUnit:addFailure( errorMsg, stackTrace )
+   66	        if self.result.currentNode.status == NodeStatus.PASS then
+   66	            self.result.failureCount = self.result.failureCount + 1
+   66	            self.result.currentNode:fail( errorMsg, stackTrace )
+   66	            table.insert( self.result.failures, self.result.currentNode )
+     	        end
+   66	        self.output:addFailure( errorMsg, stackTrace )
+     	    end
+     	
+  100	    function M.LuaUnit:endTest()
+     	        -- print( 'endTEst() '..prettystr(self.result.currentNode))
+     	        -- print( 'endTEst() '..prettystr(self.result.currentNode:hasFailure()))
+  120	        self.result.currentNode.duration = os.clock() - self.result.currentNode.startTime 
+  120	        self.result.currentNode.startTime = nil
+  120	        self.output:endTest( self.result.currentNode:hasFailure() )
+  120	        self.result.currentNode = nil
+     	    end
+     	
+  100	    function M.LuaUnit:endClass()
+   24	        self.output:endClass()
+     	    end
+     	
+  100	    function M.LuaUnit:endSuite()
+   24	        if self.result.suiteStarted == false then
+****0	            error('LuaUnit:endSuite() -- suite was already ended' )
+     	        end
+   24	        self.result.duration = os.clock()-self.result.startTime
+   24	        self.result.suiteStarted = false
+   24	        self.output:endSuite()
+     	    end
+     	
+  100	    function M.LuaUnit:setOutputType(outputType)
+     	        -- default to text
+     	        -- tap produces results according to TAP format
+****0	        if outputType:upper() == "NIL" then
+****0	            self.outputType = NilOutput
+****0	            return
+     	        end
+****0	        if outputType:upper() == "TAP" then
+****0	            self.outputType = TapOutput
+****0	            return
+     	        end 
+****0	        if outputType:upper() == "JUNIT" then
+****0	            self.outputType = JUnitOutput
+****0	            return
+     	        end 
+****0	        if outputType:upper() == "TEXT" then
+****0	            self.outputType = TextOutput
+****0	            return
+     	        end
+****0	        error( 'No such format: '..outputType,2)
+     	    end
+     	
+  100	    function M.LuaUnit:setVerbosity( verbosity )
+****0	        self.verbosity = verbosity
+     	    end
+     	
+  100	    function M.LuaUnit:setFname( fname )
+****0	        self.fname = fname
+     	    end
+     	
+     	    --------------[[ Runner ]]-----------------
+     	
+   50	    local SPLITTER = '\n>----------<\n'
+     	
+  100	    function M.LuaUnit:protectedCall( classInstance , methodInstance, prettyFuncName)
+     	        -- if classInstance is nil, this is just a function call
+     	        -- else, it's method of a class being called.
+     	
+     	        local function err_handler(e)
+   66	            return debug.traceback(e..SPLITTER, 3)
+     	        end
+     	
+     	        local ok, fullErrMsg, stackTrace, errMsg, t
+  120	        if classInstance then
+     	            -- stupid Lua < 5.2 does not allow xpcall with arguments so let's use a workaround
+  240	            ok, fullErrMsg = xpcall( function () methodInstance(classInstance) end, err_handler )
+     	        else
+****0	            ok, fullErrMsg = xpcall( function () methodInstance() end, err_handler )
+     	        end
+  120	        if ok then
+   54	            return ok
+     	        end
+     	
+   66	        t = strsplit( SPLITTER, fullErrMsg )
+   66	        errMsg = t[1]
+   66	        stackTrace = string.sub(t[2],2)
+   66	        if prettyFuncName then
+     	            -- we do have the real method name, improve the stack trace
+   66	            stackTrace = string.gsub( stackTrace, "in function 'methodInstance'", "in function '"..prettyFuncName.."'")
+     	            -- Needed for Lua 5.3 
+   66	            stackTrace = string.gsub( stackTrace, "in method 'methodInstance'", "in method '"..prettyFuncName.."'")
+   66	            stackTrace = string.gsub( stackTrace, "in upvalue 'methodInstance'", "in method '"..prettyFuncName.."'")
+     	        end
+     	
+   66	        if STRIP_LUAUNIT_FROM_STACKTRACE then
+   66	            stackTrace = stripLuaunitTrace( stackTrace )
+     	        end
+     	
+   66	        return ok, errMsg, stackTrace
+     	    end
+     	
+     	
+  100	    function M.LuaUnit:execOneFunction(className, methodName, classInstance, methodInstance)
+     	        -- When executing a test function, className and classInstance must be nil
+     	        -- When executing a class method, all parameters must be set
+     	
+     	        local ok, errMsg, stackTrace, prettyFuncName
+     	
+  120	        if type(methodInstance) ~= 'function' then
+****0	            error( tostring(methodName)..' must be a function, not '..type(methodInstance))
+     	        end
+     	
+  120	        if className == nil then
+****0	            className = '[TestFunctions]'
+****0	            prettyFuncName = methodName
+     	        else
+  120	            prettyFuncName = className..'.'..methodName
+     	        end
+     	
+  120	        if self.lastClassName ~= className then
+   24	            if self.lastClassName ~= nil then
+****0	                self:endClass()
+     	            end
+   24	            self:startClass( className )
+   24	            self.lastClassName = className
+     	        end
+     	
+  120	        self:startTest(prettyFuncName)
+     	
+     	        -- run setUp first(if any)
+  120	        if classInstance and self.isFunction( classInstance.setUp ) then
+****0	            ok, errMsg, stackTrace = self:protectedCall( classInstance, classInstance.setUp, className..'.setUp')
+****0	            if not ok then
+****0	                self:addFailure( errMsg, stackTrace )
+     	            end
+     	        end
+     	
+     	        -- run testMethod()
+  120	        if not self.result.currentNode:hasFailure() then
+  120	            ok, errMsg, stackTrace = self:protectedCall( classInstance, methodInstance, prettyFuncName)
+  120	            if not ok then
+   66	                self:addFailure( errMsg, stackTrace )
+     	            end
+     	        end
+     	
+     	        -- lastly, run tearDown(if any)
+  120	        if classInstance and self.isFunction(classInstance.tearDown) then
+****0	            ok, errMsg, stackTrace = self:protectedCall( classInstance, classInstance.tearDown, className..'.tearDown')
+****0	            if not ok then
+****0	                self:addFailure( errMsg, stackTrace )
+     	            end
+     	        end
+     	
+  120	        self:endTest()
+     	    end
+     	
+  100	    function M.LuaUnit.expandOneClass( result, className, classInstance )
+     	        -- add all test methods of classInstance to result
+  144	        for methodName, methodInstance in sortedPairs(classInstance) do
+  120	            if M.LuaUnit.isFunction(methodInstance) and M.LuaUnit.isMethodTestName( methodName ) then
+  120	                table.insert( result, { className..'.'..methodName, classInstance } )
+     	            end
+     	        end
+     	    end
+     	
+  100	    function M.LuaUnit.expandClasses( listOfNameAndInst )
+     	        -- expand all classes (proveded as {className, classInstance}) to a list of {className.methodName, classInstance}
+     	        -- functions and methods remain untouched
+   24	        local result = {}
+     	
+   48	        for i,v in ipairs( listOfNameAndInst ) do
+   24	            local name, instance = v[1], v[2]
+   24	            if M.LuaUnit.isFunction(instance) then
+****0	                table.insert( result, { name, instance } )
+     	            else 
+   24	                if type(instance) ~= 'table' then
+****0	                    error( 'Instance must be a table or a function, not a '..type(instance)..', value '..prettystr(instance))
+     	                end
+   24	                if M.LuaUnit.isClassMethod( name ) then
+****0	                    className, methodName = M.LuaUnit.splitClassMethod( name )
+****0	                    methodInstance = instance[methodName]
+****0	                    if methodInstance == nil then
+****0	                        error( "Could not find method in class "..tostring(className).." for method "..tostring(methodName) )
+     	                    end
+****0	                    table.insert( result, { name, instance } )
+     	                else
+   24	                    M.LuaUnit.expandOneClass( result, name, instance )
+     	                end
+     	            end
+     	        end
+     	
+   24	        return result
+     	    end
+     	
+  100	    function M.LuaUnit.applyPatternFilter( patternFilter, listOfNameAndInst )
+   24	        local included = {}
+   24	        local excluded = {}
+     	
+  144	        for i,v in ipairs( listOfNameAndInst ) do
+  120	            local name, instance = v[1], v[2]
+     	
+  120	            if patternFilter and not M.LuaUnit.patternInclude( patternFilter, name ) then
+****0	                table.insert( excluded, v )
+     	            else
+  120	                table.insert( included, v )
+     	            end
+     	        end
+   24	        return included, excluded
+     	
+     	    end
+     	
+  100	    function M.LuaUnit:runSuiteByInstances( listOfNameAndInst )
+     	        -- Run an explicit list of tests. All test instances and names must be supplied.
+     	        -- each test must be one of:
+     	        --   * { function name, function instance }
+     	        --   * { class name, class instance }
+     	        --   * { class.method name, class instance }
+     	
+     	        local expandedList, filteredList, filteredOutList, className, methodName, methodInstance
+   24	        expandedList = self.expandClasses( listOfNameAndInst )
+     	
+   24	        filteredList, filteredOutList = self.applyPatternFilter( self.patternFilter, expandedList )
+     	
+   24	        self:startSuite( #filteredList, #filteredOutList )
+     	
+  144	        for i,v in ipairs( filteredList ) do
+  120	            local name, instance = v[1], v[2]
+  120	            if M.LuaUnit.isFunction(instance) then
+****0	                self:execOneFunction( nil, name, nil, instance )
+     	            else 
+  120	                if type(instance) ~= 'table' then
+****0	                    error( 'Instance must be a table or a function, not a '..type(instance)..', value '..prettystr(instance))
+     	                else
+  120	                    assert( M.LuaUnit.isClassMethod( name ) )
+  120	                    className, methodName = M.LuaUnit.splitClassMethod( name )
+  120	                    methodInstance = instance[methodName]
+  120	                    if methodInstance == nil then
+****0	                        error( "Could not find method in class "..tostring(className).." for method "..tostring(methodName) )
+     	                    end
+  120	                    self:execOneFunction( className, methodName, instance, methodInstance )
+     	                end
+     	            end
+     	        end
+     	
+   24	        if self.lastClassName ~= nil then
+   24	            self:endClass()
+     	        end
+     	
+   24	        self:endSuite()
+     	    end
+     	
+  100	    function M.LuaUnit:runSuiteByNames( listOfName )
+     	        -- Run an explicit list of test names
+     	
+     	        local  className, methodName, instanceName, instance, methodInstance
+   24	        local listOfNameAndInst = {}
+     	
+   48	        for i,name in ipairs( listOfName ) do
+   24	            if M.LuaUnit.isClassMethod( name ) then
+****0	                className, methodName = M.LuaUnit.splitClassMethod( name )
+****0	                instanceName = className
+****0	                instance = _G[instanceName]
+     	
+****0	                if instance == nil then
+****0	                    error( "No such name in global space: "..instanceName )
+     	                end
+     	
+****0	                if type(instance) ~= 'table' then
+****0	                    error( 'Instance of '..instanceName..' must be a table, not '..type(instance))
+     	                end
+     	
+****0	                methodInstance = instance[methodName]
+****0	                if methodInstance == nil then
+****0	                    error( "Could not find method in class "..tostring(className).." for method "..tostring(methodName) )
+     	                end
+     	
+     	            else
+     	                -- for functions and classes
+   24	                instanceName = name
+   24	                instance = _G[instanceName]
+     	            end
+     	
+   24	            if instance == nil then
+****0	                error( "No such name in global space: "..instanceName )
+     	            end
+     	
+   24	            if (type(instance) ~= 'table' and type(instance) ~= 'function') then
+****0	                error( 'Name must match a function or a table: '..instanceName )
+     	            end
+     	
+   24	            table.insert( listOfNameAndInst, { name, instance } )
+     	        end
+     	
+   24	        self:runSuiteByInstances( listOfNameAndInst )
+     	    end
+     	
+  100	    function M.LuaUnit.run(...)
+     	        -- Run some specific test classes.
+     	        -- If no arguments are passed, run the class names specified on the
+     	        -- command line. If no class name is specified on the command line
+     	        -- run all classes whose name starts with 'Test'
+     	        --
+     	        -- If arguments are passed, they must be strings of the class names 
+     	        -- that you want to run or generic command line arguments (-o, -p, -v, ...)
+     	
+   24	        local runner = M.LuaUnit.new()
+   24	        return runner:runSuite(...)
+     	    end
+     	
+  100	    function M.LuaUnit:runSuite( ... )
+     	
+   24	        local args={...};
+   24	        if args[1] ~= nil and type(args[1]) == 'table' and args[1].__class__ == 'LuaUnit' then
+     	            -- run was called with the syntax M.LuaUnit:runSuite()
+     	            -- we support both M.LuaUnit.run() and M.LuaUnit:run()
+     	            -- strip out the first argument
+****0	            table.remove(args,1)
+     	        end
+     	
+   24	        if #args == 0 then
+   24	            args = cmdline_argv
+     	        end
+     	
+     	        local no_error, error_msg, options, val
+   24	        no_error, val = pcall( M.LuaUnit.parseCmdLine, args )
+   24	        if not no_error then 
+****0	            error_msg = val
+****0	            print(error_msg)
+****0	            print()
+****0	            print(M.USAGE)
+****0	            os.exit(-1)
+     	        end 
+     	
+   24	        options = val
+     	
+   24	        if options.verbosity then
+****0	            self:setVerbosity( options.verbosity )
+     	        end
+     	
+   24	        if options.output and options.output:lower() == 'junit' and options.fname == nil then
+****0	            print('With junit output, a filename must be supplied with -n or --name')
+****0	            os.exit(-1)
+     	        end
+     	
+   24	        if options.output then
+****0	            no_error, val = pcall(self.setOutputType,self,options.output)
+****0	            if not no_error then 
+****0	                error_msg = val
+****0	                print(error_msg)
+****0	                print()
+****0	                print(M.USAGE)
+****0	                os.exit(-1)
+     	            end 
+     	        end
+     	
+   24	        if options.fname then
+****0	            self:setFname( options.fname )
+     	        end
+     	
+   24	        if options.pattern then
+****0	            self.patternFilter = options.pattern
+     	        end
+     	
+   24	        local testNames = options['testNames']
+     	
+   24	        if testNames == nil then
+   24	            testNames = M.LuaUnit.collectTests()
+     	        end
+     	
+   24	        self:runSuiteByNames( testNames )
+     	
+   24	        return self.result.failureCount
+     	    end
+     	
+     	-- class LuaUnit
+     	
+   50	return M
+
+==============================================================================
+runtests.lua
+==============================================================================
+     	-- Unit testing starts
+   50	M = {}
+   50	luaUnit = require('test/luaunit')
+   50	local playerMod = require('player')
+   50	local gridMod = require('grid')
+   46	local netMod = require('networkadapter')
+   19	require('mockobjects')
+   49	require('printer')
+     	--setMocks()
+     	
+   20	WINDOW_WIDTH = 320
+   18	WINDOW_HEIGHT = 480
+     	
+   45	require('mockobjects')
+     	
+     	
+   45	TestPlayer = {} --test class
+   43		local net = netMod.NetworkAdapter(false)
+   32		local col = "Collect"
+   18		local gameData = net.getGameState(col)
+   31		local grid = gridMod.Grid("images/dirtcell.png", "Collect", gameData, false)
+   46		print(gameData['goldLocations'])
+     		
+     		
+   16		function TestPlayer:testMoveLeft()
+   36			local player = playerMod.CollectPlayer(grid, 1, 8, false)
+   25			luaUnit.assertEquals(player.getX(), 1)
+   23			luaUnit.assertEquals(player.getY(), 1)
+   22			luaUnit.assertEquals(player.getXSpeed(), 0)
+   10			luaUnit.assertEquals(player.getYSpeed(), 0)
+   20			luaUnit.assertEquals(player.getXDirection(), 0)
+    8			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   14			player.moveLeft()
+     			
+   14			luaUnit.assertEquals(player.getX(), 1)
+   20			luaUnit.assertEquals(player.getY(), 1)
+   18			luaUnit.assertEquals(player.getXSpeed(), 0)
+   18			luaUnit.assertEquals(player.getYSpeed(), 0)
+    6			luaUnit.assertEquals(player.getXDirection(), 0)
+   17			luaUnit.assertEquals(player.getYDirection(), 0)
+   17			player:destroy()
+     			
+   13			player = playerMod.CollectPlayer(grid, 2, 8, false)
+   17			luaUnit.assertEquals(player.getX(), 10)
+   16			luaUnit.assertEquals(player.getY(), 10)
+   16			luaUnit.assertEquals(player.getXSpeed(), 0)
+    5			luaUnit.assertEquals(player.getYSpeed(), 0)
+   16			luaUnit.assertEquals(player.getXDirection(), 0)
+    5			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   14			player:moveLeft()
+     			
+   12			luaUnit.assertEquals(player.getX(), 9)
+   13			luaUnit.assertEquals(player.getY(), 10)
+   14			luaUnit.assertEquals(player.getXSpeed(), 2)
+   21			luaUnit.assertEquals(player.getYSpeed(), 0)
+   31			luaUnit.assertEquals(player.getXDirection(), -1)
+   21			luaUnit.assertEquals(player.getYDirection(), 0)
+   37			player:destroy()
+     		end
+     	
+   14		function TestPlayer:testMoveRight()
+   34			local player = playerMod.CollectPlayer(grid, 1, 8, false)
+   23			luaUnit.assertEquals(player.getX(), 1)
+   14			luaUnit.assertEquals(player.getY(), 1)
+   14			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   14			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   12			player:moveRight()
+     			
+   10			luaUnit.assertEquals(player.getX(), 2)
+   12			luaUnit.assertEquals(player.getY(), 1)
+   12			luaUnit.assertEquals(player.getXSpeed(), 2)
+   12			luaUnit.assertEquals(player.getYSpeed(), 0)
+    4			luaUnit.assertEquals(player.getXDirection(), 1)
+   12			luaUnit.assertEquals(player.getYDirection(), 0)
+   12			player:destroy()
+     			
+   10			player = playerMod.CollectPlayer(grid, 2, 8, false)
+   12			luaUnit.assertEquals(player.getX(), 10)
+   12			luaUnit.assertEquals(player.getY(), 10)
+   12			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   12			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   11			player:moveRight()
+     			
+   12			luaUnit.assertEquals(player.getX(), 10)
+   12			luaUnit.assertEquals(player.getY(), 10)
+   13			luaUnit.assertEquals(player.getXSpeed(), 0)
+   20			luaUnit.assertEquals(player.getYSpeed(), 0)
+   30			luaUnit.assertEquals(player.getXDirection(), 0)
+   20			luaUnit.assertEquals(player.getYDirection(), 0)
+   36			player:destroy()
+     		end
+     		
+   14		function TestPlayer:testMoveUp()
+   34			local player = playerMod.CollectPlayer(grid, 1, 8, false)
+   23			luaUnit.assertEquals(player.getX(), 1)
+   14			luaUnit.assertEquals(player.getY(), 1)
+   14			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   14			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   12			player:moveUp()
+     			
+   12			luaUnit.assertEquals(player.getX(), 1)
+   14			luaUnit.assertEquals(player.getY(), 1)
+   14			luaUnit.assertEquals(player.getXSpeed(), 0)
+   14			luaUnit.assertEquals(player.getYSpeed(), 0)
+    4			luaUnit.assertEquals(player.getXDirection(), 0)
+   14			luaUnit.assertEquals(player.getYDirection(), 0)
+   14			player:destroy()
+     			
+   12			player = playerMod.CollectPlayer(grid, 2, 8, false)
+   14			luaUnit.assertEquals(player.getX(), 10)
+   14			luaUnit.assertEquals(player.getY(), 10)
+   14			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   14			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   13			player:moveUp()
+     			
+   14			luaUnit.assertEquals(player.getX(), 10)
+   12			luaUnit.assertEquals(player.getY(), 9)
+   13			luaUnit.assertEquals(player.getXSpeed(), 0)
+   20			luaUnit.assertEquals(player.getYSpeed(), 2)
+   30			luaUnit.assertEquals(player.getXDirection(), 0)
+   20			luaUnit.assertEquals(player.getYDirection(), -1)
+   36			player:destroy()
+     		end
+     		
+   14		function TestPlayer:testMoveDown()
+   34			local player = playerMod.CollectPlayer(grid, 1, 8, false)
+   23			luaUnit.assertEquals(player.getX(), 1)
+   14			luaUnit.assertEquals(player.getY(), 1)
+   14			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   14			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   12			player:moveDown()
+     			
+   12			luaUnit.assertEquals(player.getX(), 1)
+   12			luaUnit.assertEquals(player.getY(), 2)
+   12			luaUnit.assertEquals(player.getXSpeed(), 0)
+   12			luaUnit.assertEquals(player.getYSpeed(), 2)
+    4			luaUnit.assertEquals(player.getXDirection(), 0)
+   12			luaUnit.assertEquals(player.getYDirection(), 1)
+   12			player:destroy()
+     			
+   10			player = playerMod.CollectPlayer(grid, 2, 8, false)
+   12			luaUnit.assertEquals(player.getX(), 10)
+   12			luaUnit.assertEquals(player.getY(), 10)
+   12			luaUnit.assertEquals(player.getXSpeed(), 0)
+    4			luaUnit.assertEquals(player.getYSpeed(), 0)
+   12			luaUnit.assertEquals(player.getXDirection(), 0)
+    4			luaUnit.assertEquals(player.getYDirection(), 0)
+     			
+   11			player:moveDown()
+     			
+   12			luaUnit.assertEquals(player.getX(), 10)
+   12			luaUnit.assertEquals(player.getY(), 10)
+   13			luaUnit.assertEquals(player.getXSpeed(), 0)
+   20			luaUnit.assertEquals(player.getYSpeed(), 0)
+   30			luaUnit.assertEquals(player.getXDirection(), 0)
+   20			luaUnit.assertEquals(player.getYDirection(), 0)
+   36			player:destroy()
+     		end
+     		
+   14		function TestPlayer:testDig()
+   24			local player = playerMod.CollectPlayer(grid, 1, 8, false)
+   23			local cell = grid.rows[1][1]
+    4			cell.hiddenTreasure = false
+     			
+    7			luaUnit.assertEquals(player.getScore(), 0)
+     			
+    7			player:dig()
+   10			luaUnit.assertEquals(player.getScore(), 0)
+     			
+    7			cell.hiddenTreasure = true
+   14			player:dig()
+   24			luaUnit.assertEquals(player.getScore(), 8)
+   19			player:destroy()
+   36			grid:destroy()
+     		end
+     	
+   12	function M.run()
+   37		luaUnit.LuaUnit.run()
+     	end
+     	
+   12	M.run()
+     	--TestPlayer:testMoveLeft()
+     	
+    2	return M
+
+==============================================================================
+Summary
+==============================================================================
+
+138	134	50.74%	.\grid.lua
+16	24	40.00%	.\list.lua
+25	0	100.00%	.\mockobjects.lua
+17	28	37.78%	.\networkadapter.lua
+262	132	66.50%	.\player.lua
+17	4	80.95%	.\printer.lua
+450	533	45.78%	.\test/luaunit.lua
+156	0	100.00%	runtests.lua
+------------------------
+1081	855	55.84%	
