@@ -97,9 +97,9 @@ function CollectGame(netAdapter)
 			print("testing")
 			return
 		end
-		self.grid = gridMod.Grid(imagePath, self.gameType, gameState, testing)
+		self.grid = gridMod.Grid(imagePath, self.gameType, gameState)
 		self.grid:setCollectibleAt(1, 4,  collectibleMod.ShovelRepairPowerUp())
-		self.grid:setCollectibleAt(4, 1,  collectibleMod.MetalDetectorPowerUp())
+		self.grid:setCollectibleAt(4, 1,  collectibleMod.BuriedTreasure())
 	end
 	
 	local setupPlayers = function(gameState, testing)

@@ -77,13 +77,10 @@ function Character:initMoveBuffer()
 	self.action = false
 end
 
-function Character:enterGrid(grid, imagePath, testing)
+function Character:enterGrid(grid, imagePath)
 	self.x = self.initX
 	self.y = self.initY
 	self.grid = grid
-	if testing then
-		return
-	end
 	local imageScale = WINDOW_WIDTH / self.grid.numRows
 	local inc = 1 / self.grid.numRows
 	local startY = WINDOW_HEIGHT / 4
@@ -113,11 +110,11 @@ setmetatable(Player, {
 
 EVENT_DURATION = 16
 
-function Player:_init(grid, playerNum, imagePath, maxMoves, testing)
+function Player:_init(grid, playerNum, imagePath, maxMoves)
 	self:initPlayerAttributes(grid, playerNum, maxMoves)
 	self:initMoveBuffer()
-	self:enterGrid(grid, imagePath, testing)
-	self:setScoreField(playerNum, testing)
+	self:enterGrid(grid, imagePath)
+	self:setScoreField(playerNum)
 end
 
 function Player:initPlayerAttributes(grid, playerNum, maxMoves)
@@ -138,12 +135,9 @@ function Player:initPlayerAttributes(grid, playerNum, maxMoves)
 	self.maxMoves = maxMoves
 end
 
-function Player:setScoreField(playerNum, testing)
+function Player:setScoreField(playerNum)
 	self.score = 0
 	local playerName = ""
-	if testing then
-		return
-	end
 	local textField = TextField.new(nil, self.name .. ": " .. self.score)
 	if playerNum == 1 then
 		textField:setX(10)
@@ -156,8 +150,13 @@ function Player:setScoreField(playerNum, testing)
 	self.scoreField = textField
 end
 
+function Player:changeScore(points)
+	self.score = self.score + points
+	self.scoreField:setText("Score: " .. self.score)
+end
+
 --implemented by subclass
-function Player:setupPlayerGameRules(testing)
+function Player:setupPlayerGameRules()
 	print("Player Game rules not implemented")
 end
 
@@ -186,18 +185,15 @@ function Player:destroy()
 	print("Player destroy not implemented!")
 end
 
-function CollectPlayer(grid, isPlayer1, maxMoves, testing)
-	local self = Player(grid, isPlayer1, "images/player.png", maxMoves, testing)
+function CollectPlayer(grid, isPlayer1, maxMoves)
+	local self = Player(grid, isPlayer1, "images/player.png", maxMoves)
 	
-	local setupPlayerGameRules = function(testing)
+	local setupPlayerGameRules = function()
 		--Game specific
 		self.metalDetect = 0
 		
 		-- dig stuff
 		self.digs = 3
-		if testing then
-			return
-		end
 		self.shovelImage = Bitmap.new(Texture.new("images/shovel.png"))
 		self.brokenShovelImage = Bitmap.new(Texture.new("images/brokenshovel.png"))
 		self.shovelCount = TextField.new(nil, self.digs)
@@ -224,54 +220,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		stage:addChild(self.shovelCount)
 	end
 	
-	setupPlayerGameRules(testing)
-	
-	local finishMove = function()
-		local cell = self.grid.rows[self.y][self.x]
-		self.xDirection = 0
-		self.yDirection = 0
-		self.xSpeed = 0
-		self.ySpeed = 0
-		if self.digging then
-			if not testing then
-				stage:removeChild(self.digImage)
-			end
-			self.digging = false
-		end
-		if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
-			self.digs = 3
-			if not testing then 
-				self.shovelCount:setText(self.digs)
-			end
-			
-		end
-		if cell.gold then
-			print(self.name .. " picked up gold!")
-			self.score = self.score + 1
-			cell.gold = false
-			if not testing then
-				self.scoreField:setText("Score: " .. self.score)
-				stage:removeChild(cell.goldImage)
-			end
-			
-		end
-		if cell.gem then
-			print (self.name .. " picked up a gem!")
-			self.score = self.score + 4
-			cell.gem = false
-			if not testing then
-				self.scoreField:setText("Score: " .. self.score)
-				stage:removeChild(cell.gemImage)
-			end
-			
-		end
-		if cell.collectible ~= nil then
-			print(self.name .. " picked up a powerup!")
-			collectible = cell:removeCollectible()
-			collectible:doFunc(self)
-		end
-		self.grid:metalDetect(cell)
-	end
+	setupPlayerGameRules()
 	
 	local endTurn = function()
 		if self.metalDetect > 0 then
@@ -298,17 +247,19 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		self:moveDown(param)
 	end
 	
+	local incrementScore = function(points)
+		self:changeScore(points)
+	end
+	
 	local dig = function()
 		if self.digs == 0 then
 			print(self.name .. " out of digs!")
 			return
 		end
 		local cell = self.grid.rows[self.y][self.x]
-		if cell.hiddenTreasure then
+		if cell.collectible.isBuriedTreasure then
 			print(self.name .. " dug up treasure!")
-			self.score = self.score + 8
-			self.scoreField:setText("Score: " .. self.score)
-			cell:toggleHiddenTreasure()
+			self.incrementScore(8)
 		else
 			print(self.name .. " found nothing.")
 		end
@@ -349,8 +300,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		if self.digs > 0 then
 			self.shovelCount:setText(self.digs)
 		else
-			stage:removeChild(self.shovelImage)
-			stage:addChild(self.brokenShovelImage)
+			stage:removeChild(self.brokenShovelImage)
+			stage:addChild(self.shovelImage)
 		end
 	end
 	
@@ -414,6 +365,47 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		end
 	end
 	
+	local finishMove = function()
+		local cell = self.grid.rows[self.y][self.x]
+		self.xDirection = 0
+		self.yDirection = 0
+		self.xSpeed = 0
+		self.ySpeed = 0
+		if self.digging then
+			stage:removeChild(self.digImage)
+			self.digging = false
+		end
+		if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
+			self.digs = 3
+			self.shovelCount:setText(self.digs)
+			
+		end
+		if cell.gold then
+			print(self.name .. " picked up gold!")
+			self.score = self.score + 1
+			cell.gold = false
+			self.scoreField:setText("Score: " .. self.score)
+			stage:removeChild(cell.goldImage)
+			
+		end
+		if cell.gem then
+			print (self.name .. " picked up a gem!")
+			self.score = self.score + 4
+			cell.gem = false
+			self.scoreField:setText("Score: " .. self.score)
+			stage:removeChild(cell.gemImage)
+			
+		end
+		if cell.collectible ~= nil then
+			print(self.name .. " picked up a powerup! ")
+			didCollect = cell.collectible.doFunc(self)
+			if didCollect then
+				collectible = cell:removeCollectible()
+			end
+		end
+		self.grid:metalDetect(cell)
+	end
+	
 	local setAction = function(newActionSetting)
 		self.action = newActionSetting
 	end
@@ -453,7 +445,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 	self.finishMove = finishMove
 	self.setMetalDetection = setMetalDetection
 	self.addDigs = addDigs
-	return {
+	self.incrementScore = incrementScore
+	return { 
 		loadedMoves = self.loadedMoves,
 		moveRight = moveRight,
 		moveLeft = moveLeft,
@@ -472,8 +465,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves, testing)
 		getYSpeed = getYSpeed,
 		getXDirection = getXDirection,
 		getYDirection = getYDirection,
-		getScore = getScore
-		
+		getScore = getScore,
+		incrementScore = incrementScore
 	}
 end
 
@@ -487,11 +480,11 @@ setmetatable(ComputerControlled, {
     return self
   end,
 })
-function ComputerControlled:_init(grid, maxMoves, imagePath, name, init, testing)
+function ComputerControlled:_init(grid, maxMoves, imagePath, name, init)
 	self:initComputerAttributes(grid, name, init, maxMoves)
 	self:initMoveBuffer()
 	print(imagePath)
-	self:enterGrid(grid, imagePath, testing)
+	self:enterGrid(grid, imagePath)
 end
 
 function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
@@ -507,7 +500,7 @@ function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
 end
 
 --implemented by subclass
-function ComputerControlled:setupPlayerGameRules(testing)
+function ComputerControlled:setupPlayerGameRules()
 	print("Computer Game rules not implemented")
 end
 
@@ -536,8 +529,8 @@ function ComputerControlled:destroy()
 	print("Computer destroy not implemented!")
 end
 
-function Leprechaun(grid, maxMoves, init, testing)
-	local self = ComputerControlled(grid, maxMoves, "images/leprechaun.png", "Leprechaun", init, testing)
+function Leprechaun(grid, maxMoves, init)
+	local self = ComputerControlled(grid, maxMoves, "images/leprechaun.png", "Leprechaun", init)
 	
 	local finishMove = function()
 		self.xDirection = 0

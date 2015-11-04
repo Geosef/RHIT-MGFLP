@@ -51,6 +51,9 @@ function Cell:setCollectible(collectible)
 		return false
 	end
 	self.collectible = collectible
+	if self.collectible.image == nil then
+		return true
+	end
 	local imageScale = WINDOW_WIDTH / self.numRows
 	scaleX = imageScale / self.collectible.image:getWidth() / 1.25
 	scaleY = imageScale / self.collectible.image:getHeight()/ 1.25
@@ -155,7 +158,7 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(imagePath, gameType, gameState, testing)
+function Grid:_init(imagePath, gameType, gameState)
 	numRows = gameState.gridSize
 	goldLocations = gameState.goldLocations
 	gemLocations = gameState.gemLocations
@@ -223,9 +226,12 @@ function Grid:setCollectibleAt(x, y, collectible)
 end
 
 function Grid:metalDetect(cell)
+	if cell.collectible == nil then
+		return
+	end
 	self:resetHiddenTreasureImages()
 	local treasureCells = listMod.List(nil)
-	if cell.hiddenTreasure then
+	if cell.collectible.isBuriedTreasure then
 		treasureCells:append(cell)
 	end
 	if cell.x == 1 then
