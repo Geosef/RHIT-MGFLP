@@ -1,8 +1,7 @@
 <project>
- <properties mouseTouchOrder="0" win_org="GiderosMobile" osx_org="GiderosMobile" windowWidth="0" orientation="0" architecture="1" windowHeight="0" touchToMouse="1" osx_domain="giderosmobile.com" win_domain="giderosmobile.com" mouseToTouch="1" retinaDisplay="3" fps="60" packageName="edu.rosehulman.runcoderrun" encryptAssets="0" iosDevice="0" logicalWidth="320" encryptCode="0" assetsOnly="0" logicalHeight="480" autorotation="3" android_template="0" scaleMode="5">
+ <properties mouseTouchOrder="0" logicalWidth="320" windowHeight="0" architecture="1" retinaDisplay="2" osx_domain="giderosmobile.com" assetsOnly="0" touchToMouse="1" android_template="0" orientation="0" win_org="GiderosMobile" scaleMode="5" packageName="edu.rosehulman.runcoderrun" iosDevice="0" windowWidth="0" autorotation="2" osx_org="GiderosMobile" fps="60" logicalHeight="480" encryptAssets="0" mouseToTouch="1" win_domain="giderosmobile.com" encryptCode="0">
   <imageScales/>
  </properties>
- <file source="runtests.lua"/>
  <file source="mockobjects.lua"/>
  <folder name="audio">
   <file source="music.mp3"/>
@@ -14,10 +13,10 @@
  <folder name="http">
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
+  <file source="http/socket.lua"/>
  </folder>
  <file source="printer.lua"/>
  <file source="JSON.lua"/>
- <file source="http/socket.lua"/>
  <folder name="socket">
   <file source="http/socket/url.lua"/>
   <file source="http/socket/tp.lua"/>
@@ -25,17 +24,6 @@
   <file source="http/socket/http.lua"/>
   <file source="http/socket/ftp.lua"/>
  </folder>
- <folder name="luacov">
-  <folder name="reporter">
-   <file source="luacov-0.8/src/luacov/reporter/default.lua"/>
-  </folder>
-  <file source="luacov-0.8/src/luacov/stats.lua"/>
-  <file source="luacov-0.8/src/luacov/runner.lua"/>
-  <file source="luacov-0.8/src/luacov/reporter.lua"/>
-  <file source="luacov-0.8/src/luacov/defaults.lua"/>
-  <file source="luacov-0.8/src/luacov/tick.lua"/>
- </folder>
- <file source="luacov-0.8/src/luacov.lua"/>
  <file source="command.lua"/>
  <file source="movement.lua"/>
  <file source="specialmoves.lua"/>
@@ -45,8 +33,8 @@
  <file source="inputengine.lua"/>
  <file source="inputbutton.lua"/>
  <folder name="test">
-  <file source="test1.lua"/>
   <file source="luaunit.lua"/>
+  <file source="test1.lua"/>
  </folder>
  <folder name="images">
   <file source="images/treasure1.png"/>
