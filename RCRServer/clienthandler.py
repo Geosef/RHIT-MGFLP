@@ -27,7 +27,10 @@ class ClientThread(threading.Thread):
             'Submit Move': self.submitMove,
             'Update Locations': self.updateLocations,
             'End Game': self.endGame,
-            'Quit': self.quit
+            'Quit': self.quit,
+            'Browse Games': self.browseGames,
+            'Player Joined': self.playerJoined,
+            'Start Game': self.startGame
         }
 
     def handle(self):
@@ -38,9 +41,11 @@ class ClientThread(threading.Thread):
             except Exception as e:
                 print(str(e))
                 break
+            # pprint(data)
 
             methodType = data.get('type', None)
             if not methodType:
+                pprint(data)
                 print('Invalid Client Data')
                 continue
 
@@ -52,8 +57,18 @@ class ClientThread(threading.Thread):
                     if methodType == 'Login':
                         method(data)
             else:
+                pprint(data)
                 print('Invalid Client Data')
                 continue
+
+    def receiveData(self):
+        try:
+            jsonstring = self.sock.recv(1024)
+        except Exception as e:
+            self.quit()
+        data = json.loads(jsonstring)
+
+
 
 
     def sendData(self, data):
@@ -67,30 +82,30 @@ class ClientThread(threading.Thread):
 
     def quit(self, packet):
         self.game.quit(self)
-        pprint(packet)
+        # pprint(packet)
 
     def endGame(self, packet):
         self.game.endGame(self, packet)
-        pprint(packet)
+        # pprint(packet)
 
     def submitMove(self, packet):
         moves = packet.get('events')
-        self.game.submitMove(moves)
-        pprint(packet)
+        self.game.submitMove(moves, self)
+        # pprint(packet)
 
     def updateLocations(self, packet):
         locations = packet.get('locations')
         self.game.updateLocations(locations)
-        pprint(packet)
+        # pprint(packet)
 
     def joinGame(self, packet):
         gameID = packet.get('gameID')
         self.game = self.gameFactory.joinGame(self, gameID)
-        pprint(packet)
+        # pprint(packet)
 
     def createGame(self, packet):
-        pprint(packet)
-        self.game = self.gameFactory.createGame(self)
+        # pprint(packet)
+        self.game = self.gameFactory.createGame(self, packet)
         data = \
         {
             'type': 'Create Game',
@@ -99,3 +114,30 @@ class ClientThread(threading.Thread):
         }
         self.sendData(data)
 
+    def login(self, packet):
+        playerID = 1
+        self.userInfo['username'] = packet.get('username')
+        self.userInfo['playerID'] = playerID
+        print 'Logging in user:', self.userInfo.get('username')
+        data = \
+        {
+            'type': 'Login',
+            'success': True,
+            'playerID': playerID
+        }
+        self.loggedIn = True
+        self.sendData(data)
+
+    def browseGames(self, packet):
+        games = self.gameFactory.browseGames(packet)
+        self.sendData(games)
+        # pprint(games)
+
+    def playerJoined(self, packet):
+        if packet.get('accept'):
+            self.game.setup()
+        else:
+            self.game.refuse()
+
+    def startGame(self, packet):
+        self.game.startGame(self)
