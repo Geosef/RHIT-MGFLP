@@ -13,6 +13,8 @@
 pack_select = gideros.class(Sprite)
 
 function pack_select:init()
+	local screen = Bitmap.new(Texture.new("images/maroon-background.png", conf.textureFilter))
+	self:addChild(screen)
 	--load game manager
 	local gm = GameManager.new(packs)
 	--unlock first level

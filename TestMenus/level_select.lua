@@ -22,6 +22,8 @@ end
 level_select = gideros.class(Sprite)
 
 function level_select:init()
+	local screen = Bitmap.new(Texture.new("images/maroon-background.png", conf.textureFilter))
+	self:addChild(screen)
 	--get current pack
 	local curPack = sets:get("curPack")
 	

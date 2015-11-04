@@ -21,7 +21,7 @@ start = Core.class(Sprite)
 
 function start:init()
 	--here we'd probably want to set up a background picture
-	local screen = Bitmap.new(Texture.new("images/gideros_mobile.png", conf.textureFilter))
+	local screen = Bitmap.new(Texture.new("images/maroon-background.png", conf.textureFilter))
 	self:addChild(screen)
 	screen:setPosition((conf.width-screen:getWidth())/2, (conf.height-screen:getHeight())/2)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
@@ -52,7 +52,7 @@ function start:onEnterEnd()
 		sceneManager:changeScene("options", 1, conf.transition, conf.easing) 
 	end)
 	menu:addChild(button)
-	
+	--[[
 	local button =  Button.new(Bitmap.new(Texture.new("images/help_up.png", conf.textureFilter)), Bitmap.new(Texture.new("images/help_down.png", conf.textureFilter)))
 	randomize(button)
 	button:addEventListener("click", function()
@@ -61,7 +61,7 @@ function start:onEnterEnd()
 		sceneManager:changeScene("help", 1, conf.transition, conf.easing) 
 	end)
 	menu:addChild(button)
-	
+	]]
 	--position menu in center
 	menu:setPosition((conf.width-menu:getWidth())/2, (conf.height-menu:getHeight())/2)
 	
