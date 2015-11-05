@@ -28,7 +28,7 @@ function InputEngine:addEvent(button, param)
 			if previousEvent.name == "LoopStart" then
 				local prevIter = previousEvent.iterations
 				previousEvent.iterations = prevIter + 1
-				previousEvent.sprite.loopCount:setText(previousEvent.iterations)
+				previousEvent.sprite.loopCount:setText(previousEvent.iterations + 1)
 				return
 			end
 		end
@@ -113,7 +113,6 @@ function InputEngine:getEvents()
 	for i = 1, # baseList do
 		local event = baseList[i]
 		if event.name == "LoopStart" then
-			--event.iterations = 2
 			for looper = 1, event.iterations do
 				for j = i + 1, # baseList do
 					local innerEvent = baseList[j]
