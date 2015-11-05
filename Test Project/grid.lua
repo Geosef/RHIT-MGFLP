@@ -1,5 +1,6 @@
 local M = {}
 local listMod = require('list')
+local collectibleMod = require('collectible')
 
 local Cell = {}
 Cell.__index = Cell
@@ -76,60 +77,6 @@ function Cell:removeCollectible()
 	return temp
 end
 
-function Cell:setGold()
-	local imageScale = WINDOW_WIDTH / self.numRows
-	if not self.gold then
-		local goldImage = Bitmap.new(Texture.new("images/gold.png"))
-		scaleX = imageScale / goldImage:getWidth() / 2
-		scaleY = imageScale / goldImage:getHeight() / 2
-		
-		goldImage:setScale(scaleX, scaleY)
-		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
-		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
-		goldImage:setPosition(xPos, yPos)
-		stage:addChild(goldImage)
-		self.gold = true
-		self.goldImage = goldImage
-	else
-		self.gold = false
-	end
-end
-
-function Cell:setGem()
-	local imageScale = WINDOW_WIDTH / self.numRows
-	if not self.gem then
-		local gemImage = Bitmap.new(Texture.new("images/gem.png"))
-		scaleX = imageScale / gemImage:getWidth() / 2
-		scaleY = imageScale / gemImage:getHeight() / 2
-		
-		gemImage:setScale(scaleX, scaleY)
-		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4
-		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4)
-		gemImage:setPosition(xPos, yPos)
-		stage:addChild(gemImage)
-		self.gem = true
-		self.gemImage = gemImage
-	else
-		self.gem = false
-	end
-end
-
-function Cell:toggleHiddenTreasure()
-	if self.hiddenTreasure then
-		self.hiddenTreasure = false
-	else
-		self.hiddenTreasure = true
-	end
-end
-
-function Cell:setPowerup(powerup)
-	if self.powerup ~= nil then
-		return
-	end
-	self.powerupImage = powerup.Image
-	self.powerup = powerup
-end
-
 function Cell:reset()
 	if self.gold then
 		self.gold = false
@@ -158,22 +105,18 @@ setmetatable(Grid, {
   end,
 })
 
-function Grid:_init(imagePath, gameType, gameState)
-	numRows = gameState.gridSize
-	goldLocations = gameState.goldLocations
-	gemLocations = gameState.gemLocations
-	treasureLocations = gameState.treasureLocations
-	print("Grid Size" .. imagePath)
-	imageScale = WINDOW_WIDTH / numRows
-	inc = 1 / numRows
+function Grid:_init(imagePath, gameType, numRows)
+	self.numRows = numRows
+	imageScale = WINDOW_WIDTH / self.numRows
+	inc = 1 / self.numRows
 	startY = WINDOW_HEIGHT / 4	
 	
-	self.numRows = numRows
+	
 	rows = {}
-	for i=1, numRows do
+	for i=1, self.numRows do
 		
 		row = {}
-		for j=1, numRows do
+		for j=1, self.numRows do
 			local cellImage = Bitmap.new(Texture.new(imagePath))
 			scaleX = imageScale / cellImage:getWidth()
 			scaleY = imageScale / cellImage:getHeight()
@@ -183,203 +126,23 @@ function Grid:_init(imagePath, gameType, gameState)
 			yPos = (inc * (i-1)) * WINDOW_WIDTH + startY
 			cellImage:setPosition(xPos, yPos)
 			stage:addChild(cellImage)
-			cellObj = Cell(j, i, cellImage, numRows)
+			cellObj = Cell(j, i, cellImage, self.numRows)
 			table.insert(row, cellObj)			
 		end
 		table.insert(rows, row)
 	end
 	self.rows = rows
-	if goldLocations == nil or gemLocations == nil or treasureLocations == nil then
-		print("unsupported grid setup")
-		return
-	end
-	self:setGoldAt(goldLocations)
-	self:setGemsAt(gemLocations)
-	self:setHiddenTreasureAt(treasureLocations)
+	print("Grid Size " .. self.numRows)
+	
 end
 
-function Grid:setGoldAt(goldLocations)
-	for index,value in ipairs(goldLocations) do
-		cell = self.rows[value[2]][value[1]]
-		cell:setGold()
-	end
-end
-
-function Grid:setGemsAt(gemLocations)
-	for index,value in ipairs(gemLocations) do
-		cell = self.rows[value[2]][value[1]]
-		cell:setGem()
-	end
-end
-
-function Grid:setHiddenTreasureAt(treasureLocations) 
-	for index,value in ipairs(treasureLocations) do
-		cell = self.rows[value[2]][value[1]]
-		cell:toggleHiddenTreasure()
-	end
+function Grid:initializeMapItems(gameState)
+	print("Map item initialization not implemented yet!")
 end
 
 function Grid:setCollectibleAt(x, y, collectible)
 	cell = self.rows[y][x]
 	cell:setCollectible(collectible)
-	self.treasureCells = nil
-end
-
-function Grid:metalDetect(cell)
-	if cell.collectible == nil then
-		return
-	end
-	self:resetHiddenTreasureImages()
-	local treasureCells = listMod.List(nil)
-	if cell.collectible.isBuriedTreasure then
-		treasureCells:append(cell)
-	end
-	if cell.x == 1 then
-		if cell.y == 1 then
-			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-		elseif cell.y == 10 then
-			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
-			end
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-		else
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-		end
-	elseif cell.x == 10 then
-		if cell.y == 1 then
-			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-		elseif cell.y == 10 then
-			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
-			end
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-		else
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
-			end
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-		end
-	else
-		if cell.y == 1 then
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-		elseif cell.y == 10 then
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
-			end
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-		else
-			if self.rows[cell.y - 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x])
-			end
-			if self.rows[cell.y - 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x - 1])
-			end
-			if self.rows[cell.y][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x - 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x - 1])
-			end
-			if self.rows[cell.y + 1][cell.x].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x])
-			end
-			if self.rows[cell.y + 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y + 1][cell.x + 1])
-			end
-			if self.rows[cell.y][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y][cell.x + 1])
-			end
-			if self.rows[cell.y - 1][cell.x + 1].hiddenTreasure then
-				treasureCells:append(self.rows[cell.y - 1][cell.x + 1])
-			end
-		end
-	end
-	self.treasureCells = treasureCells
-	self.treasureCells:iterate(function(cell) cell:addImage("images/treasure1.png") end)
-end
-
-function Grid:resetHiddenTreasureImages()
-	if self.treasureCells == nil then
-		return
-	end
-	self.treasureCells:iterate(function(cell) cell:removeImage() end)
-	self.treasureCells = nil
 end
 
 function Grid:reset()
@@ -402,9 +165,87 @@ function Grid:destroy()
 	end
 end
 
+function CollectGrid(imagePath, gameType, gameState)
+	local self = Grid(imagePath, gameType, gameState.gridSize)
+	
+	local setGoldAt = function(goldLocations)
+		for index,value in ipairs(goldLocations) do
+			self:setCollectibleAt(value[1], value[2], collectibleMod.GoldCoin())
+		end
+	end
+
+	local setGemsAt = function(gemLocations)
+		for index,value in ipairs(gemLocations) do
+			self:setCollectibleAt(value[1], value[2], collectibleMod.Gem())
+		end
+	end
+
+	local setHiddenTreasureAt = function(treasureLocations) 
+		for index,value in ipairs(treasureLocations) do
+			self:setCollectibleAt(value[1], value[2], collectibleMod.BuriedTreasure())
+		end
+	end
+	
+	self.setGoldAt = setGoldAt
+	self.setGemsAt = setGemsAt
+	self.setHiddenTreasureAt = setHiddenTreasureAt
+	
+	local initializeMapItems = function(gameState)
+		goldLocations = gameState.goldLocations
+		gemLocations = gameState.gemLocations
+		treasureLocations = gameState.treasureLocations
+		self.setGoldAt(goldLocations)
+		self.setGemsAt(gemLocations)
+		self.setHiddenTreasureAt(treasureLocations)
+	end
+	initializeMapItems(gameState)
+	
+
+	local metalDetect = function(cell, player)
+		self.resetHiddenTreasureImages()
+		local treasureCells = listMod.List(nil)
+		for i = -1, 1 do
+			for j = -1, 1 do
+				local newX = cell.x + i
+				local newY = cell.y + j
+				if newX > 0 and newX < self.numRows + 1 and newY > 0 and newY < self.numRows + 1 then
+					local checkCell = self.rows[newY][newX]
+					if checkCell.collectible then
+						if checkCell.collectible.isBuriedTreasure then
+							treasureCells:append(checkCell)
+						end
+					end
+				end
+			end
+		end
+		self.treasureCells = treasureCells
+		self.treasureCells:iterate(function(cell) cell:addImage("images/treasure1.png") end)
+		return true
+		
+	end
+
+	local resetHiddenTreasureImages = function()
+		if self.treasureCells == nil then
+			return
+		end
+		self.treasureCells:iterate(function(cell) cell:removeImage() end)
+		self.treasureCells = nil
+	end
+	
+	self.resetHiddenTreasureImages = resetHiddenTreasureImages
+	
+	return {
+		metalDetect = metalDetect,
+		setGoldAt = setGoldAt,
+		setGemsAt = setGemsAt,
+		setHiddenTreasureAt = setHiddenTreasureAt,
+		initializeMapItems = initializeMapItems,
+		numRows = self.numRows,
+		rows = self.rows
+	}
+end
 
 M.Cell = Cell
-M.Grid = Grid
-
+M.CollectGrid = CollectGrid
 
 return M

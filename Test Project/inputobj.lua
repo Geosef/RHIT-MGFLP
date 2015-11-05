@@ -1,29 +1,10 @@
 local M = {}
 local listMod = require('list')
 
-local InputObject = {}
-InputObject.__index = InputObject
-
-setmetatable(InputObject, {
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:_init(...)
-    return self
-  end,
-})
-
-function InputObject:_init()
-end
-
-function InputObject:execute()
-end
-
-
 local EventObject = {}
 EventObject.__index = EventObject
 
 setmetatable(EventObject, {
-  __index = InputObject, -- this is what makes the inheritance work
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
     self:_init(...)
@@ -63,7 +44,7 @@ local ScriptObject = {}
 ScriptObject.__index = ScriptObject
 
 setmetatable(ScriptObject, {
-  __index = InputObject,
+  __index = EventObject, -- this is what makes the inheritance work
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
     self:_init(...)
@@ -103,7 +84,7 @@ local LoopObject = {}
 LoopObject.__index = LoopObject
 
 setmetatable(LoopObject, {
-  __index = InputObject,
+  __index = EventObject,
   __call = function (cls, ...)
     local self = setmetatable({}, cls)
     self:_init(...)

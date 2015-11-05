@@ -257,11 +257,13 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 			return
 		end
 		local cell = self.grid.rows[self.y][self.x]
-		if cell.collectible.isBuriedTreasure then
-			print(self.name .. " dug up treasure!")
-			self.incrementScore(8)
-		else
+		if not cell.collectible then
 			print(self.name .. " found nothing.")
+		else 
+			if cell.collectible.isBuriedTreasure then
+				print(self.name .. " dug up treasure!")
+				self.incrementScore(8)
+			end
 		end
 		self.digging = true
 		local frameCounter = 30
@@ -378,32 +380,17 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
 			self.digs = 3
 			self.shovelCount:setText(self.digs)
-			
-		end
-		if cell.gold then
-			print(self.name .. " picked up gold!")
-			self.score = self.score + 1
-			cell.gold = false
-			self.scoreField:setText("Score: " .. self.score)
-			stage:removeChild(cell.goldImage)
-			
-		end
-		if cell.gem then
-			print (self.name .. " picked up a gem!")
-			self.score = self.score + 4
-			cell.gem = false
-			self.scoreField:setText("Score: " .. self.score)
-			stage:removeChild(cell.gemImage)
-			
 		end
 		if cell.collectible ~= nil then
-			print(self.name .. " picked up a powerup! ")
+			print(self.name .. " passed over " .. cell.collectible.name)
 			didCollect = cell.collectible.doFunc(self)
 			if didCollect then
 				collectible = cell:removeCollectible()
 			end
 		end
-		self.grid:metalDetect(cell)
+		if self.metalDetect > 0 then
+			self.grid:metalDetect(cell, self)
+		end
 	end
 	
 	local setAction = function(newActionSetting)

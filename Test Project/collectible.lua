@@ -19,7 +19,8 @@ setmetatable(Collectible, {
 	- func is the function that is run when the collectible is in the same cell as the player. This function
 	must return a boolean that determines whether the collectible was collected or not.
 ]]
-function Collectible:_init(image, func)
+function Collectible:_init(name, image, func)
+	self.name = name
 	self.image = image
 	self.func = func
 end
@@ -39,12 +40,14 @@ end
 function GoldCoin()
 	local collectGold = function(player)
 		player.incrementScore(1) 
+		return true
 	end
-	local self = Collectible(Bitmap.new(Texture.new("images/gold.png")), collectGold)
+	local self = Collectible("Gold", Bitmap.new(Texture.new("images/gold.png")), collectGold)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc
 	}
@@ -55,11 +58,12 @@ function Gem()
 		player.incrementScore(4)
 		return true
 	end
-	local self = Collectible(Bitmap.new(Texture.new("images/gem.png")), collectGem)
+	local self = Collectible("Gem", Bitmap.new(Texture.new("images/gem.png")), collectGem)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc
 	}
@@ -69,12 +73,13 @@ function BuriedTreasure()
 	local collectGem = function(player)
 		return false
 	end
-	local self = Collectible(nil, collectGem)
+	local self = Collectible("Treasure", nil, collectGem)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	local isBuriedTreasure = true
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc,
 		isBuriedTreasure = true
@@ -86,27 +91,28 @@ function ShovelRepairPowerUp()
 		player.addDigs(2)
 		return true
 	end
-	local self = Collectible(Bitmap.new(Texture.new("images/shovelrepair.png")), shovelRepair)
+	local self = Collectible("Shovel Repair Power-Up", Bitmap.new(Texture.new("images/shovelrepair.png")), shovelRepair)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc
 	}
 end
 
--- Need to rewrite this functionality
 function MetalDetectorPowerUp()
 	local metalDetect = function(player) 
 		player.setMetalDetection() 
 		return true
 	end
-	local self = Collectible(Bitmap.new(Texture.new("images/metaldetector.png")), metalDetect)
+	local self = Collectible("Metal Detector", Bitmap.new(Texture.new("images/metaldetector.png")), metalDetect)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc
 	}
@@ -114,11 +120,12 @@ end
 
 function SmallMoveBoostPowerUp()
 	local boostMove = nil
-	local self = Collectible(Bitmap.new(Texture.new("images/shoes.png")), boostMove)
+	local self = Collectible("Small Move Boost", Bitmap.new(Texture.new("images/shoes.png")), boostMove)
 	local doFunc = function(player)
 		return self:doFunc(player)
 	end
 	return {
+		name = self.name,
 		image = self.image,
 		doFunc = doFunc
 	}

@@ -32,7 +32,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	end
 end
 
-defaultMoves = {p2={"LeftMove", "UpMove", "UpMove", "LeftMove", "UpMove"}, lep={"LeftMove", "UpMove", "RightMove", "DownMove"}}
+defaultMoves = {p2={}, lep={"LeftMove", "UpMove", "RightMove", "DownMove"}}
 
 function NetworkAdapter:sendMoves(game, packet)
 	if not self.on then
