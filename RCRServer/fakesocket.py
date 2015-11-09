@@ -45,31 +45,25 @@ class FakeSocket(object):
     submitmove = \
     {
         'type': 'Submit Move',
-        'gameID': 1,
-        'events': ['MoveUp', 'MoveLeft', 'MoveDown', 'MoveRight']
-    }
-
-    receivefuncs = \
-    {
-        'Update Location': ''
+        'events': ['UpMove', 'LeftMove', 'DownMove', 'RightMove']
     }
 
     updatelocations = \
     {
         'type': 'Update Locations',
-        'locations': \
+        'locations':
         {
-            'p1': \
+            'p1':
             {
                 'x': 1,
                 'y': 1
             },
-            'p2': \
+            'p2':
             {
                 'x': 5,
                 'y': 5
             },
-            'lep': \
+            'lep':
             {
                 'x': 3,
                 'y': 3
@@ -78,25 +72,25 @@ class FakeSocket(object):
     }
     startgame = \
     {
-        'type': 'Start Game',
-        'gameID': 1
+        'type': 'Start Game'
     }
     creategame = \
     {
         'type': 'Create Game',
         'gametype': 'Collect',
-        'difficulty': 1
+        'difficulty': 'Easy'
     }
     browsegames = \
     {
         'type': 'Browse Games',
         'gametype': 'Collect',
-        'difficulty': 1
+        'difficulty': 'Easy'
     }
 
     def preparerecv(self, data):
         type = data.get('type', '')
         if type == 'Update Locations':
+            print 'UPDATE LOC'
             return self.submitmove
         if type == 'Login':
             if self.host:
@@ -115,10 +109,11 @@ class FakeSocket(object):
                 game = games[0]
                 return {'type': 'Join Game', 'gameID': game.get('gameID')}
         if type == 'Game Setup':
-            pprint(data)
+            # pprint(data)
             self.gridsize = data.get('gridSize')
             return self.startgame
         if type == 'Start Game':
+            print 'START GAME'
             return self.submitmove
         if type == 'Run Events':
             print 'RUN EVENTS'
@@ -129,4 +124,5 @@ class FakeSocket(object):
         if type == 'End Game':
             pprint(data)
             return {}
+        print 'OTHER TYPE: ', type
         return {}

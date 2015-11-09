@@ -15,5 +15,5 @@ if __name__ == '__main__':
     hostHandler = clienthandler.ClientThread(hostSocket, gameFactory)
     peerHandler = clienthandler.ClientThread(peerSocket, gameFactory)
 
-    hostHandler.start()
+    # hostHandler.start()
     peerHandler.start()

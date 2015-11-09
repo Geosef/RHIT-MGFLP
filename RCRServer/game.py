@@ -21,7 +21,15 @@ class Game(object):
         self.ready = [False, False]
 
 
+
+    joinSuccess = \
+    {
+        'type': 'Join Game',
+        'success': True
+    }
+
     def setup(self):
+        self.threads[1].sendData(self.joinSuccess)
         gamesetup = \
         {
             'type': 'Game Setup',
@@ -32,28 +40,90 @@ class Game(object):
                 'goldLocations':
                 [
                     {
+                        'x': 2,
+                        'y': 2
+                    },
+                    {
                         'x': 3,
                         'y': 3
-                    }
+                    },
+                    {
+                        'x': 5,
+                        'y': 5
+                    },
+                    {
+                        'x': 6,
+                        'y': 6
+                    },
+                    {
+                        'x': 8,
+                        'y': 8
+                    },
+                    {
+                        'x': 9,
+                        'y': 9
+                    },
+                    {
+                        'x': 2,
+                        'y': 9
+                    },
+                    {
+                        'x': 3,
+                        'y': 8
+                    },
+                    {
+                        'x': 5,
+                        'y': 6
+                    },
+                    {
+                        'x': 6,
+                        'y': 5
+                    },
+                    {
+                        'x': 8,
+                        'y': 3
+                    },
+                    {
+                        'x': 9,
+                        'y': 2
+                    },
+
+
                 ],
                 'gemLocations':
                 [
                     {
                         'x': 4,
                         'y': 4
-                    }
+                    },
+                    {
+                        'x': 7,
+                        'y': 7
+                    },
+                    {
+                        'x': 4,
+                        'y': 7
+                    },
+                    {
+                        'x': 7,
+                        'y': 4
+                    },
                 ],
                 'treasureLocations':
                 [
                     {
-                        'x': 6,
-                        'y': 6
-                    }
+                        'x': 1,
+                        'y': 10
+                    },
+                    {
+                        'x': 10,
+                        'y': 1
+                    },
                 ],
                 'lepStart':
                 {
                     'x': 5,
-                    'y': 5
+                    'y': 6
                 }
             }
         }
@@ -66,11 +136,18 @@ class Game(object):
             'p2': {'x': 10, 'y': 10},
             'lep': {'x': 5, 'y': 5}
         }
-        self.updateLocations(locations)
+        lepMoves = self.calculateLepMoves(locations['p1'], locations['p2'], locations['lep'])
+
+        with self.lock:
+            self.currentMoves['lep'] = lepMoves
+
+            if self.checkFinish():
+                self.finishTurn()
 
     def startGame(self, clientthread):
         with self.lock:
             self.ready[clientthread.index] = True
+            pprint(self.ready)
             if all(self.ready):
                 for client in self.threads:
                     client.sendData({'type': 'Start Game'})
@@ -87,6 +164,7 @@ class Game(object):
             'username': p2Thread.userInfo.get('username')
         }
         self.threads[0].sendData(playerJoined)
+
 
     def submitMove(self, moves, thread):
         with self.lock:
@@ -119,7 +197,10 @@ class Game(object):
         checks if all players have submitted their moves
         '''
         pprint(self.currentMoves)
-        return all(self.currentMoves.values())
+        for k in self.currentMoves.values():
+            if k is None:
+                return False
+        return True
 
     def finishTurn(self):
         if self.currentTurn >= self.MAXTURNS:

@@ -6,6 +6,7 @@ import pprint
 import json
 import clienthandler
 import gamefactory
+import fakesocket
 
 def main():
 
@@ -24,6 +25,10 @@ def main():
     print 'Host: ' + host
     print 'Port: ' + str(port)
 
+    peerSocket = fakesocket.FakeSocket(False)
+
+    peerHandler = clienthandler.ClientThread(peerSocket, gameFactory)
+    peerHandler.start()
 
     index = 0
     while True:

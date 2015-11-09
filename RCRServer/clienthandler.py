@@ -41,7 +41,7 @@ class ClientThread(threading.Thread):
             except Exception as e:
                 print(str(e))
                 break
-            # pprint(data)
+            pprint(data)
 
             methodType = data.get('type', None)
             if not methodType:
