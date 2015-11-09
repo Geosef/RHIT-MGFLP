@@ -71,7 +71,7 @@ function NetworkAdapter:recvLogin(packet)
 	if packet.success then
 		print("LOGGED IN")
 		--self:joinGame(1)
-		self:createGame()
+		--self:createGame()
 	end
 end
 
