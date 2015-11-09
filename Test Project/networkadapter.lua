@@ -34,12 +34,24 @@ function NetworkAdapter:login(username, password)
 end
 
 function NetworkAdapter:createGame()
+	if not self.on then 
+	self.game = gameMod.CollectGame(self)
+	self.game.gameSetup(self:getGameState("Collect"))
+	self.game.show()
+	return end 
+	
 	local packet = {type="Create Game", gametype="Collect", difficulty="Easy"}
 	self:sendData(packet)
 	self:startRecv()
 end
 
 function NetworkAdapter:joinGame(gameID)
+	if not self.on then 
+	self.game = gameMod.CollectGame(self)
+	self.game.gameSetup(self:getGameState("Collect"))
+	self.game.show()
+	return end
+
 	local packet = {type="Join Game", gameID = gameID}
 	self:sendData(packet)
 	self:startRecv()
@@ -135,6 +147,7 @@ end
 function NetworkAdapter:endGame(packet)
 	--if packet.rematch, reset game
 	--else kick to main menu
+	--self.game.destroy()
 	--self.game = nil
 end
 
@@ -161,9 +174,11 @@ function NetworkAdapter:_init(multiplayerMode)
 		self.sock:connect(ip, port)
 		self.sock:settimeout()
 	else
-		self.game = gameMod.CollectGame(self)
-		self.game.gameSetup(self:getGameState("Collect"))
-		self.game.show()
+		--self.game = gameMod.CollectGame(self)
+		--self.game.gameSetup(self:getGameState("Collect"))
+		--self.game.show()
+		--self.game.destroy()
+		--moved into createGame and joinGame
 	end
 end
 

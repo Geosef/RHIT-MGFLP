@@ -62,7 +62,6 @@ function Cell:setCollectible(collectible)
 	xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 5
 	yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
 	self.collectible.image:setPosition(xPos, yPos)
-	stage:addChild(self.collectible.image)
 	return true
 end
 

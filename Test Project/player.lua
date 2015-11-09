@@ -98,6 +98,10 @@ function Character:show()
 	stage:addChild(self.playerImage)
 end
 
+function Character:destroy()
+	stage:removeChild(self.playerImage)
+end
+
 
 local Player = {}
 Player.__index = Player
@@ -149,7 +153,6 @@ function Player:setScoreField(playerNum)
 		textField:setX(10)
 		textField:setY(20)
 	end
-	stage:addChild(textField)
 	self.scoreField = textField
 end
 
@@ -220,8 +223,6 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		self.shovelImage:setPosition(shovelImageXPos, shovelImageYPos)
 		self.brokenShovelImage:setPosition(shovelImageXPos, shovelImageYPos)
 		self.shovelCount:setPosition(shovelImageXPos + 6, shovelImageYPos + 25)
-		stage:addChild(self.shovelImage)
-		stage:addChild(self.shovelCount)
 	end
 	
 	setupPlayerGameRules()
@@ -365,13 +366,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		self.playerImage:setPosition(x, y)
 	end
 	
-	local destroy = function()
-		stage:removeChild(self.playerImage)
-		stage:removeChild(self.scoreField)
-		if self.digImage ~= nil then
-			stage:removeChild(self.digImage)
-		end
-	end
+	
 	
 	local finishMove = function()
 		local cell = self.grid.rows[self.y][self.x]
@@ -454,7 +449,23 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 	end
 	
 	local show = function()
-		self:show()
+		stage:addChild(self.playerImage)
+		stage:addChild(self.scoreField)
+		if self.digImage ~= nil then
+			stage:addChild(self.digImage)
+		end
+		stage:addChild(self.shovelImage)
+		stage:addChild(self.shovelCount)
+	end
+	
+	local destroy = function()
+		stage:removeChild(self.playerImage)
+		stage:removeChild(self.scoreField)
+		if self.digImage ~= nil then
+			stage:removeChild(self.digImage)
+		end
+		stage:removeChild(self.shovelImage)
+		stage:removeChild(self.shovelCount)
 	end
 	
 	self.finishMove = finishMove
@@ -539,10 +550,7 @@ function ComputerControlled:update()
 	print("Computer update not implemented!")
 end
 
--- implemented by subclass
-function ComputerControlled:destroy()
-	print("Computer destroy not implemented!")
-end
+
 
 function Leprechaun(grid, maxMoves, init)
 	local self = ComputerControlled(grid, maxMoves, "images/leprechaun.png", "Leprechaun", init)
@@ -619,6 +627,10 @@ function Leprechaun(grid, maxMoves, init)
 		self:show()
 	end
 	
+	local destroy = function()
+		self:destroy()
+	end
+	
 	self.finishMove = finishMove
 	return {
 		loadedMoves = self.loadedMoves,
@@ -629,7 +641,8 @@ function Leprechaun(grid, maxMoves, init)
 		getAction = getAction,
 		setAction = setAction,
 		update = update,
-		show = show
+		show = show,
+		destroy = destroy
 	}
 end
 
