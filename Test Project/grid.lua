@@ -34,7 +34,6 @@ function Cell:addImage(imagePath)
 		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
 		image:setPosition(xPos, yPos)
 		self.image = image
-		stage:addChild(self.image)
 	end
 	return
 end
@@ -92,6 +91,21 @@ end
 
 function Cell:destroy()
 	stage:removeChild(self.sprite)
+	if self.collectible ~= nil and self.collectible.image ~= nil then
+		stage:removeChild(self.collectible.image)
+	end
+	if self.image ~= nil then
+		
+	end
+	--destroy others
+end
+
+function Cell:show()
+	stage:addChild(self.sprite)
+	if self.collectible ~= nil and self.collectible.image ~= nil then
+		stage:addChild(self.collectible.image)
+	end
+	--show others
 end
 
 local Grid = {}
@@ -125,7 +139,7 @@ function Grid:_init(imagePath, gameType, numRows)
 			xPos = (inc *  (j-1)) * WINDOW_WIDTH
 			yPos = (inc * (i-1)) * WINDOW_WIDTH + startY
 			cellImage:setPosition(xPos, yPos)
-			stage:addChild(cellImage)
+			--stage:addChild(cellImage)
 			cellObj = Cell(j, i, cellImage, self.numRows)
 			table.insert(row, cellObj)			
 		end
@@ -141,7 +155,7 @@ function Grid:initializeMapItems(gameState)
 end
 
 function Grid:setCollectibleAt(x, y, collectible)
-	cell = self.rows[y][x]
+	local cell = self.rows[y][x]
 	cell:setCollectible(collectible)
 end
 
@@ -165,24 +179,36 @@ function Grid:destroy()
 	end
 end
 
+function Grid:show()
+	for i = 1,self.numRows do
+		row = self.rows[i]
+		for j = 1,self.numRows do
+			cell = row[j]
+			cell:show()
+		end
+	end
+end
+
+
+
 function CollectGrid(imagePath, gameType, gameState)
-	local self = Grid(imagePath, gameType, gameState.gridSize)
+	local self = Grid(imagePath, gameType, gameState.gridsize)
 	
 	local setGoldAt = function(goldLocations)
 		for index,value in ipairs(goldLocations) do
-			self:setCollectibleAt(value[1], value[2], collectibleMod.GoldCoin())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.GoldCoin())
 		end
 	end
 
 	local setGemsAt = function(gemLocations)
 		for index,value in ipairs(gemLocations) do
-			self:setCollectibleAt(value[1], value[2], collectibleMod.Gem())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.Gem())
 		end
 	end
 
 	local setHiddenTreasureAt = function(treasureLocations) 
 		for index,value in ipairs(treasureLocations) do
-			self:setCollectibleAt(value[1], value[2], collectibleMod.BuriedTreasure())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.BuriedTreasure())
 		end
 	end
 	
@@ -191,9 +217,9 @@ function CollectGrid(imagePath, gameType, gameState)
 	self.setHiddenTreasureAt = setHiddenTreasureAt
 	
 	local initializeMapItems = function(gameState)
-		goldLocations = gameState.goldLocations
-		gemLocations = gameState.gemLocations
-		treasureLocations = gameState.treasureLocations
+		goldLocations = gameState.celldata.goldLocations
+		gemLocations = gameState.celldata.gemLocations
+		treasureLocations = gameState.celldata.treasureLocations
 		self.setGoldAt(goldLocations)
 		self.setGemsAt(gemLocations)
 		self.setHiddenTreasureAt(treasureLocations)
@@ -232,6 +258,14 @@ function CollectGrid(imagePath, gameType, gameState)
 		self.treasureCells = nil
 	end
 	
+	local show = function()
+		self:show()
+	end
+	
+	local destroy = function()
+		self:destroy()
+	end
+	
 	self.resetHiddenTreasureImages = resetHiddenTreasureImages
 	
 	return {
@@ -241,7 +275,9 @@ function CollectGrid(imagePath, gameType, gameState)
 		setHiddenTreasureAt = setHiddenTreasureAt,
 		initializeMapItems = initializeMapItems,
 		numRows = self.numRows,
-		rows = self.rows
+		rows = self.rows,
+		show = show,
+		destroy = destroy
 	}
 end
 
@@ -249,3 +285,4 @@ M.Cell = Cell
 M.CollectGrid = CollectGrid
 
 return M
+

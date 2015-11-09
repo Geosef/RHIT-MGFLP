@@ -19,18 +19,29 @@ function InputButton:_init(engine, imagePath, eventName, buttonNum, numButtons)
 	local scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 15
 	local scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 15
 	
-	local button = Button.new(buttonImage, buttonImage, function() self:click() end)
-	button:setScale(scaleX, scaleY)
-	xPos = buttonNum * (WINDOW_WIDTH / (numButtons + 1))
-	yPos = WINDOW_HEIGHT / 20
-	button:setPosition(xPos, yPos)
-	stage:addChild(button)
+	self.button = Button.new(buttonImage, buttonImage, function() self:click() end)
+	self.button:setScale(scaleX, scaleY)
+	local xPos = buttonNum * (WINDOW_WIDTH / (numButtons + 1))
+	local yPos = WINDOW_HEIGHT / 20
+	self.button:setPosition(xPos, yPos)
+	
 	self.imagePath = imagePath
 	--button:addEventListener("click", function()
 		--self.engine:addEvent(self.func)
 	--	self.func()
 	--end)
 end
+
+function InputButton:show()
+	stage:addChild(self.button)
+end
+
+function InputButton:destroy()
+	stage:removeChild(self.button)
+end
+
+
+
 
 function InputButton:click()
 	self.engine:addEvent(self, 1)

@@ -17,13 +17,18 @@ local multiplayerMode = false
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
 
-local collectGame = gameMod.CollectGame(netAdapter)
 
-function onEnterFrame(event)
-    collectGame.update()
-end
 
-stage:addEventListener(Event.ENTER_FRAME, onEnterFrame)
+netAdapter:login("user", "pass")
+
+
+co = coroutine.create(function ()
+	netAdapter:startRecv()
+end)
+
+--coroutine.resume(co)
+
+netAdapter:startRecv()
 
 function routePacket(jsonObject)
 	if jsonObject.type == "events" then

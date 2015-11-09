@@ -91,8 +91,11 @@ function Character:enterGrid(grid, imagePath)
 	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
 	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
 	playerImage:setPosition(self.xPosStart, self.yPosStart)
-	stage:addChild(playerImage)
 	self.playerImage = playerImage
+end
+
+function Character:show()
+	stage:addChild(self.playerImage)
 end
 
 
@@ -185,6 +188,7 @@ function Player:destroy()
 	print("Player destroy not implemented!")
 end
 
+
 function CollectPlayer(grid, isPlayer1, maxMoves)
 	local self = Player(grid, isPlayer1, "images/player.png", maxMoves)
 	
@@ -259,7 +263,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		local cell = self.grid.rows[self.y][self.x]
 		if not cell.collectible then
 			print(self.name .. " found nothing.")
-		else 
+		else
 			if cell.collectible.isBuriedTreasure then
 				print(self.name .. " dug up treasure!")
 				self.incrementScore(8)
@@ -331,6 +335,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 				table.remove(self.loadedMoves, 1)
 				self.activeMove = move
 				move:execute()
+			else
+				self.action = false
 			end
 			return
 		end
@@ -380,6 +386,23 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		if self.x == self.initX and self.y == self.initY and self.digs ~= nil then
 			self.digs = 3
 			self.shovelCount:setText(self.digs)
+			
+		end
+		if cell.gold then
+			print(self.name .. " picked up gold!")
+			self.score = self.score + 1
+			cell.gold = false
+			self.scoreField:setText("Score: " .. self.score)
+			stage:removeChild(cell.goldImage)
+			
+		end
+		if cell.gem then
+			print (self.name .. " picked up a gem!")
+			self.score = self.score + 4
+			cell.gem = false
+			self.scoreField:setText("Score: " .. self.score)
+			stage:removeChild(cell.gemImage)
+			
 		end
 		if cell.collectible ~= nil then
 			print(self.name .. " passed over " .. cell.collectible.name)
@@ -391,6 +414,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		if self.metalDetect > 0 then
 			self.grid:metalDetect(cell, self)
 		end
+		
 	end
 	
 	local setAction = function(newActionSetting)
@@ -429,6 +453,10 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		return self.score
 	end
 	
+	local show = function()
+		self:show()
+	end
+	
 	self.finishMove = finishMove
 	self.setMetalDetection = setMetalDetection
 	self.addDigs = addDigs
@@ -453,7 +481,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		getXDirection = getXDirection,
 		getYDirection = getYDirection,
 		getScore = getScore,
-		incrementScore = incrementScore
+		incrementScore = incrementScore,
+		show = show
 	}
 end
 
@@ -470,13 +499,12 @@ setmetatable(ComputerControlled, {
 function ComputerControlled:_init(grid, maxMoves, imagePath, name, init)
 	self:initComputerAttributes(grid, name, init, maxMoves)
 	self:initMoveBuffer()
-	print(imagePath)
 	self:enterGrid(grid, imagePath)
 end
 
 function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
-	self.initX = init[1]
-	self.initY = init[2]
+	self.initX = init.x
+	self.initY = init.y
 	self.name = name
 	self.maxMoves = maxMoves
 	self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
@@ -587,6 +615,10 @@ function Leprechaun(grid, maxMoves, init)
 		self:moveDown(param)
 	end
 	
+	local show = function()
+		self:show()
+	end
+	
 	self.finishMove = finishMove
 	return {
 		loadedMoves = self.loadedMoves,
@@ -596,7 +628,8 @@ function Leprechaun(grid, maxMoves, init)
 		moveDown = moveDown,
 		getAction = getAction,
 		setAction = setAction,
-		update = update
+		update = update,
+		show = show
 	}
 end
 

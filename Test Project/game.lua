@@ -27,7 +27,6 @@ end
 function Game:setBackground(imagePath, testing)
 	if not testing then
 		self.background = Bitmap.new(Texture.new(imagePath))
-		stage:addChild(self.background)
 	end
 end
 
@@ -56,17 +55,16 @@ function Game:setSound()
 end
 
 function Game:sendMoves()
-	local packet = {type="Submit Move"}
 	if self.engine == nil then
 		print("Engine hasn't been set!")
 		return
 	end
-	packet.events = self.engine:getEvents()
-	if # packet.events > self.maxPlayerMoves then
+	local events = self.engine:getEvents()
+	if # events > self.maxPlayerMoves then
 		print("That's too many moves! Check your loops to see how many instructions are being run.")
 		return
 	end
-	self.netAdapter:sendMoves(self, packet)
+	self.netAdapter:sendMoves(self, events)
 end
 
 function Game:runEvents(events)
@@ -89,8 +87,9 @@ function Game:exit()
 	print("Exit not implemented")
 end
 
-function CollectGame(netAdapter)
+function CollectGame(netAdapter, hostBool)
 	local self = Game(netAdapter, "images/grassbackground.png", false)
+	self.host = hostBool
 	
 	local setupGrid = function(imagePath, gameState, testing)
 		if testing then
@@ -104,7 +103,7 @@ function CollectGame(netAdapter)
 		self.maxPlayerMoves = 8
 		self.player1 = playerMod.CollectPlayer(self.grid, 1, self.maxPlayerMoves, testing)
 		self.player2 = playerMod.CollectPlayer(self.grid, 2, self.maxPlayerMoves, testing)
-		self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.lepStart, testing)
+		self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.celldata.lepStart, testing)
 	end
 	
 	local setSound = function(testing)
@@ -112,39 +111,43 @@ function CollectGame(netAdapter)
 			return
 		end
 		local music = musicMod.Music.new("audio/music.mp3")
-		music:on()
+		--music:on()
 	end
 	
 	local setupPanel = function(numButtons)
-		rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png",
+		--move this stuff into panel object
+		
+		self.rightButton = buttonMod.InputButton(self.engine, "images/arrow-right.png",
 		"RightMove", 1, numButtons)
-		downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", 
+		self.downButton = buttonMod.InputButton(self.engine, "images/arrow-down.png", 
 		"DownMove", 2, numButtons)
-		leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", 
+		self.leftButton = buttonMod.InputButton(self.engine, "images/arrow-left.png", 
 		"LeftMove", 3, numButtons)
-		upButton = buttonMod.InputButton(self.engine, "images/arrow-up.png", 
+		self.upButton = buttonMod.InputButton(self.engine, "images/arrow-up.png", 
 		"UpMove", 4, numButtons)
-		digButton = buttonMod.InputButton(self.engine, "images/shovel.png", 
+		self.digButton = buttonMod.InputButton(self.engine, "images/shovel.png", 
 		"Dig", 5, numButtons)
-		loopStart = buttonMod.InputButton(self.engine, "images/loop-start.png", 
+		self.loopStart = buttonMod.InputButton(self.engine, "images/loop-start.png", 
 		"LoopStart", 6, numButtons)
-		loopEnd = buttonMod.InputButton(self.engine, "images/loop-end.png", 
+		self.loopEnd = buttonMod.InputButton(self.engine, "images/loop-end.png", 
 		"LoopEnd", 7, numButtons)
 		
 		local buttonImage = Bitmap.new(Texture.new("images/go.png"))
-		scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 10.5
-		scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 15
+		local scaleX = WINDOW_WIDTH / buttonImage:getWidth() / 10.5
+		local scaleY = WINDOW_HEIGHT / buttonImage:getHeight() / 15
 		
-		local button = Button.new(buttonImage, buttonImage, function()
+		self.goButton = Button.new(buttonImage, buttonImage, function()
 			--self:reset() 
 			self:sendMoves()
 			self.engine:clearBuffer()
 			end)
-		button:setScale(scaleX, scaleY)
-		xPos = numButtons * (WINDOW_WIDTH / (numButtons + 1))
-		yPos = WINDOW_HEIGHT / 20
-		button:setPosition(xPos, yPos)
-		stage:addChild(button)
+		self.goButton:setScale(scaleX, scaleY)
+		local xPos = numButtons * (WINDOW_WIDTH / (numButtons + 1))
+		local yPos = WINDOW_HEIGHT / 20
+		self.goButton:setPosition(xPos, yPos)
+		
+		
+		
 	end
 	
 	
@@ -180,10 +183,6 @@ function CollectGame(netAdapter)
 		self.player2.endTurn()
 	end
 	
-	local updateLocations = function()
-		self.netAdapter:updateMoves(self.player1, self.player2, self.leprechaun)
-	end
-	
 	local finished = {false, false, false}
 	local update = function()
 		
@@ -191,43 +190,89 @@ function CollectGame(netAdapter)
 		self.player1.update()
 		local p1ActionAfter = self.player1.getAction()
 		if p1ActionBefore and not p1ActionAfter then
-			finished[0] = true
+			finished[1] = true
 		end
 		local p2ActionBefore = self.player2.getAction()
 		self.player2.update()
 		local p2ActionAfter = self.player2.getAction()
-		if p1ActionBefore and not p1ActionAfter then
-			finished[1] = true
+		if p2ActionBefore and not p2ActionAfter then
+			finished[2] = true
 		end
 		local leprechaunActionBefore = self.leprechaun.getAction()
 		self.leprechaun.update()
 		local leprechaunActionAfter = self.leprechaun.getAction()
-		if p1ActionBefore and not p1ActionAfter then
-			finished[2] = true
+		if leprechaunActionBefore and not leprechaunActionAfter then
+			finished[3] = true
 		end
-		if finished[0] and finished[1] and finished[2] then
+		if finished[1] and finished[2] and finished[3] then
 			--if player one
 			finished = {false, false, false}
-			self.updateLocations()
+			if self.host then
+				self.uploadLocations()
+			else
+				self.netAdapter:startRecv()
+			end
 		end
 	end
 	
-	local exit = function()
+	local destroy = function()
 		stage:removeChild(self.background)
-		self.grid:destroy()
+		self.grid.destroy()
 		self.player1.destroy()
 		self.player2.destroy()
 		self.leprechaun.destroy()
+		
+		
+		self.rightButton:destroy()
+		self.downButton:destroy()
+		self.leftButton:destroy()
+		self.upButton:destroy()
+		self.digButton:destroy()
+		self.loopStart:destroy()
+		self.loopEnd:destroy()
+		
+		stage:removeChild(self.goButton)
+		
+		stage:removeEventListener(Event.ENTER_FRAME, self.update)
 	end
 	
 	local show = function()
-		self.grid:show()
+		stage:addChild(self.background)
+		self.grid.show()
 		self.player1.show()
 		self.player2.show()
 		self.leprechaun.show()
+		
+		self.rightButton:show()
+		self.downButton:show()
+		self.leftButton:show()
+		self.upButton:show()
+		self.digButton:show()
+		self.loopStart:show()
+		self.loopEnd:show()
+		
+		stage:addChild(self.goButton)
+		
+		stage:addEventListener(Event.ENTER_FRAME, self.update)
 	end
 	
-	local updateLocations = function()
+	local gameSetup = function(gameState)
+	--print_r(gameState)
+		self.setupGrid("images/dirtcell.png", gameState, false)
+		self.setupPlayers(gameState, false)
+	end
+	
+	local uploadLocations = function()
+		local locations = {
+		p1={x=self.player1.x, y=self.player1.y},
+		p2={x=self.player2.x, y=self.player2.y},
+		lep={x=self.leprechaun.x, y=self.leprechaun.y}
+		}
+		self.netAdapter:uploadLocations(locations)
+		
+	end
+	
+	local updateLocations = function(locations)
 	
 	end
 	
@@ -235,22 +280,29 @@ function CollectGame(netAdapter)
 	local gameState = self.netAdapter:getGameState(self.gameType)
 	
 	self.setupPanel = setupPanel
-	setupGrid("images/dirtcell.png", gameState, false)
-	setupPlayers(gameState, false)
+	--setupGrid("images/dirtcell.png", gameState, false)
+	--setupPlayers(gameState, false)
 	self:setupEngine(8, false)
 	setSound(false)
 	
 	self.updateLocations = updateLocations
+	self.uploadLocations = uploadLocations
 	self.runEvents = runEvents
 	self.resetTurn = resetTurn
+	self.setupGrid = setupGrid
+	self.setupPlayers = setupPlayers
+	self.update = update
 	
 	return {
 		runEvents = runEvents,
 		update = update,
 		exit = exit,
-		show = show
+		show = show,
+		destroy = destroy,
+		gameSetup = gameSetup,
+		updateLocations = updateLocations
 	}
-	
+
 end
 
 M.CollectGame = CollectGame
