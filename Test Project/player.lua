@@ -623,6 +623,14 @@ function Leprechaun(grid, maxMoves, init)
 		self:moveDown(param)
 	end
 	
+	local getX = function()
+		return self.x
+	end
+	
+	local getY = function()
+		return self.y
+	end
+	
 	local show = function()
 		self:show()
 	end
@@ -642,7 +650,9 @@ function Leprechaun(grid, maxMoves, init)
 		setAction = setAction,
 		update = update,
 		show = show,
-		destroy = destroy
+		destroy = destroy,
+		getX = getX,
+		getY = getY
 	}
 end
 

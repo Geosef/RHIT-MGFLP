@@ -43,7 +43,7 @@ function clickCreate()
 end
 
 function clickJoin()
-	netAdapter:joinGame()
+	netAdapter:joinGame(1)
 end
 
 function routePacket(jsonObject)

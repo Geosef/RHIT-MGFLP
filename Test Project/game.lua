@@ -264,9 +264,9 @@ function CollectGame(netAdapter, hostBool)
 	
 	local uploadLocations = function()
 		local locations = {
-		p1={x=self.player1.x, y=self.player1.y},
-		p2={x=self.player2.x, y=self.player2.y},
-		lep={x=self.leprechaun.x, y=self.leprechaun.y}
+		p1={x=self.player1.getX(), y=self.player1.getY()},
+		p2={x=self.player2.getX(), y=self.player2.getY()},
+		lep={x=self.leprechaun.getX(), y=self.leprechaun.getY()}
 		}
 		self.netAdapter:uploadLocations(locations)
 		
