@@ -30,6 +30,14 @@ end)
 
 netAdapter:startRecv()
 
+createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), nil)
+createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/4)
+stage:addChild(createGameButton)
+
+createGameButton = Button.new(Bitmap.new(Texture.new("images/joingame_up.png")), Bitmap.new(Texture.new("images/joingame_down.png")), nil)
+createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/2)
+stage:addChild(createGameButton)
+
 function routePacket(jsonObject)
 	if jsonObject.type == "events" then
 		collectGame.runEvents(jsonObject)
