@@ -258,7 +258,7 @@ class Game(object):
         lepMoves = self.maxMoves + 1
         visitedStates = set()
         frontier = util.PriorityQueue()
-        currentState = (lepLoc['x'], lepLoc['y'])
+        currentState = (lepLoc.get('x'), lepLoc.get('y'))
         stateCost = 0
         hVal = self.collectEnemyHeuristic(p1Loc, p2Loc, currentState)
         p = hVal + stateCost
@@ -269,7 +269,6 @@ class Game(object):
                 return []
             currentState, actions, stateCost, hVal = frontier.pop()
             if len(actions) == lepMoves:
-                print actions
                 return actions
             if currentState not in visitedStates:
                 visitedStates.add(currentState)
@@ -292,8 +291,8 @@ class Game(object):
         p2 = p2Loc['x'], p2Loc['y']
         p1Dist = util.manhattanDistance(state, p1)
         p2Dist = util.manhattanDistance(state, p2)
-        avg = (p1Dist + p2Dist) / 2
-        return avg
+        inverseAvg = 2 / (p1Dist + p2Dist)
+        return inverseAvg
 
     def getSuccessors(self, state):
         successors = []
