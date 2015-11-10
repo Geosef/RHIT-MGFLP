@@ -168,7 +168,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = '192.168.254.21'
+		local ip = '192.168.254.38'
 		local port = 5005
 		self.sock = socket.tcp()
 		self.sock:connect(ip, port)

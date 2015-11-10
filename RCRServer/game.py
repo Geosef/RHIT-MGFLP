@@ -291,8 +291,8 @@ class Game(object):
         p2 = p2Loc['x'], p2Loc['y']
         p1Dist = util.manhattanDistance(state, p1)
         p2Dist = util.manhattanDistance(state, p2)
-        inverseAvg = 2 / (p1Dist + p2Dist)
-        return inverseAvg
+        avg = (p2Dist + p1Dist) / 2
+        return 1 / avg
 
     def getSuccessors(self, state):
         successors = []
@@ -301,6 +301,7 @@ class Game(object):
             dx, dy = Actions.directionToVector(action)
             newX, newY = int(x + dx), int(y+dy)
             if not self.isWall(newX, newY):
+                print newX, newY
                 nextState = (newX, newY)
                 cost = self.calculateStateCost(nextState)
                 successors.append((nextState, action, cost))
