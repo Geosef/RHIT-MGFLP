@@ -55,6 +55,7 @@ function Game:setSound()
 end
 
 function Game:sendMoves()
+	if not self.idle then return end
 	if self.engine == nil then
 		print("Engine hasn't been set!")
 		return
@@ -90,7 +91,7 @@ end
 function CollectGame(netAdapter, hostBool)
 	local self = Game(netAdapter, "images/grassbackground.png", false)
 	self.host = hostBool
-	
+	self.idle = true
 	local setupGrid = function(imagePath, gameState, testing)
 		if testing then
 			print("testing")
@@ -138,7 +139,9 @@ function CollectGame(netAdapter, hostBool)
 		
 		self.goButton = Button.new(buttonImage, buttonImage, function()
 			--self:reset() 
-			self:sendMoves()
+			if not (self.player1.getAction() or self.player2.getAction() or self.leprechaun.getAction()) then
+				self:sendMoves()
+			end
 			self.engine:clearBuffer()
 			end)
 		self.goButton:setScale(scaleX, scaleY)
@@ -152,6 +155,7 @@ function CollectGame(netAdapter, hostBool)
 	
 	
 	local runEvents = function(events)
+		self.idle = false
 		--print_r(events)
 		if events.p1 == nil or events.p2 == nil then
 			print("unsupported event format")
@@ -205,8 +209,8 @@ function CollectGame(netAdapter, hostBool)
 			finished[3] = true
 		end
 		if finished[1] and finished[2] and finished[3] then
-			--if player one
 			finished = {false, false, false}
+			self.idle = true
 			if self.host then
 				self.uploadLocations()
 			else
