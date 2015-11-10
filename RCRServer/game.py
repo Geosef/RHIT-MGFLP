@@ -1,10 +1,28 @@
 __author__ = 'kochelmj'
 
 import threading
+import util
 from pprint import pprint
 
-class Game(object):
+class Directions:
+    UP = "UpMove"
+    DOWN = "DownMove"
+    LEFT = "LeftMove"
+    RIGHT = "RightMove"
 
+class Actions:
+    _directions = {Directions.UP: (0, 1),
+                   Directions.DOWN: (0, -1),
+                   Directions.RIGHT: (1, 0),
+                   Directions.LEFT: (-1, 0)}
+    _directionsAsList = _directions.items()
+
+    def directionToVector(direction):
+        dx, dy = Actions._directions[direction]
+        return (dx, dy)
+    directionToVector = staticmethod(directionToVector)
+
+class Game(object):
 
     MAXTURNS = 10
     def __init__(self, p1Thread, gameID, packet):
@@ -15,6 +33,7 @@ class Game(object):
         self.currentTurn = 0
         self.currentMoves = {0:None, 1:None, 'lep':None}
         self.gridSize = 10
+        self.maxMoves = 8
         self.full = False
         self.gameType = packet.get('gametype')
         self.difficulty = packet.get('difficulty')
@@ -236,7 +255,64 @@ class Game(object):
 
 
     def calculateLepMoves(self, p1Loc, p2Loc, lepLoc):
-        return ["LeftMove", "UpMove", "RightMove", "DownMove"]
+        lepMoves = self.maxMoves + 1
+        visitedStates = set()
+        frontier = util.PriorityQueue()
+        currentState = (lepLoc.get('x'), lepLoc.get('y'))
+        stateCost = 0
+        hVal = self.collectEnemyHeuristic(p1Loc, p2Loc, currentState)
+        p = hVal + stateCost
+        node = (currentState, [], stateCost, hVal)
+        frontier.push(node, p)
+        while(1):
+            if frontier.isEmpty():
+                return []
+            currentState, actions, stateCost, hVal = frontier.pop()
+            if len(actions) == lepMoves:
+                return actions
+            if currentState not in visitedStates:
+                visitedStates.add(currentState)
+                successors = self.getSuccessors(currentState)
+                for successor in successors:
+                    nextState, nextAction, nextCost = successor
+                    cost = stateCost
+                    newActions = list(actions)
+                    newActions.append(nextAction)
+                    cost += stateCost
+                    newHVal = self.collectEnemyHeuristic(p1Loc, p2Loc, nextState)
+                    pVal = newHVal + cost
+                    newNode = (nextState, newActions, cost, newHVal)
+                    frontier.push(newNode, pVal)
+        return []
+
+
+    def collectEnemyHeuristic(self, p1Loc, p2Loc, state):
+        p1 = p1Loc['x'], p1Loc['y']
+        p2 = p2Loc['x'], p2Loc['y']
+        p1Dist = util.manhattanDistance(state, p1)
+        p2Dist = util.manhattanDistance(state, p2)
+        inverseAvg = 2 / (p1Dist + p2Dist)
+        return inverseAvg
+
+    def getSuccessors(self, state):
+        successors = []
+        x , y = state
+        for action in [Directions.UP, Directions.DOWN, Directions.LEFT, Directions.RIGHT]:
+            dx, dy = Actions.directionToVector(action)
+            newX, newY = int(x + dx), int(y+dy)
+            if not self.isWall(newX, newY):
+                nextState = (newX, newY)
+                cost = self.calculateStateCost(nextState)
+                successors.append((nextState, action, cost))
+        return successors
+
+    def calculateStateCost(self, state):
+        return 1
+
+    def isWall(self, x, y):
+        if x < 1 or y < 1 or x > 10 or y > 10:
+            return True
+        return False
 
     def refuse(self):
         '''
