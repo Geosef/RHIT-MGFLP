@@ -11,14 +11,16 @@
   <file source="http/socket.lua"/>
  </folder>
  <folder name="images">
+  <file source="images/joingame_up.png"/>
+  <file source="images/joingame_down.png"/>
+  <file source="images/creategame_up.png"/>
+  <file source="images/creategame_down.png"/>
   <file source="images/arrow-down.png"/>
   <file source="images/arrow-left.png"/>
   <file source="images/arrow-right.png"/>
   <file source="images/arrow-up.png"/>
   <file source="images/ball.png"/>
   <file source="images/brokenshovel.png"/>
-  <file source="../../../../Desktop/creategame_down.png"/>
-  <file source="../../../../Desktop/creategame_up.png"/>
   <file source="images/diggingActionCell.png"/>
   <file source="images/dirtcell.png"/>
   <file source="images/field.png"/>
@@ -27,8 +29,6 @@
   <file source="images/gold.png"/>
   <file source="images/grassbackground.png"/>
   <file source="images/jetpack.png"/>
-  <file source="../../../../Desktop/joingame_down.png"/>
-  <file source="../../../../Desktop/joingame_up.png"/>
   <file source="images/leprechaun.png"/>
   <file source="images/loop-end.png"/>
   <file source="images/loop-start.png"/>
