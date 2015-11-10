@@ -30,13 +30,21 @@ end)
 
 netAdapter:startRecv()
 
-createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), nil)
+createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), function() clickCreate() end)
 createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/4)
 stage:addChild(createGameButton)
 
-createGameButton = Button.new(Bitmap.new(Texture.new("images/joingame_up.png")), Bitmap.new(Texture.new("images/joingame_down.png")), nil)
-createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/2)
-stage:addChild(createGameButton)
+joinGameButton = Button.new(Bitmap.new(Texture.new("images/joingame_up.png")), Bitmap.new(Texture.new("images/joingame_down.png")), function() clickJoin() end)
+joinGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/2)
+stage:addChild(joinGameButton)
+
+function clickCreate()
+	netAdapter:createGame()
+end
+
+function clickJoin()
+	netAdapter:joinGame()
+end
 
 function routePacket(jsonObject)
 	if jsonObject.type == "events" then

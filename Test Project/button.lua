@@ -87,21 +87,21 @@ end
 
 -- if state is true show downState else show upState
 function Button:updateVisualState(state)
---	if state then
-		--if self:contains(self.upState) then
---			self:removeChild(self.upState)
---		end
+	if state then
+		if self:contains(self.upState) then
+			self:removeChild(self.upState)
+		end
 		
---		if not self:contains(self.downState) then
---			self:addChild(self.downState)
---		end
---	else
---		if self:contains(self.downState) then
---			self:removeChild(self.downState)
---		end
+		if not self:contains(self.downState) then
+			self:addChild(self.downState)
+		end
+	else
+		if self:contains(self.downState) then
+			self:removeChild(self.downState)
+		end
 		
---		if not self:contains(self.upState) then
---			self:addChild(self.upState)
---		end
---	end
+		if not self:contains(self.upState) then
+			self:addChild(self.upState)
+		end
+	end
 end
