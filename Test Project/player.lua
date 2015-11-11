@@ -453,7 +453,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 	local show = function()
 		stage:addChild(self.playerImage)
 		stage:addChild(self.scoreField)
-		if self.digImage ~= nil then
+		if self.digging then
 			stage:addChild(self.digImage)
 		end
 		stage:addChild(self.shovelImage)
@@ -463,7 +463,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 	local destroy = function()
 		stage:removeChild(self.playerImage)
 		stage:removeChild(self.scoreField)
-		if self.digImage ~= nil then
+		if self.digging then
 			stage:removeChild(self.digImage)
 		end
 		stage:removeChild(self.shovelImage)
