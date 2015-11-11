@@ -132,23 +132,43 @@ function NetworkAdapter:runEvents(packet)
 	self.game.runEvents(packet.events)
 end
 
-function NetworkAdapter:uploadLocations(locations)
-	local packet = {type="Update Locations", locations = locations}
+function NetworkAdapter:updateLocations(locations, scores)
+	local packet = {type="Update Locations", locations = locations, scores = scores}
 	self:sendData(packet)
 	self:startRecv()
 	
 end
 
 function NetworkAdapter:recvUpdateLocations(packet)
-	self.game.updateLocations(packet.locations)
+	self.game.recvUpdateLocations(packet.locations)
 	print("UPDATE")
 end
 
-function NetworkAdapter:endGame(packet)
+function NetworkAdapter:endGame(rematch)
+	local packet = {type='End Game', rematch=rematch}
+	
+	self:sendData(packet)
+	if rematch then
+		self:startRecv()
+	end
+
 	--if packet.rematch, reset game
 	--else kick to main menu
 	--self.game.destroy()
 	--self.game = nil
+end
+
+function NetworkAdapter:gameOver(packet)
+	print('Winner: ' .. packet.winner)
+	self.game.gameOver(packet.winner)
+end
+
+function NetworkAdapter:rematch(packet)
+	print_r(packet)
+	if packet.rematch then
+		self:startRecv()
+	end
+
 end
 
 function NetworkAdapter:playerLeft(packet)
@@ -168,7 +188,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = '192.168.254.38'
+		local ip = '192.168.254.21'
 		local port = 5005
 		self.sock = socket.tcp()
 		self.sock:connect(ip, port)
@@ -220,7 +240,9 @@ local packetRoute = {
 ["Run Events"] = NetworkAdapter.runEvents,
 ["Update Locations"] = NetworkAdapter.recvUpdateLocations,
 ["End Game"] = NetworkAdapter.endGame,
-["Player Left"] = NetworkAdapter.playerLeft
+["Player Left"] = NetworkAdapter.playerLeft,
+["Game Over"] = NetworkAdapter.gameOver,
+["Rematch"] = NetworkAdapter.rematch
 }
 function NetworkAdapter:startRecv()
 	if not self.on then

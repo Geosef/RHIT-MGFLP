@@ -212,7 +212,7 @@ function CollectGame(netAdapter, hostBool)
 			finished = {false, false, false}
 			self.idle = true
 			if self.host then
-				self.uploadLocations()
+				self.updateLocations()
 			else
 				self.netAdapter:startRecv()
 			end
@@ -266,18 +266,70 @@ function CollectGame(netAdapter, hostBool)
 		self.setupPlayers(gameState, false)
 	end
 	
-	local uploadLocations = function()
+	local updateLocations = function()
 		local locations = {
 		p1={x=self.player1.getX(), y=self.player1.getY()},
 		p2={x=self.player2.getX(), y=self.player2.getY()},
 		lep={x=self.leprechaun.getX(), y=self.leprechaun.getY()}
 		}
-		self.netAdapter:uploadLocations(locations)
+		local scores = {self.player1.getScore(), self.player2.getScore()}
+		self.netAdapter:updateLocations(locations, scores)
 		
 	end
 	
-	local updateLocations = function(locations)
+	local recvUpdateLocations = function(locations)
+		print_r(locations)
+		self.grid.setMapItems(locations, false)
+	end
 	
+	local gameOver = function(winner)
+		--display winner
+		--display rematch and quit buttons
+		
+		local winnerField = TextField.new(nil, 'Winner: '  .. winner)
+		winnerField:setX(WINDOW_WIDTH / 2 - 10)
+		winnerField:setY(WINDOW_HEIGHT / 3 - 20)
+		stage:addChild(winnerField)
+		
+		local rematchButtonImage = Bitmap.new(Texture.new('images/rematch.png'))
+		local rematchButton = Button.new(rematchButtonImage, rematchButtonImage, function()
+			self.netAdapter:endGame(true)
+		end)
+		
+		local scaleX = WINDOW_WIDTH / rematchButtonImage:getWidth() / 4
+		local scaleY = WINDOW_HEIGHT / rematchButtonImage:getHeight() / 7
+		rematchButton:setScale(scaleX, scaleY)
+		local xPos = WINDOW_WIDTH / 2 - rematchButtonImage:getWidth() / 2
+		local yPos = 2 * WINDOW_HEIGHT / 3 - 20
+		rematchButton:setPosition(xPos, yPos)
+		
+		stage:addChild(rematchButton)
+		
+		local quitButtonImage = Bitmap.new(Texture.new('images/quit.png'))
+		local quitButton = Button.new(quitButtonImage, quitButtonImage, function()
+			self.netAdapter:endGame(false)
+			destroy()
+			stage:removeChild(self.rematchButton)
+			stage:removeChild(self.quitButton)
+			stage:removeChild(self.winnerField)
+			self.netAdapter:startRecv()
+			
+		end)
+		
+		local scaleX = WINDOW_WIDTH / quitButtonImage:getWidth() / 4
+		local scaleY = WINDOW_HEIGHT / quitButtonImage:getHeight() / 7
+		quitButton:setScale(scaleX, scaleY)
+		local xPos = WINDOW_WIDTH / 2 - quitButtonImage:getWidth() / 2
+		local yPos = 2 * WINDOW_HEIGHT / 3 + 40
+		quitButton:setPosition(xPos, yPos)
+		
+		
+		stage:addChild(quitButton)
+		self.winnerField = winnerField
+		self.rematchButton = rematchButton
+		self.quitButton = quitButton
+		
+		
 	end
 	
 	self.gameType = "Collect"
@@ -290,7 +342,7 @@ function CollectGame(netAdapter, hostBool)
 	setSound(false)
 	
 	self.updateLocations = updateLocations
-	self.uploadLocations = uploadLocations
+	self.recvUpdateLocations = recvUpdateLocations
 	self.runEvents = runEvents
 	self.resetTurn = resetTurn
 	self.setupGrid = setupGrid
@@ -304,7 +356,9 @@ function CollectGame(netAdapter, hostBool)
 		show = show,
 		destroy = destroy,
 		gameSetup = gameSetup,
-		updateLocations = updateLocations
+		updateLocations = updateLocations,
+		recvUpdateLocations = recvUpdateLocations,
+		gameOver = gameOver
 	}
 
 end

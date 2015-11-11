@@ -158,7 +158,7 @@ end
 
 function Player:changeScore(points)
 	self.score = self.score + points
-	self.scoreField:setText("Score: " .. self.score)
+	self.scoreField:setText(self.name .. ": " .. self.score)
 end
 
 --implemented by subclass

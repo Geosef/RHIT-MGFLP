@@ -1,5 +1,5 @@
 <project>
- <properties fps="60" orientation="0" packageName="edu.rosehulman.runcoderrun" win_domain="giderosmobile.com" windowWidth="0" logicalWidth="320" mouseToTouch="1" logicalHeight="480" encryptCode="0" osx_domain="giderosmobile.com" encryptAssets="0" architecture="1" windowHeight="0" scaleMode="5" iosDevice="0" assetsOnly="0" android_template="0" win_org="GiderosMobile" osx_org="GiderosMobile" mouseTouchOrder="0" touchToMouse="1" autorotation="2" retinaDisplay="2">
+ <properties iosDevice="0" architecture="1" retinaDisplay="2" scaleMode="5" touchToMouse="1" win_domain="giderosmobile.com" fps="60" autorotation="2" assetsOnly="0" osx_org="GiderosMobile" packageName="edu.rosehulman.runcoderrun" osx_domain="giderosmobile.com" mouseToTouch="1" win_org="GiderosMobile" logicalWidth="320" orientation="0" encryptCode="0" android_template="0" windowWidth="0" mouseTouchOrder="0" logicalHeight="480" encryptAssets="0" windowHeight="0">
   <imageScales/>
  </properties>
  <folder name="audio">
@@ -11,6 +11,8 @@
   <file source="http/socket.lua"/>
  </folder>
  <folder name="images">
+  <file source="images/rematch.png"/>
+  <file source="images/quit.png"/>
   <file source="images/joingame_up.png"/>
   <file source="images/joingame_down.png"/>
   <file source="images/creategame_up.png"/>

@@ -46,7 +46,7 @@ function Cell:removeImage()
 	self.image = nil
 end
 
-function Cell:setCollectible(collectible)
+function Cell:setCollectible(collectible, initial)
 	if self.collectible ~= nil then
 		return false
 	end
@@ -99,8 +99,11 @@ function Cell:destroy()
 	--destroy others
 end
 
-function Cell:show()
-	stage:addChild(self.sprite)
+function Cell:show(initial)
+	if initial then
+		stage:addChild(self.sprite)
+	end
+	
 	if self.collectible ~= nil and self.collectible.image ~= nil then
 		stage:addChild(self.collectible.image)
 	end
@@ -153,9 +156,13 @@ function Grid:initializeMapItems(gameState)
 	print("Map item initialization not implemented yet!")
 end
 
-function Grid:setCollectibleAt(x, y, collectible)
+function Grid:setCollectibleAt(x, y, collectible, initial)
 	local cell = self.rows[y][x]
 	cell:setCollectible(collectible)
+	if not initial then
+		cell:show(false)
+	end
+		
 end
 
 function Grid:reset()
@@ -183,7 +190,7 @@ function Grid:show()
 		row = self.rows[i]
 		for j = 1,self.numRows do
 			cell = row[j]
-			cell:show()
+			cell:show(true)
 		end
 	end
 end
@@ -193,21 +200,22 @@ end
 function CollectGrid(imagePath, gameType, gameState)
 	local self = Grid(imagePath, gameType, gameState.gridsize)
 	
-	local setGoldAt = function(goldLocations)
+	local setGoldAt = function(goldLocations, initial)
+		print_r(goldLocations)
 		for index,value in ipairs(goldLocations) do
-			self:setCollectibleAt(value.x, value.y, collectibleMod.GoldCoin())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.GoldCoin(), initial)
 		end
 	end
 
-	local setGemsAt = function(gemLocations)
+	local setGemsAt = function(gemLocations, initial)
 		for index,value in ipairs(gemLocations) do
-			self:setCollectibleAt(value.x, value.y, collectibleMod.Gem())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.Gem(), initial)
 		end
 	end
 
-	local setHiddenTreasureAt = function(treasureLocations) 
+	local setHiddenTreasureAt = function(treasureLocations, initial)
 		for index,value in ipairs(treasureLocations) do
-			self:setCollectibleAt(value.x, value.y, collectibleMod.BuriedTreasure())
+			self:setCollectibleAt(value.x, value.y, collectibleMod.BuriedTreasure(), initial)
 		end
 	end
 	
@@ -215,15 +223,15 @@ function CollectGrid(imagePath, gameType, gameState)
 	self.setGemsAt = setGemsAt
 	self.setHiddenTreasureAt = setHiddenTreasureAt
 	
-	local initializeMapItems = function(gameState)
-		goldLocations = gameState.celldata.goldLocations
-		gemLocations = gameState.celldata.gemLocations
-		treasureLocations = gameState.celldata.treasureLocations
-		self.setGoldAt(goldLocations)
-		self.setGemsAt(gemLocations)
-		self.setHiddenTreasureAt(treasureLocations)
+	local setMapItems = function(locations, initial)
+		goldLocations = locations.goldLocations
+		gemLocations = locations.gemLocations
+		treasureLocations = locations.treasureLocations
+		self.setGoldAt(goldLocations, initial)
+		self.setGemsAt(gemLocations, initial)
+		self.setHiddenTreasureAt(treasureLocations, initial)
 	end
-	initializeMapItems(gameState)
+	setMapItems(gameState.celldata, true)
 	
 
 	local metalDetect = function(cell, player)
@@ -272,7 +280,7 @@ function CollectGrid(imagePath, gameType, gameState)
 		setGoldAt = setGoldAt,
 		setGemsAt = setGemsAt,
 		setHiddenTreasureAt = setHiddenTreasureAt,
-		initializeMapItems = initializeMapItems,
+		setMapItems = setMapItems,
 		numRows = self.numRows,
 		rows = self.rows,
 		show = show,
