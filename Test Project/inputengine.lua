@@ -34,6 +34,7 @@ function InputEngine:addEvent(button, param)
 		end
 		-- Loop Counter Text Field
 		loopCount = TextField.new(nil, 0)
+		loopCount:setTextColor(0xff0000)
 	end
 	
 	local eventNum = self.script:length() + 1
@@ -59,7 +60,7 @@ function InputEngine:addEvent(button, param)
 		loopCount:setScale(2.0)
 		loopCount:setAlpha(0.4)
 		loopCount:setText(1)
-		loopCount:setPosition(xPos + 5, yPos + 20)
+		loopCount:setPosition(xPos + 3, yPos + 20)
 		eventSprite.loopCount = loopCount
 		stage:addChild(eventSprite.loopCount)
 	end

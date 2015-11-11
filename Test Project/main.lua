@@ -12,7 +12,7 @@ local gameMod = require('game')
 
 --tests.run()
 
-local multiplayerMode = true
+local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
