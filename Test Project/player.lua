@@ -1,5 +1,7 @@
 local M = {}
 
+notifyModule = require('notifier')
+
 local Character = {}
 Character.__index = Character
 
@@ -407,6 +409,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 			if didCollect then
 				collectible = cell:removeCollectible()
 			end
+			local notifier = notifyModule.Notifier()
+			notifier:notify("Collected!")
 		end
 		if self.metalDetect > 0 then
 			self.grid:metalDetect(cell, self)
