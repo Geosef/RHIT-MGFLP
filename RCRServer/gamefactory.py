@@ -24,17 +24,23 @@ class GameFactory(object):
 
     def joinGame(self, client, gameID):
         with self.gameDictLock:
-            gameObject = self.games.get(gameID, None)
-            if not gameObject or gameObject.full:
-                client.sendData({
+            gameList = self.games.values()
+            for gameObj in gameList:
+                if not gameObj.full:
+                    gameObj.joinGame(client)
+                    return gameObj
+            # gameObject = self.games.get(gameID, None)
+
+            # if not gameObject or gameObject.full:
+            client.sendData({
             'type': 'Join Game',
             'success': False
         })
-                return None
+            return None
             #TODO: handle game join failure
-            else:
-                gameObject.joinGame(client)
-                return gameObject
+            # else:
+            #     gameObject.joinGame(client)
+            #     return gameObject
 
 
     def browseGames(self, packet):
