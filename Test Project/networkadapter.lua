@@ -13,8 +13,6 @@ setmetatable(NetworkAdapter, {
   end,
 })
 
-
-
 --These methods are used to react to receiving packets from the server
 function NetworkAdapter:createAccount(packet)
 
@@ -188,7 +186,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = '192.168.254.21'
+		local ip = '137.112.233.136'
 		local port = 5005
 		self.sock = socket.tcp()
 		self.sock:connect(ip, port)

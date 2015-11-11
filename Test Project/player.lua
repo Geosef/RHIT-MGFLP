@@ -146,6 +146,7 @@ function Player:setScoreField(playerNum)
 	self.score = 0
 	local playerName = ""
 	local textField = TextField.new(nil, self.name .. ": " .. self.score)
+	textField:setTextColor(0xff0000)
 	if playerNum == 1 then
 		textField:setX(10)
 		textField:setY(10)
@@ -193,7 +194,7 @@ end
 
 
 function CollectPlayer(grid, isPlayer1, maxMoves)
-	local self = Player(grid, isPlayer1, "images/player.png", maxMoves)
+	local self = Player(grid, isPlayer1, "images/astronaut.png", maxMoves)
 	
 	local setupPlayerGameRules = function()
 		--Game specific
@@ -366,10 +367,24 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 		self.playerImage:setPosition(x, y)
 	end
 	
-	
-	
+	self.lastCell = nil
 	local finishMove = function()
 		local cell = self.grid.rows[self.y][self.x]
+		if self.lastCell ~= nil then
+			self.grid.rows[self.lastCell.y][self.lastCell.x].currentChar = nil
+		end
+		if self.grid.rows[self.y][self.x].currentChar ~= nil then
+			if self.grid.rows[self.y][self.x].currentChar.name == "Leprechaun" then
+				print(self.name .. " ran into an alien! Lost some coins!")
+				self.incrementScore(-7)
+			else 
+				print(self.name .. " ran into " .. cell.currentChar.name .. "! Stole some coins!")
+				self.grid.rows[self.y][self.x].currentChar.incrementScore(-3)
+				self.incrementScore(3)
+			end
+		end
+		self.grid.rows[self.y][self.x].currentChar = self
+		self.lastCell = self.grid.rows[self.y][self.x]
 		self.xDirection = 0
 		self.yDirection = 0
 		self.xSpeed = 0
@@ -383,20 +398,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 			self.shovelCount:setText(self.digs)
 			
 		end
-		if cell.gold then
-			print(self.name .. " picked up gold!")
-			self.score = self.score + 1
-			cell.gold = false
-			self.scoreField:setText("Score: " .. self.score)
-			stage:removeChild(cell.goldImage)
-			
-		end
-		if cell.gem then
-			print (self.name .. " picked up a gem!")
-			self.score = self.score + 4
-			cell.gem = false
-			self.scoreField:setText("Score: " .. self.score)
-			stage:removeChild(cell.gemImage)
+		if cell.hasEnemy then
 			
 		end
 		if cell.collectible ~= nil then
@@ -553,9 +555,21 @@ end
 
 
 function Leprechaun(grid, maxMoves, init)
-	local self = ComputerControlled(grid, maxMoves, "images/leprechaun.png", "Leprechaun", init)
-	
+	local self = ComputerControlled(grid, maxMoves, "images/alien.png", "Leprechaun", init)
+	self.lastCell = nil
 	local finishMove = function()
+		local cell = self.grid.rows[self.y][self.x]
+		if self.lastCell ~= nil then
+			self.grid.rows[self.lastCell.y][self.lastCell.x].currentChar = nil
+		end
+		print(self.grid.rows[self.y][self.x].currentChar)
+		if self.grid.rows[self.y][self.x].currentChar ~= nil then
+			print(self.grid.rows[self.y][self.x].currentChar.name)
+			print(self.name .. " ran into " .. self.grid.rows[self.y][self.x].currentChar.name .. "! Stole some coins!")
+			self.grid.rows[self.y][self.x].currentChar.incrementScore(-3)
+		end
+		self.grid.rows[self.y][self.x].currentChar = self
+		self.lastCell = self.grid.rows[self.y][self.x]
 		self.xDirection = 0
 		self.yDirection = 0
 		self.xSpeed = 0

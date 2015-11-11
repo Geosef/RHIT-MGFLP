@@ -39,7 +39,7 @@ def calculateLepMoves(gameObj, locations):
     visitedStates = set()
     frontier = util.PriorityQueue()
     currentState = (lepLoc.get('x'), lepLoc.get('y'))
-    stateCost = 0
+    stateCost = 1
     hVal = collectEnemyHeuristic(p1Loc, p2Loc, currentState)
     p = hVal + stateCost
     node = (currentState, [], stateCost, hVal)
@@ -58,7 +58,7 @@ def calculateLepMoves(gameObj, locations):
                 cost = stateCost
                 newActions = list(actions)
                 newActions.append(nextAction)
-                cost += stateCost
+                cost += nextCost
                 newHVal = collectEnemyHeuristic(p1Loc, p2Loc, nextState)
                 pVal = newHVal + cost
                 newNode = (nextState, newActions, cost, newHVal)
@@ -71,8 +71,8 @@ def collectEnemyHeuristic(p1Loc, p2Loc, state):
     p2 = p2Loc['x'], p2Loc['y']
     p1Dist = util.manhattanDistance(state, p1)
     p2Dist = util.manhattanDistance(state, p2)
-    avg = (p2Dist + p1Dist) / 2
-    return 1 / avg
+    avg = (p1Dist - p2Dist) / 2
+    return 10 - avg
 
 def getSuccessors(state):
     successors = []
@@ -81,10 +81,10 @@ def getSuccessors(state):
         dx, dy = Actions.directionToVector(action)
         newX, newY = int(x + dx), int(y+dy)
         if not isWall(newX, newY):
-            print newX, newY
             nextState = (newX, newY)
             cost = calculateStateCost(nextState)
             successors.append((nextState, action, cost))
+    print successors
     return successors
 
 def calculateStateCost(state):

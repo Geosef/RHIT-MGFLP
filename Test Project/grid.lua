@@ -21,6 +21,7 @@ function Cell:_init(x, y, sprite, numRows)
 	self.hiddenTreasure = false
 	self.collectible = nil
 	self.image = nil
+	self.currentChar = nil
 end
 
 function Cell:addImage(imagePath)

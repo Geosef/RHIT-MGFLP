@@ -89,7 +89,7 @@ function Game:exit()
 end
 
 function CollectGame(netAdapter, hostBool)
-	local self = Game(netAdapter, "images/grassbackground.png", false)
+	local self = Game(netAdapter, "images/moonbackground.png", false)
 	self.host = hostBool
 	self.idle = true
 	local setupGrid = function(imagePath, gameState, testing)
@@ -262,7 +262,7 @@ function CollectGame(netAdapter, hostBool)
 	
 	local gameSetup = function(gameState)
 	--print_r(gameState)
-		self.setupGrid("images/dirtcell.png", gameState, false)
+		self.setupGrid("images/mooncell.png", gameState, false)
 		self.setupPlayers(gameState, false)
 	end
 	

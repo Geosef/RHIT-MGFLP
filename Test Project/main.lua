@@ -12,12 +12,10 @@ local gameMod = require('game')
 
 --tests.run()
 
-local multiplayerMode = true
+local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
-
-
 
 netAdapter:login("user", "pass")
 
@@ -27,7 +25,6 @@ co = coroutine.create(function ()
 end)
 
 --coroutine.resume(co)
-
 netAdapter:startRecv()
 
 createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), function() clickCreate() end)
