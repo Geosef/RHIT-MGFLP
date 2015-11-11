@@ -1,5 +1,5 @@
 <project>
- <properties windowWidth="0" osx_domain="giderosmobile.com" retinaDisplay="2" encryptCode="0" assetsOnly="0" osx_org="GiderosMobile" touchToMouse="1" scaleMode="5" autorotation="2" win_domain="giderosmobile.com" android_template="0" fps="60" mouseToTouch="1" iosDevice="0" orientation="0" mouseTouchOrder="0" packageName="edu.rosehulman.runcoderrun" logicalHeight="480" logicalWidth="320" encryptAssets="0" architecture="1" windowHeight="0" win_org="GiderosMobile">
+ <properties scaleMode="5" windowHeight="0" mouseToTouch="1" orientation="0" architecture="1" osx_domain="giderosmobile.com" packageName="edu.rosehulman.runcoderrun" fps="60" retinaDisplay="2" assetsOnly="0" autorotation="2" android_template="0" logicalWidth="320" windowWidth="0" encryptCode="0" win_org="GiderosMobile" win_domain="giderosmobile.com" iosDevice="0" touchToMouse="1" encryptAssets="0" logicalHeight="480" mouseTouchOrder="0" osx_org="GiderosMobile">
   <imageScales/>
  </properties>
  <folder name="audio">
@@ -11,6 +11,7 @@
   <file source="http/socket.lua"/>
  </folder>
  <folder name="images">
+  <file source="images/RcrLogo.png"/>
   <file source="images/astronaut.png"/>
   <file source="images/alien.png"/>
   <file source="images/mooncell.png"/>

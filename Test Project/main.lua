@@ -27,12 +27,22 @@ end)
 --coroutine.resume(co)
 netAdapter:startRecv()
 
+stage:addChild(Bitmap.new(Texture.new("images/moonbackground.png")))
+
+logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
+logoScale = WINDOW_WIDTH/logo:getWidth()/1.05
+logo:setScale(logoScale,logoScale)
+
+logo:setPosition(WINDOW_WIDTH/30, WINDOW_HEIGHT/2.75)
+
+stage:addChild(logo)
+
 createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), function() clickCreate() end)
-createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/4)
+createGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/1.5)
 stage:addChild(createGameButton)
 
 joinGameButton = Button.new(Bitmap.new(Texture.new("images/joingame_up.png")), Bitmap.new(Texture.new("images/joingame_down.png")), function() clickJoin() end)
-joinGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/2)
+joinGameButton:setPosition(WINDOW_WIDTH/7, WINDOW_HEIGHT/1.2)
 stage:addChild(joinGameButton)
 
 function clickCreate()
