@@ -6,6 +6,12 @@ import time
 from pprint import pprint
 
 class FakeSocket(object):
+    '''
+    If host is true:
+    create a game
+    else:
+    browse for games until one is available, join it
+    '''
 
     login = \
     {
@@ -19,6 +25,7 @@ class FakeSocket(object):
         self.lock = threading.Lock()
         self.packet = {}
         self.packet = self.login
+        self.userInfo = {'username': 'fake', 'playerID': 0}
 
     def send(self, jsondata):
         data = json.loads(jsondata)
@@ -89,6 +96,8 @@ class FakeSocket(object):
 
     def preparerecv(self, data):
         type = data.get('type', '')
+        if type == 'Game Over':
+            return {'type': 'End Game', 'rematch': True}
         if type == 'Update Locations':
             print 'UPDATE LOC'
             return self.submitmove
@@ -101,6 +110,11 @@ class FakeSocket(object):
             return {}
         if type == 'Player Joined':
             return {'type': 'Player Joined', 'accept': True}
+        if type == 'Join Game':
+            if not data.get('success'):
+                return self.browsegames
+            else:
+                return {}
         if type == 'Browse Games':
             games = data.get('games')
             if len(games) == 0:

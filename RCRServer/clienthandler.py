@@ -41,7 +41,10 @@ class ClientThread(threading.Thread):
             except Exception as e:
                 print(str(e))
                 break
-            pprint(data.get('type'))
+            if data.get('type') != 'Browse Games':
+                pprint(data.get('type'))
+                if hasattr(self, 'index'):
+                    print 'ID:', str(self.index)
 
             methodType = data.get('type', None)
             if not methodType:
@@ -85,7 +88,7 @@ class ClientThread(threading.Thread):
         # pprint(packet)
 
     def endGame(self, packet):
-        self.game.endGame(self, packet)
+        self.game.rematch(self, packet)
         # pprint(packet)
 
     def submitMove(self, packet):
@@ -95,12 +98,14 @@ class ClientThread(threading.Thread):
 
     def updateLocations(self, packet):
         locations = packet.get('locations')
-        self.game.updateLocations(locations)
+        scores = packet.get('scores')
+        self.game.updateLocations(locations, scores)
         # pprint(packet)
 
     def joinGame(self, packet):
         gameID = packet.get('gameID')
         self.game = self.gameFactory.joinGame(self, gameID)
+
         # pprint(packet)
 
     def createGame(self, packet):
@@ -135,7 +140,7 @@ class ClientThread(threading.Thread):
 
     def playerJoined(self, packet):
         if packet.get('accept'):
-            self.game.setup()
+            self.game.setup(True)
         else:
             self.game.refuse()
 

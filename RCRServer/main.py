@@ -13,8 +13,8 @@ def main():
     gameFactory = gamefactory.GameFactory()
 
     # host = 'localhost'
-    # host = '192.168.254.21'
-    host = '192.168.254.38'
+    host = '192.168.254.21'
+    # host = '192.168.254.38'
     port = 5005
 
     tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,10 +25,15 @@ def main():
     print 'Host: ' + host
     print 'Port: ' + str(port)
 
-    peerSocket = fakesocket.FakeSocket(False)
+    peerSocket1 = fakesocket.FakeSocket(False)
 
-    peerHandler = clienthandler.ClientThread(peerSocket, gameFactory)
-    peerHandler.start()
+    peerHandler1 = clienthandler.ClientThread(peerSocket1, gameFactory)
+    peerHandler1.start()
+
+    peerSocket2 = fakesocket.FakeSocket(False)
+
+    peerHandler2 = clienthandler.ClientThread(peerSocket2, gameFactory)
+    peerHandler2.start()
 
     index = 0
     while True:

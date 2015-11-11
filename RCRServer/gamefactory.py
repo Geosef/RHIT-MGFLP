@@ -26,6 +26,10 @@ class GameFactory(object):
         with self.gameDictLock:
             gameObject = self.games.get(gameID, None)
             if not gameObject or gameObject.full:
+                client.sendData({
+            'type': 'Join Game',
+            'success': False
+        })
                 return None
             #TODO: handle game join failure
             else:
@@ -45,7 +49,7 @@ class GameFactory(object):
                 'type': 'Browse Games',
                 'games': []
             }
-            pprint(packet)
+            # pprint(packet)
 
             for k,v in self.games.items():
                 if (not v.full) and (allGameTypes or v.gameType == gameType) and (allDifficulties or v.difficulty == difficulty):
