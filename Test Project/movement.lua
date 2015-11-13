@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 local M={}
 
 inputMod = require('inputobj')

@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 local function setGlobals()
 	WINDOW_WIDTH = application:getLogicalWidth()
 	WINDOW_HEIGHT = application:getLogicalHeight()

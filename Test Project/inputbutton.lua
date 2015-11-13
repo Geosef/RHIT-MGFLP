@@ -1,5 +1,6 @@
-M = {}
+-- program is being exported under the TSU exception
 
+M = {}
 
 local InputButton = {}
 InputButton.__index = InputButton

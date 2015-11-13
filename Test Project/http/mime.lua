@@ -1,3 +1,5 @@
+--program is being exported under the TSU exception
+
 -----------------------------------------------------------------------------
 -- MIME support for the Lua language.
 -- Author: Diego Nehab

@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 function print_r ( t )  
     local print_r_cache={}
     local function sub_print_r(t,indent)

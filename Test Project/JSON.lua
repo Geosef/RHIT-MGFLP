@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 -- -*- coding: utf-8 -*-
 --
 -- Simple JSON encoding and decoding in pure Lua.

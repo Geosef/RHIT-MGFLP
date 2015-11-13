@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 -----------------------------------------------------------------------------
 -- SMTP client support for the Lua language.
 -- LuaSocket toolkit.

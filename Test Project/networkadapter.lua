@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 M = {}
 
 local gameMod = require('game')
@@ -186,7 +188,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = '137.112.226.147'
+		local ip = '137.112.224.98'
 		local port = 5005
 		self.sock = socket.tcp()
 		self.sock:connect(ip, port)
