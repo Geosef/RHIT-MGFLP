@@ -14,7 +14,7 @@ def main():
 
     # host = 'localhost'
     # host = '192.168.254.21'
-    host = '137.112.226.18'
+    host = '192.168.0.25'
     port = 5005
 
     tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

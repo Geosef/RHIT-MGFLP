@@ -3,6 +3,7 @@
 M = {}
 
 local gameMod = require('game')
+local serverIP = '192.168.0.25';
 
 local NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
@@ -188,7 +189,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = '137.112.224.98'
+		local ip = serverIP
 		local port = 5005
 		self.sock = socket.tcp()
 		self.sock:connect(ip, port)
