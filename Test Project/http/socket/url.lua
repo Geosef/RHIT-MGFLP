@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 -----------------------------------------------------------------------------
 -- URI parsing, composition and relative URL resolution
 -- LuaSocket toolkit.

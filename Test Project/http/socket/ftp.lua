@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 -----------------------------------------------------------------------------
 -- FTP support for the Lua language
 -- LuaSocket toolkit.

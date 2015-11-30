@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 -----------------------------------------------------------------------------
 -- LTN12 - Filters, sources, sinks and pumps.
 -- LuaSocket toolkit.

@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 TestMyStuff = {} --test class
 	function TestMyStuff:testWithNumbers()
 		luaunit.assertTrue(true)

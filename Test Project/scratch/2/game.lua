@@ -1,5 +1,3 @@
--- program is being exported under the TSU exception
-
 local M = {}
 
 local gridMod = require('grid')
@@ -243,6 +241,9 @@ function CollectGame(netAdapter, hostBool)
 	end
 	
 	local show = function()
+		stage:removeChild(createGameButton)
+		stage:removeChild(joinGameButton)
+		
 		stage:addChild(self.background)
 		self.grid.show()
 		self.player1.show()
@@ -287,22 +288,24 @@ function CollectGame(netAdapter, hostBool)
 	local gameOver = function(winner)
 		--display winner
 		--display rematch and quit buttons
+		destroy()
 		
 		local winnerField = TextField.new(nil, 'Winner: '  .. winner)
-		winnerField:setX(WINDOW_WIDTH / 2 - 10)
-		winnerField:setY(WINDOW_HEIGHT / 3 - 20)
+		winnerField:setX(WINDOW_WIDTH / 2 - 20)
+		winnerField:setY(WINDOW_HEIGHT / 2 - 10)
+		winnerField:setScale(2.0, 2.0, 2.0)
 		stage:addChild(winnerField)
 		
 		local rematchButtonImage = Bitmap.new(Texture.new('images/rematch.png'))
 		local rematchButton = Button.new(rematchButtonImage, rematchButtonImage, function()
-			self.netAdapter:endGame(true)
+			--self.netAdapter:endGame(true)
 		end)
 		
 		local scaleX = WINDOW_WIDTH / rematchButtonImage:getWidth() / 4
 		local scaleY = WINDOW_HEIGHT / rematchButtonImage:getHeight() / 7
 		rematchButton:setScale(scaleX, scaleY)
 		local xPos = WINDOW_WIDTH / 2 - rematchButtonImage:getWidth() / 2
-		local yPos = 2 * WINDOW_HEIGHT / 3 - 20
+		local yPos = 2 * WINDOW_HEIGHT / 3 - 30
 		rematchButton:setPosition(xPos, yPos)
 		
 		stage:addChild(rematchButton)
@@ -310,11 +313,13 @@ function CollectGame(netAdapter, hostBool)
 		local quitButtonImage = Bitmap.new(Texture.new('images/quit.png'))
 		local quitButton = Button.new(quitButtonImage, quitButtonImage, function()
 			self.netAdapter:endGame(false)
-			destroy()
 			stage:removeChild(self.rematchButton)
 			stage:removeChild(self.quitButton)
 			stage:removeChild(self.winnerField)
 			self.netAdapter:startRecv()
+			
+			stage:addChild(createGameButton)
+			stage:addChild(joinGameButton)
 			
 		end)
 		
