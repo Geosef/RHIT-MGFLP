@@ -5,7 +5,7 @@ import util
 from pprint import pprint
 import staticdata
 import collectgame_algorithms
-
+import time
 
 class Game(object):
 
@@ -16,6 +16,7 @@ class Game(object):
         self.gameID = gameID
         self.threads = [p1Thread]
         self.lock = threading.Lock()
+        self.rematchLock = threading.Lock()
         self.currentTurn = 0
         self.currentMoves = {0:None, 1:None, 'lep':None}
         self.gridSize = 10
@@ -40,6 +41,8 @@ class Game(object):
             self.threads[1].sendData(self.joinSuccess)
 
         gamesetup = staticdata.gamesetup
+
+        time.sleep(1)
 
         for client in self.threads:
             client.sendData(gamesetup)
@@ -170,7 +173,7 @@ class Game(object):
             self.cleanUp()
             return
 
-        with self.lock:
+        with self.rematchLock:
             self.rematchBools[client.index] = True
             if all(self.rematchBools):
                 self.rematchBools = [False, False]

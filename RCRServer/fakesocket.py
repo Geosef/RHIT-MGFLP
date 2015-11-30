@@ -75,7 +75,9 @@ class FakeSocket(object):
                 'x': 3,
                 'y': 3
             }
-        }
+        },
+        'scores':
+        [10, 10]
     }
     startgame = \
     {

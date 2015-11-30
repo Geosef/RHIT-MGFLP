@@ -84,7 +84,7 @@ def getSuccessors(state):
             nextState = (newX, newY)
             cost = calculateStateCost(nextState)
             successors.append((nextState, action, cost))
-    print successors
+    # print successors
     return successors
 
 def calculateStateCost(state):
