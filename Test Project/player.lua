@@ -378,7 +378,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 			self.grid.rows[self.lastCell.y][self.lastCell.x].currentChar = nil
 		end
 		if self.grid.rows[self.y][self.x].currentChar ~= nil then
-			if self.grid.rows[self.y][self.x].currentChar.name == "Leprechaun" then
+			if self.grid.rows[self.y][self.x].currentChar.name == "Alien" then
 				print(self.name .. " ran into an alien! Lost some coins!")
 				self.incrementScore(-7)
 			else 
@@ -560,8 +560,8 @@ end
 
 
 
-function Leprechaun(grid, maxMoves, init)
-	local self = ComputerControlled(grid, maxMoves, "images/alien.png", "Leprechaun", init)
+function Alien(grid, maxMoves, init)
+	local self = ComputerControlled(grid, maxMoves, "images/alien.png", "Alien", init)
 	self.lastCell = nil
 	local finishMove = function()
 		local cell = self.grid.rows[self.y][self.x]
@@ -677,6 +677,6 @@ function Leprechaun(grid, maxMoves, init)
 end
 
 M.CollectPlayer = CollectPlayer
-M.Leprechaun = Leprechaun
+M.Alien = Alien
 
 return M

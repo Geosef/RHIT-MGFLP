@@ -203,7 +203,7 @@ function NetworkAdapter:_init(multiplayerMode)
 	end
 end
 
-defaultMoves = {p2={"LeftMove", "UpMove", "UpMove", "LeftMove", "UpMove"}, lep={"LeftMove", "UpMove", "RightMove", "DownMove"}}
+defaultMoves = {p2={"LeftMove", "UpMove", "UpMove", "LeftMove", "UpMove"}, alien={"LeftMove", "UpMove", "RightMove", "DownMove"}}
 
 function NetworkAdapter:sendMoves(game, events)
 	if not self.on then
@@ -226,7 +226,7 @@ end
 
 
 function NetworkAdapter:getGameState(gameType)
-		return {gridsize=10, celldata = {lepStart={x=5, y=6}, goldLocations={{x=2, y=2}, {x=3,y=3}, {x=5,y=5}, {x=6,y=6}, {x=8,y=8}, {x=9,y=9}, {x=2,y=9}, {x=3,y=8}, {x=5,y=6}, {x=6,y=5}, {x=8,y=3}, {x=9,y=2}}, gemLocations={{x=4,y=4}, {x=7,y=7}, {x=4,y=7}, {x=7,y=4}}, treasureLocations={{x=1,y=10}, {x=10,y=1}}} }
+		return {gridsize=10, celldata = {alienStart={x=5, y=6}, goldLocations={{x=2, y=2}, {x=3,y=3}, {x=5,y=5}, {x=6,y=6}, {x=8,y=8}, {x=9,y=9}, {x=2,y=9}, {x=3,y=8}, {x=5,y=6}, {x=6,y=5}, {x=8,y=3}, {x=9,y=2}}, gemLocations={{x=4,y=4}, {x=7,y=7}, {x=4,y=7}, {x=7,y=4}}, treasureLocations={{x=1,y=10}, {x=10,y=1}}} }
 end
 
 local packetRoute = {
@@ -257,6 +257,7 @@ function NetworkAdapter:startRecv()
 		local type = inPacket.type
 		print("TYPE: "..type)
 		local method = packetRoute[type]
+		print(method)
 		--print_r(inPacket)
 		
 		if method ~= nil then

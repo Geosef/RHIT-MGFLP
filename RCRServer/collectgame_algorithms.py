@@ -22,7 +22,7 @@ def generateRandomItemLocations(locations):
 def calculateItemLocations(locations):
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
-    lepLoc = locations.get('lep')
+    alienLoc = locations.get('alien')
 
     itemLocations = generateRandomItemLocations(locations)
 
@@ -30,15 +30,15 @@ def calculateItemLocations(locations):
 
 
 
-def calculateLepMoves(gameObj, locations):
+def calculateAlienMoves(gameObj, locations):
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
-    lepLoc = locations.get('lep')
+    alienLoc = locations.get('alien')
 
-    lepMoves = gameObj.maxMoves + 1
+    alienMoves = gameObj.maxMoves + 1
     visitedStates = set()
     frontier = util.PriorityQueue()
-    currentState = (lepLoc.get('x'), lepLoc.get('y'))
+    currentState = (alienLoc.get('x'), alienLoc.get('y'))
     stateCost = 1
     hVal = collectEnemyHeuristic(p1Loc, p2Loc, currentState)
     p = hVal + stateCost
@@ -48,7 +48,7 @@ def calculateLepMoves(gameObj, locations):
         if frontier.isEmpty():
             return []
         currentState, actions, stateCost, hVal = frontier.pop()
-        if len(actions) == lepMoves:
+        if len(actions) == alienMoves:
             return actions
         if currentState not in visitedStates:
             visitedStates.add(currentState)

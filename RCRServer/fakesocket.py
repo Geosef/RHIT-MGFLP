@@ -70,7 +70,7 @@ class FakeSocket(object):
                 'x': 5,
                 'y': 5
             },
-            'lep':
+            'alien':
             {
                 'x': 3,
                 'y': 3

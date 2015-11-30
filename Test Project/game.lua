@@ -106,7 +106,7 @@ function CollectGame(netAdapter, hostBool)
 		self.maxPlayerMoves = 8
 		self.player1 = playerMod.CollectPlayer(self.grid, 1, self.maxPlayerMoves, testing)
 		self.player2 = playerMod.CollectPlayer(self.grid, 2, self.maxPlayerMoves, testing)
-		self.leprechaun = playerMod.Leprechaun(self.grid, self.maxPlayerMoves + 1, gameState.celldata.lepStart, testing)
+		self.alien = playerMod.Alien(self.grid, self.maxPlayerMoves + 1, gameState.celldata.alienStart, testing)
 	end
 	
 	local setSound = function(testing)
@@ -141,7 +141,7 @@ function CollectGame(netAdapter, hostBool)
 		
 		self.goButton = Button.new(buttonImage, buttonImage, function()
 			--self:reset() 
-			if not (self.player1.getAction() or self.player2.getAction() or self.leprechaun.getAction()) then
+			if not (self.player1.getAction() or self.player2.getAction() or self.alien.getAction()) then
 				self:sendMoves()
 			end
 			self.engine:clearBuffer()
@@ -173,10 +173,10 @@ function CollectGame(netAdapter, hostBool)
 			local eventObj = eventObjConst(self.player2, 1, index)
 			table.insert(self.player2.loadedMoves, eventObj)
 		end
-		for index,value in ipairs(events.lep) do
+		for index,value in ipairs(events.alien) do
 			local eventObjConst = commandMod.getEvent(value)
-			local eventObj = eventObjConst(self.leprechaun, 1, index)
-			table.insert(self.leprechaun.loadedMoves, eventObj)
+			local eventObj = eventObjConst(self.alien, 1, index)
+			table.insert(self.alien.loadedMoves, eventObj)
 		end
 		self.resetTurn()
 	end
@@ -184,7 +184,7 @@ function CollectGame(netAdapter, hostBool)
 	local resetTurn = function()
 		self.player1.setAction(true)
 		self.player2.setAction(true)
-		self.leprechaun.setAction(true)
+		self.alien.setAction(true)
 		self.player1.endTurn()
 		self.player2.endTurn()
 	end
@@ -204,10 +204,10 @@ function CollectGame(netAdapter, hostBool)
 		if p2ActionBefore and not p2ActionAfter then
 			finished[2] = true
 		end
-		local leprechaunActionBefore = self.leprechaun.getAction()
-		self.leprechaun.update()
-		local leprechaunActionAfter = self.leprechaun.getAction()
-		if leprechaunActionBefore and not leprechaunActionAfter then
+		local alienActionBefore = self.alien.getAction()
+		self.alien.update()
+		local alienActionAfter = self.alien.getAction()
+		if alienActionBefore and not alienActionAfter then
 			finished[3] = true
 		end
 		if finished[1] and finished[2] and finished[3] then
@@ -226,7 +226,7 @@ function CollectGame(netAdapter, hostBool)
 		self.grid.destroy()
 		self.player1.destroy()
 		self.player2.destroy()
-		self.leprechaun.destroy()
+		self.alien.destroy()
 		
 		
 		self.rightButton:destroy()
@@ -247,7 +247,7 @@ function CollectGame(netAdapter, hostBool)
 		self.grid.show()
 		self.player1.show()
 		self.player2.show()
-		self.leprechaun.show()
+		self.alien.show()
 		
 		self.rightButton:show()
 		self.downButton:show()
@@ -272,7 +272,7 @@ function CollectGame(netAdapter, hostBool)
 		local locations = {
 		p1={x=self.player1.getX(), y=self.player1.getY()},
 		p2={x=self.player2.getX(), y=self.player2.getY()},
-		lep={x=self.leprechaun.getX(), y=self.leprechaun.getY()}
+		alien={x=self.alien.getX(), y=self.alien.getY()}
 		}
 		local scores = {self.player1.getScore(), self.player2.getScore()}
 		self.netAdapter:updateLocations(locations, scores)

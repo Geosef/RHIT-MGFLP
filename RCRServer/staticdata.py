@@ -90,7 +90,7 @@ gamesetup = \
                 'y': 1
             },
         ],
-        'lepStart':
+        'alienStart':
         {
             'x': 5,
             'y': 6
