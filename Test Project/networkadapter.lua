@@ -3,7 +3,7 @@
 M = {}
 
 local gameMod = require('game')
-local serverIP = '192.168.0.25';
+local serverIP = '137.112.233.149';
 
 local NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter

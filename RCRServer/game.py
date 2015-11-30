@@ -18,7 +18,7 @@ class Game(object):
         self.lock = threading.Lock()
         self.rematchLock = threading.Lock()
         self.currentTurn = 0
-        self.currentMoves = {0:None, 1:None, 'lep':None}
+        self.currentMoves = {0:None, 1:None, 'alien':None}
         self.gridSize = 10
         self.maxMoves = 8
         self.full = False
@@ -51,12 +51,12 @@ class Game(object):
             {
                 'p1': {'x': 1, 'y': 1},
                 'p2': {'x': 10, 'y': 10},
-                'lep': {'x': 5, 'y': 5}
+                'alien': {'x': 5, 'y': 5}
             }
-        lepMoves = collectgame_algorithms.calculateLepMoves(self, locations)
+        alienMoves = collectgame_algorithms.calculateAlienMoves(self, locations)
 
         with self.lock:
-            self.currentMoves['lep'] = lepMoves
+            self.currentMoves['alien'] = alienMoves
 
             if self.checkFinish():
                 self.finishTurn()
@@ -99,10 +99,10 @@ class Game(object):
         else:
             newItemLocations = {'goldLocations': [], 'gemLocations': [], 'treasureLocations': []}
 
-        lepMoves = collectgame_algorithms.calculateLepMoves(self, locations)
+        alienMoves = collectgame_algorithms.calculateAlienMoves(self, locations)
 
         with self.lock:
-            self.currentMoves['lep'] = lepMoves
+            self.currentMoves['alien'] = alienMoves
 
             if self.checkFinish():
                 self.finishTurn()
@@ -141,7 +141,7 @@ class Game(object):
                     {
                         'p1': self.currentMoves[0],
                         'p2': self.currentMoves[1],
-                        'lep': self.currentMoves['lep']
+                        'alien': self.currentMoves['alien']
                     }
             }
 

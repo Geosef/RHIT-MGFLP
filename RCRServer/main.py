@@ -13,9 +13,7 @@ def main():
     gameFactory = gamefactory.GameFactory()
 
     # host = 'localhost'
-    # host = '192.168.254.21'
-    # host = '137.112.233.136'
-    host = '137.112.226.146'
+    host = '137.112.233.149'
     port = 5005
 
     tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
