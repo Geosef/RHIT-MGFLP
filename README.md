@@ -1,6 +1,4 @@
-<snippet>
-  <content><![CDATA[
-# ${1:Run Coder Run}
+# Run Coder Run
 This is a senior capstone project for RHIT written by Prithvi Kanherkar, Michael Kochell, Bill Mader and Joe Carroll.
 
 Note: Program is being exported under the TSU exception.
@@ -28,12 +26,9 @@ In order to run this application on multiple Gideros player on separate computer
 
 ## Credits
 [Prithvi Kanherkar](https://www.github.com/pkanher617)
-[Michael Kochell](https://www.github.com/mickmister)
-[Bill Mader](https://www.github.com/Bill-Mader)
-[Joe Carroll](https://www.github.com/Geosef)
 
-## License
-TODO: Write license
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
+[Michael Kochell](https://www.github.com/mickmister)
+
+[Bill Mader](https://www.github.com/Bill-Mader)
+
+[Joe Carroll](https://www.github.com/Geosef)
