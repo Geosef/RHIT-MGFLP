@@ -1,0 +1,13 @@
+<project>
+ <properties logicalHeight="480" mouseTouchOrder="0" encryptCode="0" orientation="1" osx_domain="giderosmobile.com" android_template="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" fps="60" autorotation="0" windowWidth="0" win_org="GiderosMobile" scaleMode="5" mouseToTouch="1" win_domain="giderosmobile.com" logicalWidth="320" packageName="com.yourdomain.yourapp" architecture="0" iosDevice="0" windowHeight="0" osx_org="GiderosMobile" encryptAssets="0">
+  <imageScales/>
+ </properties>
+ <file source="button.lua"/>
+ <file source="easing.lua"/>
+ <file source="scenemanager.lua"/>
+ <folder name="images">
+  <file source="images/RcrLogo.png"/>
+  <file source="images/moonbackground.png"/>
+ </folder>
+ <file source="main.lua"/>
+</project>
