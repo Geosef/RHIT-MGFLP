@@ -8,7 +8,7 @@ local secondScene = gideros.class(Sprite)
 
 function secondScene:init()
 	local logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
-	stage:addChild(logo)
+	self:addChild(logo)
 end
 
 sceneManager = SceneManager.new({ 
@@ -22,7 +22,7 @@ function titleScene:init()
 	local titleClick = Button.new(titleBackground, titleBackground, function() 
 		sceneManager:changeScene("second", 1, SceneManager.flipWithFade, easing.outBack) 
 	end)
-	stage:addChild(titleClick)
+	self:addChild(titleClick)
 end
 
 stage:addChild(sceneManager)
