@@ -243,7 +243,7 @@ function CollectGame(netAdapter, hostBool)
 	end
 	
 	local show = function()
-		stage:addChild(self.background)
+		--[[stage:addChild(self.background)
 		self.grid.show()
 		self.player1.show()
 		self.player2.show()
@@ -260,6 +260,8 @@ function CollectGame(netAdapter, hostBool)
 		stage:addChild(self.goButton)
 		
 		stage:addEventListener(Event.ENTER_FRAME, self.update)
+		]]
+		stage:addChild(Bitmap.new(Texture.new("images/moonbg.png", true)))
 	end
 	
 	local gameSetup = function(gameState)
