@@ -1,18 +1,14 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-
-local titleScene = gideros.class(Sprite)
-
-local secondScene = gideros.class(Sprite)
-
-
+KEYBOARD = Keyboard.new()
 
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
 	["login"] = login,
+	["mainMenu"] = mainMenu
 })
 
 stage:addChild(sceneManager)
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)

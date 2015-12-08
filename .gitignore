@@ -11,3 +11,5 @@ RCRServer/.idea/RCRServer.iml
 
 RCRServer/.idea/vcs.xml
 RCRClient/.tmp/RCRClient.md5
+*.md5
+*.DS_Store
