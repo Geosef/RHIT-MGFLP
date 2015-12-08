@@ -1,7 +1,12 @@
 <project>
- <properties logicalHeight="480" mouseTouchOrder="0" encryptCode="0" orientation="1" osx_domain="giderosmobile.com" android_template="0" retinaDisplay="0" touchToMouse="1" assetsOnly="0" fps="60" autorotation="0" windowWidth="0" win_org="GiderosMobile" scaleMode="5" mouseToTouch="1" win_domain="giderosmobile.com" logicalWidth="320" packageName="com.yourdomain.yourapp" architecture="0" iosDevice="0" windowHeight="0" osx_org="GiderosMobile" encryptAssets="0">
+ <properties windowWidth="0" mouseToTouch="1" touchToMouse="1" iosDevice="0" mouseTouchOrder="0" android_template="0" packageName="com.yourdomain.yourapp" osx_org="GiderosMobile" win_org="GiderosMobile" scaleMode="5" win_domain="giderosmobile.com" osx_domain="giderosmobile.com" logicalHeight="480" orientation="1" logicalWidth="320" autorotation="0" windowHeight="0" fps="60" encryptAssets="0" assetsOnly="0" architecture="0" encryptCode="0" retinaDisplay="0">
   <imageScales/>
  </properties>
+ <folder name="scenes">
+  <file source="createAccount.lua"/>
+  <file source="login.lua"/>
+  <file source="splash.lua"/>
+ </folder>
  <file source="button.lua"/>
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
