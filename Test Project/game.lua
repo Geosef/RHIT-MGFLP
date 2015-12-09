@@ -243,7 +243,8 @@ function CollectGame(netAdapter, hostBool)
 	end
 	
 	local show = function()
-		--[[stage:addChild(self.background)
+		stage:addChild(self.background)
+		self.background:setScale(2.5, 2)
 		self.grid.show()
 		self.player1.show()
 		self.player2.show()
@@ -260,8 +261,8 @@ function CollectGame(netAdapter, hostBool)
 		stage:addChild(self.goButton)
 		
 		stage:addEventListener(Event.ENTER_FRAME, self.update)
-		]]
-		stage:addChild(Bitmap.new(Texture.new("images/moonbg.png", true)))
+		
+		--stage:addChild(Bitmap.new(Texture.new("images/moonbg.png", true)))
 	end
 	
 	local gameSetup = function(gameState)
@@ -282,7 +283,7 @@ function CollectGame(netAdapter, hostBool)
 	end
 	
 	local recvUpdateLocations = function(locations)
-		print_r(locations)
+		--print_r(locations)
 		self.grid.setMapItems(locations, false)
 	end
 	
@@ -303,8 +304,8 @@ function CollectGame(netAdapter, hostBool)
 		local scaleX = WINDOW_WIDTH / rematchButtonImage:getWidth() / 4
 		local scaleY = WINDOW_HEIGHT / rematchButtonImage:getHeight() / 7
 		rematchButton:setScale(scaleX, scaleY)
-		local xPos = WINDOW_WIDTH / 2 - rematchButtonImage:getWidth() / 2
-		local yPos = 2 * WINDOW_HEIGHT / 3 - 20
+		local xPos = WINDOW_WIDTH / 3 - rematchButtonImage:getWidth()
+		local yPos = WINDOW_HEIGHT / 3 - 20
 		rematchButton:setPosition(xPos, yPos)
 		
 		stage:addChild(rematchButton)
@@ -318,13 +319,18 @@ function CollectGame(netAdapter, hostBool)
 			stage:removeChild(self.winnerField)
 			self.netAdapter:startRecv()
 			
+			stage:addChild(bg)
+			stage:addChild(logo)
+			stage:addChild(createGameButton)
+			stage:addChild(joinGameButton)
+			
 		end)
 		
 		local scaleX = WINDOW_WIDTH / quitButtonImage:getWidth() / 4
 		local scaleY = WINDOW_HEIGHT / quitButtonImage:getHeight() / 7
 		quitButton:setScale(scaleX, scaleY)
-		local xPos = WINDOW_WIDTH / 2 - quitButtonImage:getWidth() / 2
-		local yPos = 2 * WINDOW_HEIGHT / 3 + 40
+		local xPos = 2 * WINDOW_WIDTH / 3
+		local yPos = WINDOW_HEIGHT / 3 - 20
 		quitButton:setPosition(xPos, yPos)
 		
 		

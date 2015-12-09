@@ -204,7 +204,7 @@ function CollectGrid(imagePath, gameType, gameState)
 	local self = Grid(imagePath, gameType, gameState.gridsize)
 	
 	local setGoldAt = function(goldLocations, initial)
-		print_r(goldLocations)
+		--print_r(goldLocations)
 		for index,value in ipairs(goldLocations) do
 			self:setCollectibleAt(value.x, value.y, collectibleMod.GoldCoin(), initial)
 		end

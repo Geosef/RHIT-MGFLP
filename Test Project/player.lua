@@ -587,10 +587,12 @@ function Alien(grid, maxMoves, init)
 		
 		if (self.xSpeed == 0 and self.ySpeed == 0) and not self.digging then
 			if # self.loadedMoves ~= 0 then
-				move = self.loadedMoves[1]
+				local move = self.loadedMoves[1]
 				table.remove(self.loadedMoves, 1)
 				self.activeMove = move
 				move:execute()
+			else
+				self.action = false
 			end
 			return
 		end

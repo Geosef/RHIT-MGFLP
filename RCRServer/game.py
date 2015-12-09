@@ -68,6 +68,7 @@ class Game(object):
             if all(self.ready):
                 for client in self.threads:
                     client.sendData({'type': 'Start Game'})
+                self.ready = [False for k in self.ready]
 
 
 
@@ -115,8 +116,12 @@ class Game(object):
 
     def checkEndGame(self, scores):
         if scores[0] >= self.MAXSCORE or \
-        scores[1] >= self.MAXSCORE or \
-        self.currentTurn >= self.MAXTURNS:
+        scores[1] >= self.MAXSCORE:
+            print 'REACHED MAX SCORE'
+            self.endGame(scores)
+            return True
+        if self.currentTurn >= self.MAXTURNS:
+            print 'REACHED MAX MOVES'
             self.endGame(scores)
             return True
         return False
@@ -125,7 +130,7 @@ class Game(object):
         '''
         checks if all players have submitted their moves
         '''
-        pprint(self.currentMoves)
+        # pprint(self.currentMoves)
         for k in self.currentMoves.values():
             if k is None:
                 return False

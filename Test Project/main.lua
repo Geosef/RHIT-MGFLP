@@ -14,7 +14,7 @@ local gameMod = require('game')
 
 --tests.run()
 
-local multiplayerMode = false
+local multiplayerMode = true
 
 JSON = (loadfile "JSON.lua")()
 local netAdapter = networkModule.NetworkAdapter(multiplayerMode)
@@ -29,10 +29,10 @@ end)
 --coroutine.resume(co)
 netAdapter:startRecv()
 
-local bg = Bitmap.new(Texture.new("images/rcrbg.png", true))
+bg = Bitmap.new(Texture.new("images/rcrbg.png", true))
 stage:addChild(bg)
 
-local logo = Bitmap.new(Texture.new("images/RcrLogo.png", true))
+logo = Bitmap.new(Texture.new("images/RcrLogo.png", true))
 local logoScale = WINDOW_WIDTH/logo:getWidth()/1.05
 logo:setScale(logoScale,logoScale)
 
@@ -40,7 +40,7 @@ logo:setPosition(WINDOW_WIDTH/30, WINDOW_HEIGHT/11)
 
 stage:addChild(logo)
 
-local createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), function() clickCreate() end)
+createGameButton = Button.new(Bitmap.new(Texture.new("images/creategame_up.png")), Bitmap.new(Texture.new("images/creategame_down.png")), function() clickCreate() end)
 local createGameButtonX = WINDOW_WIDTH/2 - createGameButton:getWidth()/2
 local createGameButtonY = WINDOW_HEIGHT/11 + logo:getHeight()+ 50
 createGameButton:setPosition(createGameButtonX, createGameButtonY)

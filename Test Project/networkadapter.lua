@@ -3,7 +3,7 @@
 M = {}
 
 local gameMod = require('game')
-local serverIP = '137.112.233.149';
+local serverIP = '192.168.254.21';
 
 local NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
@@ -43,7 +43,13 @@ function NetworkAdapter:createGame()
 	
 	local packet = {type="Create Game", gametype="Collect", difficulty="Easy"}
 	self:sendData(packet)
+	
+	local tf = TextField.new(nil, 'Waiting for Player')
+	tf:setPosition(200, 200)
+	tf:setScale(5, 5)
+	stage:addChild(tf)
 	self:startRecv()
+	stage:removeChild(tf)
 end
 
 function NetworkAdapter:joinGame(gameID)
@@ -63,6 +69,25 @@ function NetworkAdapter:recvJoinGame(packet)
 	if packet.success then
 		self.game = gameMod.CollectGame(self, false)
 		self:startRecv()
+	else
+		print('Join game unsuccessful')
+		local tf = TextField.new(nil, 'Join Unsuccessful')
+		tf:setPosition(200, 200)
+		tf:setScale(5, 5)
+		local back = TextField.new(nil, 'Back')
+		back:setPosition(200, 300)
+		back:setScale(7, 7)
+		
+		local backButton = Button.new(back, back, function() 
+			stage:addChild(bg)
+			stage:addChild(logo)
+			stage:addChild(createGameButton)
+			stage:addChild(joinGameButton)
+		end)
+		
+		stage:addChild(tf)
+		stage:addChild(backButton)
+		stage:addChild(backButton)
 	end
 end
 
