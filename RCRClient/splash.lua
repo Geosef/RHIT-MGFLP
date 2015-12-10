@@ -8,5 +8,5 @@ function splash:init()
 	end)
 	self:addChild(titleClick)
 	local logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
-	self:addChild(logo)	
+	self:addChild(logo)
 end

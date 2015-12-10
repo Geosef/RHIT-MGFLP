@@ -8,12 +8,10 @@ function Button:init(upState, downState, func)
 	self.upState = upState
 	self.downState = downState
 	self:addChild(self.upState)
-		
 	self.focus = false
-
+	
 	-- set the visual state as "up"
 	self:updateVisualState(false)
-
 	-- register to all mouse and touch events
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
@@ -23,6 +21,7 @@ function Button:init(upState, downState, func)
 	self:addEventListener(Event.TOUCHES_MOVE, self.onTouchesMove, self)
 	self:addEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
 	self:addEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
+	
 	--print(self.name)
 end
 
@@ -99,7 +98,6 @@ function Button:updateVisualState(state)
 		if self:contains(self.downState) then
 			self:removeChild(self.downState)
 		end
-		
 		if not self:contains(self.upState) then
 			self:addChild(self.upState)
 		end

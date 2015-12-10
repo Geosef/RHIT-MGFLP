@@ -1,5 +1,5 @@
 <project>
- <properties android_template="0" touchToMouse="1" encryptCode="0" retinaDisplay="0" win_domain="giderosmobile.com" windowWidth="0" iosDevice="0" orientation="1" win_org="GiderosMobile" autorotation="0" mouseTouchOrder="0" logicalHeight="480" scaleMode="5" fps="60" logicalWidth="320" encryptAssets="0" architecture="0" packageName="com.yourdomain.yourapp" osx_domain="giderosmobile.com" osx_org="GiderosMobile" assetsOnly="0" mouseToTouch="1" windowHeight="0">
+ <properties mouseTouchOrder="0" retinaDisplay="0" scaleMode="5" encryptCode="0" mouseToTouch="1" logicalWidth="768" iosDevice="0" windowHeight="0" osx_domain="giderosmobile.com" architecture="0" android_template="0" assetsOnly="0" logicalHeight="1024" touchToMouse="1" encryptAssets="0" win_org="GiderosMobile" packageName="com.yourdomain.yourapp" fps="60" osx_org="GiderosMobile" orientation="1" win_domain="giderosmobile.com" autorotation="0" windowWidth="0">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -16,6 +16,8 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/unchecked.png"/>
+  <file source="images/checked.png"/>
   <folder name="letters">
    <file source="images/letters/A-raw.png"/>
    <file source="images/letters/B-raw.png"/>
