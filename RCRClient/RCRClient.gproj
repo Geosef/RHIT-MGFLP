@@ -18,6 +18,8 @@
  <folder name="images">
   <file source="images/createButton.png"/>
   <file source="images/loginButton.png"/>
+  <file source="images/unchecked.png"/>
+  <file source="images/checked.png"/>
   <folder name="letters">
    <file source="images/letters/A-raw.png"/>
    <file source="images/letters/B-raw.png"/>
