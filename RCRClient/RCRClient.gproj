@@ -1,5 +1,5 @@
 <project>
- <properties encryptAssets="0" mouseToTouch="1" architecture="0" osx_org="GiderosMobile" scaleMode="5" osx_domain="giderosmobile.com" logicalWidth="320" assetsOnly="0" autorotation="0" touchToMouse="1" windowWidth="0" retinaDisplay="0" mouseTouchOrder="0" packageName="com.yourdomain.yourapp" orientation="1" win_org="GiderosMobile" android_template="0" iosDevice="0" logicalHeight="480" encryptCode="0" fps="60" windowHeight="0" win_domain="giderosmobile.com">
+ <properties touchToMouse="1" orientation="1" iosDevice="0" windowWidth="0" ios_bundle="com.yourdomain." version_code="1" android_template="0" packageName="com.yourdomain.yourapp" encryptCode="0" mouseTouchOrder="0" win_domain="giderosmobile.com" mouseToTouch="1" assetsOnly="0" version="1.0" fps="60" encryptAssets="0" windowHeight="0" architecture="0" win_org="GiderosMobile" scaleMode="5" osx_org="GiderosMobile" osx_domain="giderosmobile.com" autorotation="0" logicalHeight="1024" logicalWidth="768" osx_bundle="com.yourdomain." retinaDisplay="0" html5_host="" winrt_org="GiderosMobile" winrt_package="com.yourdomain.yourapp">
   <imageScales/>
  </properties>
  <folder name="fonts">
