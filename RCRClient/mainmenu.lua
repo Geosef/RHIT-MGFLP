@@ -40,7 +40,7 @@ function mainMenu:init()
 	self:addChild(highDiffText)
 	print(game1Text:getY())
 	-- Add buttons
-	local game1EasyButton = Button.new(uncheckedBox1, checkedBox, function() return end)
+	local game1EasyButton = RadioButton.new(uncheckedBox1, checkedBox, function() return end)
 	local game1MidButton = Button.new(uncheckedBox2, checkedBox, function() return end)
 	local game1HardButton = Button.new(uncheckedBox3, checkedBox, function() return end)
 	local buttonRow1Val = firstRow - 30
