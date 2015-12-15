@@ -8,8 +8,12 @@ sceneManager = SceneManager.new({
 	["login"] = login,
 	["mainMenu"] = mainMenu,
 	["create"] = createAccount,
+	["textBox"] = textBoxScene
 })
 
 stage:addChild(sceneManager)
 
-sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("textBox", 1, SceneManager.crossfade, easing.outBack)
+
+
+
