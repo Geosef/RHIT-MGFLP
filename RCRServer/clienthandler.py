@@ -42,9 +42,12 @@ class ClientThread(threading.Thread):
                 print(str(e))
                 break
             if data.get('type') != 'Browse Games':
-                pprint(data.get('type'))
                 if hasattr(self, 'index'):
-                    print 'ID:', str(self.index)
+                    pass
+                    # print(data.get('type'), str(self.index))
+                else:
+                    pass
+                    # print(data.get('type'))
 
             methodType = data.get('type', None)
             if not methodType:
@@ -76,6 +79,7 @@ class ClientThread(threading.Thread):
 
     def sendData(self, data):
         try:
+            # print 'Sending', data['type']
             self.sock.send(json.dumps(data) + "\n")
         except Exception as e:
             print(str(e))

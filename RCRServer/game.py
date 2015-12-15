@@ -181,6 +181,7 @@ class Game(object):
         with self.rematchLock:
             self.rematchBools[client.index] = True
             if all(self.rematchBools):
+                for client in self.threads: client.sendData({'type': 'Rematch', 'rematch': True})
                 self.rematchBools = [False, False]
                 self.setup(False)
 
