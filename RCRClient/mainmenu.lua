@@ -6,8 +6,8 @@ local spacing = 50
 
 function mainMenu:init()
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
-	local titleBackground = Bitmap.new(Texture.new("images/moonbackground.png"))
-	titleBackground:setScale(1.5, 1)
+	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
+	self:addChild(titleBackground)
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Moderate")
@@ -65,7 +65,19 @@ function mainMenu:getPrevCol(colVal, currentObj, newObj)
 	return colVal - (currentObj:getWidth() / 2) - spacing - (newObj:getWidth()/2)
 end
 
+PlayButton = Core.class(Button)
 
+function PlayButton:onMouseDown(event)
+
+end
+
+function PlayButton:onMouseUp(event)
+	if self.focus then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+	end
+end
 
 
 

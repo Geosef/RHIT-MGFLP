@@ -13,7 +13,6 @@ sceneManager = SceneManager.new({
 
 stage:addChild(sceneManager)
 
-sceneManager:changeScene("textBox", 1, SceneManager.crossfade, easing.outBack)
 
-
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 
