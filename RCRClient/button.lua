@@ -1,17 +1,30 @@
 -- program is being exported under the TSU exception
+--[[
+A generic button class
+This code is MIT licensed, see http://www.opensource.org/licenses/mit-license.php
+(C) 2010 - 2011 Gideros Mobile 
+
+This code was modified from the original source by
+Michael Kochell, Prithvi Kanherkar, Joseph Carroll and William Mader
+on 12/14/2015
+]]
 
 Button = gideros.class(Sprite)
 
-function Button:init(upState, downState, func)
-	self.func = func
+function Button:init(upState, downState)
 	--print(self.name)
 	self.upState = upState
 	self.downState = downState
-	self:addChild(self.upState)
 	self.focus = false
 	
 	-- set the visual state as "up"
 	self:updateVisualState(false)
+	
+	self:registerListeners()
+	--print(self.name)
+end
+
+function Button:registerListeners() 
 	-- register to all mouse and touch events
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
@@ -22,7 +35,6 @@ function Button:init(upState, downState, func)
 	self:addEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
 	self:addEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
 	
-	--print(self.name)
 end
 
 function Button:onMouseDown(event)
@@ -31,7 +43,6 @@ function Button:onMouseDown(event)
 		self:updateVisualState(true)
 		event:stopPropagation()
 		--print(self.name)
-		self.func()
 	end
 end
 
