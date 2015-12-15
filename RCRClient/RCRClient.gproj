@@ -1,5 +1,5 @@
 <project>
- <properties touchToMouse="1" orientation="1" iosDevice="0" windowWidth="0" ios_bundle="com.yourdomain." version_code="1" android_template="0" packageName="com.yourdomain.yourapp" encryptCode="0" mouseTouchOrder="0" win_domain="giderosmobile.com" mouseToTouch="1" assetsOnly="0" version="1.0" fps="60" encryptAssets="0" windowHeight="0" architecture="0" win_org="GiderosMobile" scaleMode="5" osx_org="GiderosMobile" osx_domain="giderosmobile.com" autorotation="0" logicalHeight="1024" logicalWidth="768" osx_bundle="com.yourdomain." retinaDisplay="0" html5_host="" winrt_org="GiderosMobile" winrt_package="com.yourdomain.yourapp">
+ <properties iosDevice="0" touchToMouse="1" win_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" fps="60" retinaDisplay="0" autorotation="0" orientation="1" win_org="GiderosMobile" osx_org="GiderosMobile" windowWidth="0" android_template="0" mouseTouchOrder="0" encryptCode="0" osx_domain="giderosmobile.com" mouseToTouch="1" logicalWidth="768" windowHeight="0" logicalHeight="1024" assetsOnly="0" encryptAssets="0" architecture="0" scaleMode="5">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -17,6 +17,7 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/background.png"/>
   <file source="images/createButton.png"/>
   <file source="images/loginButton.png"/>
   <file source="images/unchecked.png"/>

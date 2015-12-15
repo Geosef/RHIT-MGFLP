@@ -10,12 +10,13 @@ on 12/14/2015
 ]]
 
 Button = Core.class(Sprite)
-
-function Button:init(upState, downState)
+-- Added func to constructor that is run in onMouseUp
+function Button:init(upState, downState, func)
 	--print(self.name)
 	self.upState = upState
 	self.downState = downState
 	self.focus = false
+	self.func = func
 	
 	-- set the visual state as "up"
 	self:updateVisualState(false)
@@ -30,7 +31,6 @@ function Button:postInit()
 end
 
 function Button:registerListeners() 
-	print("No here")
 	-- register to all mouse and touch events
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
@@ -48,7 +48,6 @@ function Button:onMouseDown(event)
 		self:updateVisualState(true)
 		event:stopPropagation()
 		--print(self.name)
-		print("No damnit")
 	end
 end
 
@@ -68,6 +67,8 @@ function Button:onMouseUp(event)
 		self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
+		--Runs specified function
+		self.func()
 	end
 end
 
