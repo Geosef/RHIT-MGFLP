@@ -1,4 +1,4 @@
-splash = gideros.class(Sprite)
+splash = Core.class(Sprite)
 
 function splash:init()
 	local titleBackground = Bitmap.new(Texture.new("images/moonbackground.png"))

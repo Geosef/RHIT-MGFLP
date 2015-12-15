@@ -1,4 +1,4 @@
-createAccount = gideros.class(Sprite)
+createAccount = Core.class(Sprite)
 
 function createAccount:init()
 	local titleBackground = Bitmap.new(Texture.new("images/starsBackground.png"))

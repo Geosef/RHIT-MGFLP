@@ -1,4 +1,4 @@
-login = gideros.class(Sprite)
+login = Core.class(Sprite)
 
 function login:init()
 	-- Add background

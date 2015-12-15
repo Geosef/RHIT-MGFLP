@@ -9,7 +9,7 @@ Michael Kochell, Prithvi Kanherkar, Joseph Carroll and William Mader
 on 12/14/2015
 ]]
 
-Button = gideros.class(Sprite)
+Button = Core.class(Sprite)
 
 function Button:init(upState, downState)
 	--print(self.name)
@@ -20,11 +20,17 @@ function Button:init(upState, downState)
 	-- set the visual state as "up"
 	self:updateVisualState(false)
 	
-	self:registerListeners()
+	--Extracted listeners to new register function and placed registry function in postInit
+	--self:registerListeners()
 	--print(self.name)
 end
 
+function Button:postInit()
+	self:registerListeners()
+end
+
 function Button:registerListeners() 
+	print("No here")
 	-- register to all mouse and touch events
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
@@ -34,7 +40,6 @@ function Button:registerListeners()
 	self:addEventListener(Event.TOUCHES_MOVE, self.onTouchesMove, self)
 	self:addEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
 	self:addEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
-	
 end
 
 function Button:onMouseDown(event)
@@ -43,6 +48,7 @@ function Button:onMouseDown(event)
 		self:updateVisualState(true)
 		event:stopPropagation()
 		--print(self.name)
+		print("No damnit")
 	end
 end
 
