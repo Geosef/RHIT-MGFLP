@@ -1,77 +1,45 @@
+-- program is being exported under the TSU exception
+
 login = Core.class(Sprite)
 
 function login:init()
+	--local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+
 	-- Add background
-	local titleBackground = Bitmap.new(Texture.new("images/starsBackground.png"))
-	titleBackground:setScale(.5, .5)
+	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
 
 	-- Add logo
 	local logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
-	logo:setPosition(0, 225)
+	logo:setScale(2, 2)
+	logo:setPosition(0, 50)
 	self:addChild(logo)	
+
+	-- Add email input box
+	local emailTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	emailTB:setPosition(200, 275)
+	self:addChild(emailTB)
 	
-	-- Create white background for email text input
-	local rect = Shape.new()
-	rect:setLineStyle(1, 0x000000, 1)
-	rect:setFillStyle(Shape.SOLID, 0xffffff)
-	rect:beginPath()
-	rect:moveTo(0, 0)
-	rect:lineTo(300, 0)
-	rect:lineTo(300, 25)
-	rect:lineTo(0, 25)
-	rect:lineTo(0, 0)
-	rect:endPath()
-	rect:setPosition(50, 50)
-	self:addChild(rect)
-	
-	-- Create email input text field
-	local emailInput = TextField.new(font, "email")
-	emailInput:setTextColor(0x000000)
-	emailInput:setPosition(56, 70)
-	emailInput:setScale(2, 2)
-	self:addChild(emailInput)
-	
-	KEYBOARD:registerTextField(emailInput)
-	
-	-- Create white background for password text input
-	local rect2 = Shape.new()
-	rect2:setLineStyle(1, 0x000000, 1)
-	rect2:setFillStyle(Shape.SOLID, 0xffffff)
-	rect2:beginPath()
-	rect2:moveTo(0, 0)
-	rect2:lineTo(300, 0)
-	rect2:lineTo(300, 25)
-	rect2:lineTo(0, 25)
-	rect2:lineTo(0, 0)
-	rect2:endPath()
-	rect2:setPosition(50, 85)
-	self:addChild(rect2)
-	
-	-- Create password input text field
-	local passwordInput = TextField.new(font, "password")
-	passwordInput:setTextColor(0x000000)
-	passwordInput:setPosition(56, 105)
-	passwordInput:setScale(2, 2)
-	self:addChild(passwordInput)
-	
-	KEYBOARD:registerTextField(passwordInput)
+	-- Add password input box
+	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	passwordTB:setPosition(200, 400)
+	self:addChild(passwordTB)
 	
 	-- Create login image
 	local loginButton = Bitmap.new(Texture.new("images/loginButton.png"))
-	loginButton:setScale(.5, .5)
-	loginButton:setPosition(45, 110)
+	loginButton:setScale(1, 1)
+	loginButton:setPosition(190, 515)
 	
 	-- Create login button
 	local loginClick = Button.new(loginButton, loginButton, function() 
-		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
+		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack, {userData = {email="asdf", password="fdsa"}}) 
 	end)
 	self:addChild(loginClick)
 	
 	-- Create "create account" image
 	local createButton = Bitmap.new(Texture.new("images/createButton.png"))
-	createButton:setScale(.4, .4)
-	createButton:setPosition(390, 40)
+	createButton:setScale(.6, .6)
+	createButton:setPosition(600, 525)
 	
 	-- Create "create account" button
 	local createClick = Button.new(createButton, createButton, function() 
@@ -93,4 +61,31 @@ end
 
 emailInputDialog:addEventListener(Event.COMPLETE, onComplete)
 emailInputDialog:show()	
+]]
+
+--[[
+***Old code for custom keyboard input***
+
+	-- Create white background for email text input
+	local rect = Shape.new()
+	rect:setLineStyle(1, 0x000000, 1)
+	rect:setFillStyle(Shape.SOLID, 0xffffff)
+	rect:beginPath()
+	rect:moveTo(0, 0)
+	rect:lineTo(600, 0)
+	rect:lineTo(600, 75)
+	rect:lineTo(0, 75)
+	rect:lineTo(0, 0)
+	rect:endPath()
+	rect:setPosition(200, 300)
+	self:addChild(rect)
+	
+	-- Create email input text field
+	local emailInput = TextField.new(font, "email")
+	emailInput:setTextColor(0x000000)
+	emailInput:setPosition(206, 350)
+	emailInput:setScale(5, 5)
+	self:addChild(emailInput)
+	
+	KEYBOARD:registerTextField(emailInput)
 ]]

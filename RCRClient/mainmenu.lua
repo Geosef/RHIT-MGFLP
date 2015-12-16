@@ -1,13 +1,33 @@
+-- program is being exported under the TSU exception
+
 mainMenu = Core.class(Sprite)
 
 local firstCol = 300
 local firstRow = 384
 local spacing = 50
 
-function mainMenu:init()
+function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+	
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
+	--[[
+	*** Code for getting email and password ***
+	if params ~= nill then
+		self.email = params.email
+		self.password = params.password
+		local emailText = TextField.new(font, self.email)
+		emailText:setPosition(0, 50)
+		self:addChild(emailText)
+		local passwordText = TextField.new(font, self.password)
+		passwordText:setPosition(0, 100)
+		self:addChild(passwordText)
+	else
+		self.fail = "failed"
+		local failedText = TextField.new(font, self.fail)
+		self:addChild(failedText)
+	end
+	]]
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Moderate")

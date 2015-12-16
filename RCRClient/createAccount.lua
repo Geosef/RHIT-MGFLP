@@ -1,83 +1,44 @@
+-- program is being exported under the TSU exception
+
 createAccount = Core.class(Sprite)
 
 function createAccount:init()
-	local titleBackground = Bitmap.new(Texture.new("images/starsBackground.png"))
-	titleBackground:setScale(.5, .5)
+	--local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+
+	-- Add background
+	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
 
+	-- Add logo
 	local logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
+	logo:setScale(2, 2)
+	logo:setPosition(0, 50)
 	self:addChild(logo)	
+
+	-- Add email input box
+	local emailTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	emailTB:setPosition(200, 225)
+	self:addChild(emailTB)
 	
-	local rect = Shape.new()
-	rect:setLineStyle(1, 0x000000, 1)
-	rect:setFillStyle(Shape.SOLID, 0xffffff)
-	rect:beginPath()
-	rect:moveTo(0, 0)
-	rect:lineTo(300, 0)
-	rect:lineTo(300, 25)
-	rect:lineTo(0, 25)
-	rect:lineTo(0, 0)
-	rect:endPath()
-	rect:setPosition(94, 120)
-	self:addChild(rect)
+	-- Add password input box
+	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	passwordTB:setPosition(200, 350)
+	self:addChild(passwordTB)
 	
-	local emailInput = TextField.new(font, "email")
-	emailInput:setTextColor(0x000000)
-	emailInput:setPosition(100, 140)
-	emailInput:setScale(2, 2)
-	self:addChild(emailInput)
+	-- Add confirm password input box
+	local confirmTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	confirmTB:setPosition(200, 475)
+	self:addChild(confirmTB)
 	
-	KEYBOARD:registerTextField(emailInput)
-	
-	local rect2 = Shape.new()
-	rect2:setLineStyle(1, 0x000000, 1)
-	rect2:setFillStyle(Shape.SOLID, 0xffffff)
-	rect2:beginPath()
-	rect2:moveTo(0, 0)
-	rect2:lineTo(300, 0)
-	rect2:lineTo(300, 25)
-	rect2:lineTo(0, 25)
-	rect2:lineTo(0, 0)
-	rect2:endPath()
-	rect2:setPosition(94, 155)
-	self:addChild(rect2)
-	
-	local passwordInput = TextField.new(font, "password")
-	passwordInput:setTextColor(0x000000)
-	passwordInput:setPosition(100, 175)
-	passwordInput:setScale(2, 2)
-	self:addChild(passwordInput)
-	
-	KEYBOARD:registerTextField(passwordInput)
-		
-	local rect3 = Shape.new()
-	rect3:setLineStyle(1, 0x000000, 1)
-	rect3:setFillStyle(Shape.SOLID, 0xffffff)
-	rect3:beginPath()
-	rect3:moveTo(0, 0)
-	rect3:lineTo(300, 0)
-	rect3:lineTo(300, 25)
-	rect3:lineTo(0, 25)
-	rect3:lineTo(0, 0)
-	rect3:endPath()
-	rect3:setPosition(94, 190)
-	self:addChild(rect3)
-	
-	local reconfirmInput = TextField.new(font, "reconfirm")
-	reconfirmInput:setTextColor(0x000000)
-	reconfirmInput:setPosition(100, 210)
-	reconfirmInput:setScale(2, 2)
-	self:addChild(reconfirmInput)
-	
-	KEYBOARD:registerTextField(reconfirmInput)
-		
+	-- Create "create account" image
 	local createButton = Bitmap.new(Texture.new("images/createButton.png"))
-	createButton:setScale(.4, .4)
-	createButton:setPosition(200, 230)
+	createButton:setScale(.6, .6)
+	createButton:setPosition(450, 600)
 	
+	-- Create "create account" button
 	local createClick = Button.new(createButton, createButton, function() 
 		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
 	end)
 	self:addChild(createClick)
-
+	
 end

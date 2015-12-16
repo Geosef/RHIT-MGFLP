@@ -1,3 +1,4 @@
+-- program is being exported under the TSU exception
 --[[
 Author of this easing functions for Lua is Josh Tynjala
 https://github.com/joshtynjala/gtween.lua

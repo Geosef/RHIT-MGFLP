@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
@@ -8,7 +10,7 @@ sceneManager = SceneManager.new({
 	["login"] = login,
 	["mainMenu"] = mainMenu,
 	["create"] = createAccount,
-	["textBox"] = textBoxScene
+	["textBox"] = textBoxScene,
 })
 
 stage:addChild(sceneManager)
