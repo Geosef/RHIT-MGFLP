@@ -11,8 +11,7 @@ function mainMenu:init(params)
 	
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
-	--[[
-	*** Code for getting email and password ***
+
 	if params ~= nill then
 		self.email = params.email
 		self.password = params.password
@@ -27,7 +26,7 @@ function mainMenu:init(params)
 		local failedText = TextField.new(font, self.fail)
 		self:addChild(failedText)
 	end
-	]]
+	
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Moderate")

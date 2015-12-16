@@ -3,7 +3,7 @@
 login = Core.class(Sprite)
 
 function login:init()
-	--local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+	local font = TTFont.new("fonts/arial-rounded.ttf", 60)
 
 	-- Add background
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
@@ -15,31 +15,42 @@ function login:init()
 	logo:setPosition(0, 50)
 	self:addChild(logo)	
 
+	-- Add email text
+	local emailText = TextField.new(font, "Email")
+	emailText:setPosition(50, 335)
+	self:addChild(emailText)
+	
 	-- Add email input box
 	local emailTB = TextBox.new({fontSize = 60, width = 600, height = 100})
-	emailTB:setPosition(200, 275)
+	emailTB:setPosition(350, 275)
 	self:addChild(emailTB)
+	
+	-- Add passowrd text
+	local emailText = TextField.new(font, "Password")
+	emailText:setPosition(50, 460)
+	self:addChild(emailText)
 	
 	-- Add password input box
 	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100})
-	passwordTB:setPosition(200, 400)
+	passwordTB:setPosition(350, 400)
 	self:addChild(passwordTB)
 	
 	-- Create login image
 	local loginButton = Bitmap.new(Texture.new("images/loginButton.png"))
 	loginButton:setScale(1, 1)
-	loginButton:setPosition(190, 515)
+	loginButton:setPosition(340, 515)
 	
 	-- Create login button
 	local loginClick = Button.new(loginButton, loginButton, function() 
-		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack, {userData = {email="asdf", password="fdsa"}}) 
+		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
+			{userData = {email=emailTB.tf:getText(), password=passwordTB.tf:getText()}}) 
 	end)
 	self:addChild(loginClick)
 	
 	-- Create "create account" image
 	local createButton = Bitmap.new(Texture.new("images/createButton.png"))
 	createButton:setScale(.6, .6)
-	createButton:setPosition(600, 525)
+	createButton:setPosition(700, 525)
 	
 	-- Create "create account" button
 	local createClick = Button.new(createButton, createButton, function() 
