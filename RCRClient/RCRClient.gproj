@@ -1,5 +1,5 @@
 <project>
- <properties iosDevice="0" touchToMouse="1" win_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" fps="60" retinaDisplay="0" autorotation="0" orientation="1" win_org="GiderosMobile" osx_org="GiderosMobile" windowWidth="0" android_template="0" mouseTouchOrder="0" encryptCode="0" osx_domain="giderosmobile.com" mouseToTouch="1" logicalWidth="768" windowHeight="0" logicalHeight="1024" assetsOnly="0" encryptAssets="0" architecture="0" scaleMode="5">
+ <properties scaleMode="5" encryptCode="0" osx_org="GiderosMobile" windowHeight="0" architecture="0" android_template="0" assetsOnly="0" windowWidth="0" mouseTouchOrder="0" fps="60" mouseToTouch="1" autorotation="0" iosDevice="0" encryptAssets="0" osx_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" win_domain="giderosmobile.com" logicalWidth="768" logicalHeight="1024" touchToMouse="1" orientation="1" retinaDisplay="0" win_org="GiderosMobile">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -18,6 +18,7 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/NewRcrLogo.png"/>
   <file source="images/background.png"/>
   <file source="images/createButton.png"/>
   <file source="images/loginButton.png"/>

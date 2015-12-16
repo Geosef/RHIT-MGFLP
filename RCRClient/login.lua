@@ -10,8 +10,7 @@ function login:init()
 	self:addChild(titleBackground)
 
 	-- Add logo
-	local logo = Bitmap.new(Texture.new("images/RcrLogo.png"))
-	logo:setScale(2, 2)
+	local logo = Bitmap.new(Texture.new("images/NewRcrLogo.png"))
 	logo:setPosition(0, 50)
 	self:addChild(logo)	
 
