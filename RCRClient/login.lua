@@ -35,26 +35,26 @@ function login:init()
 	self:addChild(passwordTB)
 	
 	-- Create login image
-	local loginButton = Bitmap.new(Texture.new("images/loginButton.png"))
-	loginButton:setScale(1, 1)
-	loginButton:setPosition(340, 515)
+	local loginButtonUp = Bitmap.new(Texture.new("images/loginButtonUp.png"))
+	local loginButtonDown = Bitmap.new(Texture.new("images/loginButtonDown.png"))
 	
 	-- Create login button
-	local loginClick = Button.new(loginButton, loginButton, function() 
+	local loginClick = Button.new(loginButtonUp, loginButtonDown, function() 
 		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
 			{userData = {email=emailTB.tf:getText(), password=passwordTB.tf:getText()}}) 
 	end)
+	loginClick:setPosition(347, 515)
 	self:addChild(loginClick)
 	
 	-- Create "create account" image
-	local createButton = Bitmap.new(Texture.new("images/createButton.png"))
-	createButton:setScale(.6, .6)
-	createButton:setPosition(700, 525)
+	local createButtonUp = Bitmap.new(Texture.new("images/createAccountButtonUp.png"))
+	local createButtonDown = Bitmap.new(Texture.new("images/createAccountButtonDown.png"))
 	
 	-- Create "create account" button
-	local createClick = Button.new(createButton, createButton, function() 
+	local createClick = Button.new(createButtonUp, createButtonDown, function() 
 		sceneManager:changeScene("create", 1, SceneManager.crossfade, easing.outBack) 
 	end)
+	createClick:setPosition(700, 515)
 	self:addChild(createClick)
 	
 end

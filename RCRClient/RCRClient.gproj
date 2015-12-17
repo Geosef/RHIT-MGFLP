@@ -1,5 +1,5 @@
 <project>
- <properties scaleMode="5" encryptCode="0" osx_org="GiderosMobile" windowHeight="0" architecture="0" android_template="0" assetsOnly="0" windowWidth="0" mouseTouchOrder="0" fps="60" mouseToTouch="1" autorotation="0" iosDevice="0" encryptAssets="0" osx_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" win_domain="giderosmobile.com" logicalWidth="768" logicalHeight="1024" touchToMouse="1" orientation="1" retinaDisplay="0" win_org="GiderosMobile">
+ <properties assetsOnly="0" architecture="0" packageName="com.yourdomain.yourapp" touchToMouse="1" windowHeight="0" win_domain="giderosmobile.com" logicalWidth="768" encryptCode="0" logicalHeight="1024" mouseToTouch="1" android_template="0" scaleMode="5" osx_org="GiderosMobile" mouseTouchOrder="0" fps="60" windowWidth="0" encryptAssets="0" autorotation="0" retinaDisplay="0" osx_domain="giderosmobile.com" win_org="GiderosMobile" iosDevice="0" orientation="1">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -18,6 +18,11 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/RcrLogoLarge.png"/>
+  <file source="images/createAccountButtonUp.png"/>
+  <file source="images/createAccountButtonDown.png"/>
+  <file source="images/loginButtonDown.png"/>
+  <file source="images/loginButtonUp.png"/>
   <file source="images/NewRcrLogo.png"/>
   <file source="images/background.png"/>
   <file source="images/createButton.png"/>

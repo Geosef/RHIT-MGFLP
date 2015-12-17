@@ -48,16 +48,15 @@ function createAccount:init()
 	confirmTB:setPosition(350, 475)
 	self:addChild(confirmTB)
 	
-	-- Create "create account" image
-	local createButton = Bitmap.new(Texture.new("images/createButton.png"))
-	createButton:setScale(.6, .6)
-	createButton:setPosition(575, 600)
+	-- Create "create account" images
+	local createButtonUp = Bitmap.new(Texture.new("images/createAccountButtonUp.png"))
+	local createButtonDown = Bitmap.new(Texture.new("images/createAccountButtonDown.png"))
 	
 	-- Create "create account" button
-	local createClick = Button.new(createButton, createButton, function() 
-		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
-			{userData = {email=emailTB.tf:getText(), password=passwordTB.tf:getText()}}) 
+	local createClick = Button.new(createButtonUp, createButtonDown, function() 
+		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
 	end)
+	createClick:setPosition(525, 600)
 	self:addChild(createClick)
 	
 end
