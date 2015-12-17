@@ -1,8 +1,20 @@
 -- program is being exported under the TSU exception
 
+gameSelect = Core.class(Sprite)
+
+function gameSelect:init(mainMenu)
+	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+	local game1Text = TextField.new(font, "Space Collectors")
+	local easyDiffText = TextField.new(font, "Easy")
+	game1Text:setPosition(0, game1Text:getHeight())
+	easyDiffText:setPosition(0, easyDiffText:getHeight())
+	self:addChild(game1Text)
+	self:addChild(easyDiffText)
+end
+
 mainMenu = Core.class(Sprite)
 
-local firstCol = 300
+local firstCol = 250
 local firstRow = 384
 local spacing = 50
 
@@ -27,7 +39,7 @@ function mainMenu:init(params)
 		self:addChild(failedText)
 	end
 	
-	local game1Text = TextField.new(font, "Space Collectors")
+	--[[local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Moderate")
 	local highDiffText = TextField.new(font, "Hard")
@@ -45,7 +57,10 @@ function mainMenu:init(params)
 	self:addChild(midDiffText)
 	self:addChild(highDiffText)
 	-- Add buttons
-	self.buttonList = self:addButtons(secondCol, thirdCol, fourthCol)
+	self.buttonList = self:addButtons(secondCol, thirdCol, fourthCol)]]
+	local gameSelectBox = gameSelect.new()
+	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
+	self:addChild(gameSelectBox)
 end
 
 function mainMenu:addButtons(secondCol, thirdCol, fourthCol)
@@ -83,23 +98,6 @@ end
 function mainMenu:getPrevCol(colVal, currentObj, newObj)
 	return colVal - (currentObj:getWidth() / 2) - spacing - (newObj:getWidth()/2)
 end
-
-PlayButton = Core.class(Button)
-
-function PlayButton:onMouseDown(event)
-
-end
-
-function PlayButton:onMouseUp(event)
-	if self.focus then
-		self.focus = false
-		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
-		event:stopPropagation()
-	end
-end
-
-
-
 
 
 
