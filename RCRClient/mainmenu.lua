@@ -2,28 +2,73 @@
 
 gameSelect = Core.class(Sprite)
 
-function gameSelect:init(mainMenu)
-	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
-	local game1Text = TextField.new(font, "Space Collectors")
-	local easyDiffText = TextField.new(font, "Easy")
-	game1Text:setPosition(0, game1Text:getHeight())
-	easyDiffText:setPosition(0, easyDiffText:getHeight())
-	self:addChild(game1Text)
-	self:addChild(easyDiffText)
-end
-
-mainMenu = Core.class(Sprite)
-
 local firstCol = 250
 local firstRow = 384
 local spacing = 50
+local buttonWidth = 35
+local font = TTFont.new("fonts/arial-rounded.ttf", 20)
+
+function gameSelect:init(mainMenu)
+	local game1Text = TextField.new(font, "Space Collectors")
+	local easyDiffText = TextField.new(font, "Easy")
+	local midDiffText = TextField.new(font, "Normal")
+	local hardDiffText = TextField.new(font, "Hard")
+	self.firstRow = easyDiffText:getHeight() + (spacing / 2) + game1Text:getHeight()
+	self.firstCol = game1Text:getWidth() / 2
+	self.secondCol = game1Text:getWidth() + spacing + (easyDiffText:getWidth() / 2)
+	self.thirdCol = self.secondCol + (easyDiffText:getWidth() / 2) + spacing + (midDiffText:getWidth() / 2)
+	self.fourthCol = self.thirdCol + (midDiffText:getWidth() / 2) + spacing + (hardDiffText:getWidth() / 2)
+	game1Text:setPosition(self.firstCol - (game1Text:getWidth() / 2), self.firstRow - (game1Text:getHeight() / 2))
+	easyDiffText:setPosition(self.secondCol - (easyDiffText:getWidth() / 2), 0)
+	midDiffText:setPosition(self.thirdCol - (midDiffText:getWidth() / 2), 0)
+	hardDiffText:setPosition(self.fourthCol - (hardDiffText:getWidth() / 2), 0)
+	print(game1Text:getY())
+	self:addChild(game1Text)
+	self:addChild(easyDiffText)
+	self:addChild(midDiffText)
+	self:addChild(hardDiffText)
+	self.game1buttonList = self:addButtons(self.firstRow)
+	local game2Text = TextField.new(font, "Zombie Survivors")
+	self.secondRow = self.firstRow + spacing + game2Text:getHeight()
+	game2Text:setPosition(self.firstCol - (game2Text:getWidth() / 2), self.secondRow - (game2Text:getHeight()/2))
+	self:addChild(game2Text)
+	self.game2buttonList = self:addButtons(self.secondRow)
+	local game3Text = TextField.new(font, "Game 3")
+	self.thirdRow = self.secondRow + spacing + game3Text:getHeight()
+	game3Text:setPosition(self.firstCol - (game3Text:getWidth() / 2), self.thirdRow - (game3Text:getHeight()/2))
+	self:addChild(game3Text)
+	self.game3buttonList = self:addButtons(self.thirdRow)
+end
+
+function gameSelect:addButtons(rowVal)
+	buttonList = {}
+	local uncheckedBox1 = Bitmap.new(Texture.new("images/unchecked.png"))
+	local uncheckedBox2 = Bitmap.new(Texture.new("images/unchecked.png"))
+	local uncheckedBox3 = Bitmap.new(Texture.new("images/unchecked.png"))
+	local checkedBox1 = Bitmap.new(Texture.new("images/checked.png"))
+	local checkedBox2 = Bitmap.new(Texture.new("images/checked.png"))
+	local checkedBox3 = Bitmap.new(Texture.new("images/checked.png"))
+	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1)
+	local midButton = RadioButton.new(uncheckedBox2, checkedBox2)
+	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3)
+	local adjRowVal = rowVal - buttonWidth
+	print(rowVal)
+	easyButton:setPosition(self.secondCol - (easyButton:getWidth() / 2), adjRowVal)
+	midButton:setPosition(self.thirdCol - (midButton:getWidth() / 2), adjRowVal)
+	hardButton:setPosition(self.fourthCol - (hardButton:getWidth() / 2), adjRowVal)
+	self:addChild(easyButton)
+	self:addChild(midButton)
+	self:addChild(hardButton)
+	return {game1EasyButton, game1MidButton, game1HardButton}
+end
+
+mainMenu = Core.class(Sprite)
 
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
-
 	if params ~= nill then
 		self.email = params.email
 		self.password = params.password
@@ -63,25 +108,7 @@ function mainMenu:init(params)
 	self:addChild(gameSelectBox)
 end
 
-function mainMenu:addButtons(secondCol, thirdCol, fourthCol)
-	local uncheckedBox1 = Bitmap.new(Texture.new("images/unchecked.png"))
-	local uncheckedBox2 = Bitmap.new(Texture.new("images/unchecked.png"))
-	local uncheckedBox3 = Bitmap.new(Texture.new("images/unchecked.png"))
-	local checkedBox1 = Bitmap.new(Texture.new("images/checked.png"))
-	local checkedBox2 = Bitmap.new(Texture.new("images/checked.png"))
-	local checkedBox3 = Bitmap.new(Texture.new("images/checked.png"))
-	local game1EasyButton = RadioButton.new(uncheckedBox1, checkedBox1)
-	local game1MidButton = RadioButton.new(uncheckedBox2, checkedBox2)
-	local game1HardButton = RadioButton.new(uncheckedBox3, checkedBox3)
-	local buttonRow1Val = firstRow - 25
-	game1EasyButton:setPosition(secondCol - (game1EasyButton:getWidth() / 2), buttonRow1Val)
-	game1MidButton:setPosition(thirdCol - (game1MidButton:getWidth() / 2), buttonRow1Val)
-	game1HardButton:setPosition(fourthCol - (game1HardButton:getWidth() / 2), buttonRow1Val)
-	self:addChild(game1EasyButton)
-	self:addChild(game1MidButton)
-	self:addChild(game1HardButton)
-	return {game1EasyButton, game1MidButton, game1HardButton}
-end
+
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)
 	return rowVal - (currentObj:getHeight()/2) - (spacing / 2) - (newObj:getHeight()/2) 

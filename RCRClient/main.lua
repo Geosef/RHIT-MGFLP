@@ -16,5 +16,5 @@ sceneManager = SceneManager.new({
 stage:addChild(sceneManager)
 
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 
