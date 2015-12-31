@@ -2,53 +2,45 @@
 
 gameSelect = Core.class(Sprite)
 
-local firstCol = 250
-local firstRow = 384
 local spacing = 50
 local buttonWidth = 35
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 
 --[[
-To add a new row of buttons for a game:
-- Create new text field
-- Assign new row value for buttons using this formula:
-	newRow = previousRow + spacing + textfield:getHeight()
-- Set the position of the text field to:
-	X: self.firstCol - (textfield:getWidth() / 2)
-	Y: newRow - (textfield:getHeight() / 2)
-- Add textfield as child to the gameSelect box
-- Call addButtons and pass in the newRow value calculated above
+To add a new row of buttons for a game, just call self:addGame() and pass in the name of the game.
 ]]
 function gameSelect:init(mainMenu)
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Normal")
 	local hardDiffText = TextField.new(font, "Hard")
-	self.firstRow = easyDiffText:getHeight() + (spacing / 2) + game1Text:getHeight()
+	self.numRows = 1
+	self.rowVals = {easyDiffText:getHeight() + (spacing / 2) + game1Text:getHeight()}
 	self.firstCol = game1Text:getWidth() / 2
 	self.secondCol = game1Text:getWidth() + spacing + (easyDiffText:getWidth() / 2)
 	self.thirdCol = self.secondCol + (easyDiffText:getWidth() / 2) + spacing + (midDiffText:getWidth() / 2)
 	self.fourthCol = self.thirdCol + (midDiffText:getWidth() / 2) + spacing + (hardDiffText:getWidth() / 2)
-	game1Text:setPosition(self.firstCol - (game1Text:getWidth() / 2), self.firstRow - (game1Text:getHeight() / 2))
+	game1Text:setPosition(self.firstCol - (game1Text:getWidth() / 2), self.rowVals[self.numRows] - (game1Text:getHeight() / 2))
 	easyDiffText:setPosition(self.secondCol - (easyDiffText:getWidth() / 2), 0)
 	midDiffText:setPosition(self.thirdCol - (midDiffText:getWidth() / 2), 0)
 	hardDiffText:setPosition(self.fourthCol - (hardDiffText:getWidth() / 2), 0)
-	print(game1Text:getY())
 	self:addChild(game1Text)
 	self:addChild(easyDiffText)
 	self:addChild(midDiffText)
 	self:addChild(hardDiffText)
-	self.game1buttonList = self:addButtons(self.firstRow)
-	local game2Text = TextField.new(font, "Zombie Survivors")
-	self.secondRow = self.firstRow + spacing + game2Text:getHeight()
-	game2Text:setPosition(self.firstCol - (game2Text:getWidth() / 2), self.secondRow - (game2Text:getHeight()/2))
-	self:addChild(game2Text)
-	self.game2buttonList = self:addButtons(self.secondRow)
-	local game3Text = TextField.new(font, "Game 3")
-	self.thirdRow = self.secondRow + spacing + game3Text:getHeight()
-	game3Text:setPosition(self.firstCol - (game3Text:getWidth() / 2), self.thirdRow - (game3Text:getHeight()/2))
-	self:addChild(game3Text)
-	self.game3buttonList = self:addButtons(self.thirdRow)
+	self.game1buttonList = self:addButtons(self.rowVals[self.numRows])
+	self:addGame("Zombie Survivors")
+	self:addGame("Game 3")
+end
+
+function gameSelect:addGame(name)
+	local gametext = TextField.new(font, name)
+	local newRow = self.rowVals[self.numRows] + spacing + gametext:getHeight()
+	table.insert(self.rowVals, newRow)
+	self.numRows = self.numRows + 1
+	gametext:setPosition(self.firstCol - (gametext:getWidth() / 2), self.rowVals[self.numRows] - (gametext:getHeight()/2))
+	self:addChild(gametext)
+	self.newbuttonlist = self:addButtons(self.rowVals[self.numRows])
 end
 
 function gameSelect:addButtons(rowVal)
@@ -63,7 +55,6 @@ function gameSelect:addButtons(rowVal)
 	local midButton = RadioButton.new(uncheckedBox2, checkedBox2)
 	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3)
 	local adjRowVal = rowVal - buttonWidth
-	print(rowVal)
 	easyButton:setPosition(self.secondCol - (easyButton:getWidth() / 2), adjRowVal)
 	midButton:setPosition(self.thirdCol - (midButton:getWidth() / 2), adjRowVal)
 	hardButton:setPosition(self.fourthCol - (hardButton:getWidth() / 2), adjRowVal)
