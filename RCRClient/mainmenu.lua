@@ -8,6 +8,17 @@ local spacing = 50
 local buttonWidth = 35
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 
+--[[
+To add a new row of buttons for a game:
+- Create new text field
+- Assign new row value for buttons using this formula:
+	newRow = previousRow + spacing + textfield:getHeight()
+- Set the position of the text field to:
+	X: self.firstCol - (textfield:getWidth() / 2)
+	Y: newRow - (textfield:getHeight() / 2)
+- Add textfield as child to the gameSelect box
+- Call addButtons and pass in the newRow value calculated above
+]]
 function gameSelect:init(mainMenu)
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
