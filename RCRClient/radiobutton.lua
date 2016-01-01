@@ -5,8 +5,7 @@ RadioButton = Core.class(Button)
 function RadioButton:onMouseDown(event)
 	if self:hitTestPoint(event.x, event.y) then
 		self.focus = true
-		self.isChecked = not self.isChecked
-		self:updateVisualState(self.isChecked)
+		self:toggle()
 		event:stopPropagation()
 		--print(self.name)
 	end
@@ -17,7 +16,13 @@ function RadioButton:onMouseUp(event)
 		self.focus = false
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
+		self.func()
 	end
 end
 
+
+function RadioButton:toggle()
+	self.isChecked = not self.isChecked
+	self:updateVisualState(self.isChecked)
+end
 

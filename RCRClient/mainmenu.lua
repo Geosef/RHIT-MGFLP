@@ -28,9 +28,12 @@ function gameSelect:init(mainMenu)
 	self:addChild(easyDiffText)
 	self:addChild(midDiffText)
 	self:addChild(hardDiffText)
-	self.game1buttonList = self:addButtons(self.rowVals[self.numRows])
+	self.buttonList = {}
+	self.checkedButtons = {}
+	self:addButtons(self.rowVals[self.numRows])
 	self:addGame("Zombie Survivors")
 	self:addGame("Game 3")
+	
 end
 
 function gameSelect:addGame(name)
@@ -40,28 +43,59 @@ function gameSelect:addGame(name)
 	self.numRows = self.numRows + 1
 	gametext:setPosition(self.firstCol - (gametext:getWidth() / 2), self.rowVals[self.numRows] - (gametext:getHeight()/2))
 	self:addChild(gametext)
-	self.newbuttonlist = self:addButtons(self.rowVals[self.numRows])
+	self:addButtons(self.rowVals[self.numRows], name)
 end
 
-function gameSelect:addButtons(rowVal)
-	buttonList = {}
+function inTable(tbl, item)
+    for key, value in pairs(tbl) do
+        if value == item then return key end
+    end
+    return false
+end
+
+function gameSelect:addButtons(rowVal, name)
 	local uncheckedBox1 = Bitmap.new(Texture.new("images/unchecked.png"))
 	local uncheckedBox2 = Bitmap.new(Texture.new("images/unchecked.png"))
 	local uncheckedBox3 = Bitmap.new(Texture.new("images/unchecked.png"))
 	local checkedBox1 = Bitmap.new(Texture.new("images/checked.png"))
 	local checkedBox2 = Bitmap.new(Texture.new("images/checked.png"))
 	local checkedBox3 = Bitmap.new(Texture.new("images/checked.png"))
-	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1)
-	local midButton = RadioButton.new(uncheckedBox2, checkedBox2)
-	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3)
+	buttonFunc = function()
+		for i,v in ipairs(self.buttonList) do
+			if v.isChecked then
+				if inTable(self.checkedButtons, v) then
+				elseif table.getn(self.checkedButtons) >= 3 then
+					v:toggle()
+				else
+					table.insert(self.checkedButtons, v)
+				end
+			else
+				buttonIndex = inTable(self.checkedButtons, v)
+				if buttonIndex then
+					table.remove(self.checkedButtons, buttonIndex)
+				end
+			end
+		end
+	end
+	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
+	local midButton = RadioButton.new(uncheckedBox2, checkedBox2, buttonFunc)
+	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3, buttonFunc)
 	local adjRowVal = rowVal - buttonWidth
+	easyButton.diff = "easy"
+	midButton.diff = "medium"
+	hardButton.diff = "hard"
+	easyButton.game = name
+	midButton.game = name
+	hardButton.game = name
 	easyButton:setPosition(self.secondCol - (easyButton:getWidth() / 2), adjRowVal)
 	midButton:setPosition(self.thirdCol - (midButton:getWidth() / 2), adjRowVal)
 	hardButton:setPosition(self.fourthCol - (hardButton:getWidth() / 2), adjRowVal)
 	self:addChild(easyButton)
 	self:addChild(midButton)
 	self:addChild(hardButton)
-	return {game1EasyButton, game1MidButton, game1HardButton}
+	table.insert(self.buttonList, easyButton)
+	table.insert(self.buttonList, midButton)
+	table.insert(self.buttonList, hardButton)
 end
 
 mainMenu = Core.class(Sprite)
@@ -86,31 +120,30 @@ function mainMenu:init(params)
 		self:addChild(failedText)
 	end
 	
-	--[[local game1Text = TextField.new(font, "Space Collectors")
-	local easyDiffText = TextField.new(font, "Easy")
-	local midDiffText = TextField.new(font, "Moderate")
-	local highDiffText = TextField.new(font, "Hard")
-	
-	game1Text:setPosition(firstCol - (game1Text:getWidth() / 2), firstRow)
-	local zeroRow = self:getPreviousRow(firstRow, game1Text, easyDiffText)
-	local secondCol = self:getNextCol(firstCol, game1Text, easyDiffText)
-	easyDiffText:setPosition(secondCol - (easyDiffText:getWidth() / 2), zeroRow)
-	local thirdCol = self:getNextCol(secondCol, easyDiffText, midDiffText)
-	midDiffText:setPosition(thirdCol - (midDiffText:getWidth() / 2), zeroRow)
-	local fourthCol = self:getNextCol(thirdCol, midDiffText, highDiffText)
-	highDiffText:setPosition(fourthCol - (highDiffText:getWidth() / 2), zeroRow)
-	self:addChild(game1Text)
-	self:addChild(easyDiffText)
-	self:addChild(midDiffText)
-	self:addChild(highDiffText)
-	-- Add buttons
-	self.buttonList = self:addButtons(secondCol, thirdCol, fourthCol)]]
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
 	self:addChild(gameSelectBox)
+	local loginButtonUp = Bitmap.new(Texture.new("images/loginButtonUp.png"))
+	local loginButtonDown = Bitmap.new(Texture.new("images/loginButtonDown.png"))
+	submitFunc = function() 
+		mainMenu:sendSelected(gameSelectBox.checkedButtons)
+		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
+	end
+	local submitButton = Button.new(loginButtonUp, loginButtonDown, submitFunc)
+	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
+	self:addChild(submitButton)
 end
 
-
+function mainMenu:sendSelected(checkedButtons)
+	local types = {}
+	local diffs = {}
+	local index = 1
+	for i,v in ipairs(checkedButtons) do
+		types[index] = v.game
+		diffs[index] = v.diff
+		index = index + 1
+	end
+end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)
 	return rowVal - (currentObj:getHeight()/2) - (spacing / 2) - (newObj:getHeight()/2) 
