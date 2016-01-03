@@ -143,6 +143,7 @@ function mainMenu:sendSelected(checkedButtons)
 		diffs[index] = v.diff
 		index = index + 1
 	end
+	
 end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)
