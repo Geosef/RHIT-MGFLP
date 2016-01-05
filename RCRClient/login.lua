@@ -30,7 +30,7 @@ function login:init()
 	self:addChild(emailText)
 	
 	-- Add password input box
-	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100, secure = true})
 	passwordTB:setPosition(350, 400)
 	self:addChild(passwordTB)
 	
@@ -41,7 +41,7 @@ function login:init()
 	-- Create login button
 	local loginClick = Button.new(loginButtonUp, loginButtonDown, function() 
 		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
-			{userData = {email=emailTB.tf:getText(), password=passwordTB.tf:getText()}}) 
+			{userData = {email=emailTB:getText(), password=passwordTB:getText()}}) 
 	end)
 	loginClick:setPosition(347, 515)
 	self:addChild(loginClick)

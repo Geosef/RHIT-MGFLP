@@ -1,5 +1,5 @@
 <project>
- <properties osx_bundle="com.yourdomain." retinaDisplay="0" scaleMode="5" android_template="0" osx_domain="giderosmobile.com" touchToMouse="1" autorotation="0" ios_bundle="com.yourdomain." orientation="1" version_code="1" fps="60" iosDevice="0" packageName="com.yourdomain.yourapp" assetsOnly="0" mouseTouchOrder="0" winrt_package="com.yourdomain.yourapp" html5_host="" logicalHeight="1024" windowWidth="0" logicalWidth="768" mouseToTouch="1" win_domain="giderosmobile.com" encryptAssets="0" windowHeight="0" win_org="GiderosMobile" encryptCode="0" version="1.0" architecture="0" osx_org="GiderosMobile" winrt_org="GiderosMobile">
+ <properties packageName="com.yourdomain.yourapp" osx_domain="giderosmobile.com" windowWidth="0" touchToMouse="1" version_code="1" encryptAssets="0" logicalHeight="1024" orientation="1" architecture="0" retinaDisplay="0" win_org="GiderosMobile" mouseTouchOrder="0" android_template="0" logicalWidth="768" win_domain="giderosmobile.com" scaleMode="5" osx_bundle="com.yourdomain." iosDevice="0" version="1.0" assetsOnly="0" autorotation="0" osx_org="GiderosMobile" ios_bundle="com.yourdomain." winrt_org="GiderosMobile" encryptCode="0" mouseToTouch="1" winrt_package="com.yourdomain.yourapp" windowHeight="0" html5_host="" fps="60">
   <imageScales/>
  </properties>
  <folder name="http">
@@ -7,11 +7,11 @@
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
   <folder name="socket">
-   <file source="http/socket/http.lua"/>
-   <file source="http/socket/smtp.lua"/>
+   <file excludeFromExecution="1" source="http/socket/http.lua"/>
+   <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
    <file source="http/socket/tp.lua"/>
    <file source="http/socket/url.lua"/>
-   <file source="http/socket/ftp.lua"/>
+   <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
   </folder>
  </folder>
  <file source="networkadapter.lua"/>

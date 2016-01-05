@@ -24,7 +24,8 @@ local defaultParams = {
 	dialogTitle = "Dialog",
 	dialogMessage = "",
 	dialogNo = "Cancel",
-	dialogYes = "OK"
+	dialogYes = "OK",
+	secure = false
 }
 
 local function filterParams(params)
@@ -47,16 +48,35 @@ function TextBox:init(params)
 	self:createTextField(params)
 	
 	self:addDialogListener(params)
+	self.currentText = ""
+end
+
+function TextBox:setText(str)
+	self.currentText = str
+	if not self.params.secure then
+		self.tf:setText(str)
+	else
+		local len = string.len(str)
+		local stars = ""
+		for i = 1,len do
+			stars = stars .. "*"
+		end
+		self.tf:setText(stars)
+	end
+end
+
+function TextBox:getText()
+	return self.currentText
 end
 
 function TextBox:onMouseDown(event)
 	if self:hitTestPoint(event.x, event.y) then
-		local textInputDialog = TextInputDialog.new(self.params.dialogTitle, self.params.dialogMessage, self.tf:getText(), self.params.dialogNo, self.params.dialogYes)
-	
+		local textInputDialog = TextInputDialog.new(self.params.dialogTitle, self.params.dialogMessage, self:getText(), self.params.dialogNo, self.params.dialogYes)
+		textInputDialog:setSecureInput(self.params.secure)
 		local onComplete
 		local function onComplete(event)
 			if event.buttonIndex == 1 then
-				self.tf:setText(event.text)
+				self:setText(event.text)
 			end
 			textInputDialog:removeEventListener(Event.COMPLETE, onComplete)
 		end
