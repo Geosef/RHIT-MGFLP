@@ -16,7 +16,13 @@ setmetatable(NetworkAdapter, {
   end,
 })
 
---These methods are used to react to receiving packets from the server
+--[[
+	These methods are used to react to receiving packets from the server
+	S= Send, R= Recv
+
+----------------------------------------------------------------------------------------------------------------
+	Login (SR) and Create Account (SR)
+]]
 function NetworkAdapter:createAccount(packet)
 
 end
@@ -33,6 +39,21 @@ function NetworkAdapter:login(username, password)
 	}
 	self:sendData(packet)
 end
+
+function NetworkAdapter:recvLogin(packet)
+
+	if packet.success then
+		print("LOGGED IN")
+		--self:joinGame(1)
+		--self:createGame()
+	end
+end
+
+--[[
+----------------------------------------------------------------------------------------------------------------
+	Create Game (SR), Browse Game and Join Game	(SR)
+]]
+
 
 function NetworkAdapter:createGame()
 	--[[if not self.on then 
@@ -53,6 +74,16 @@ function NetworkAdapter:createGame()
 	]]
 end
 
+
+function NetworkAdapter:recvCreateGame(packet)
+	print("CREATED GAME")
+	if packet.success then
+		print("SUCCESS")
+		self.game = gameMod.CollectGame(self, true)
+		self:startRecv()
+	end
+end
+
 function NetworkAdapter:joinGame(gameID)
 	if not self.on then 
 	self.game = gameMod.CollectGame(self)
@@ -66,7 +97,7 @@ function NetworkAdapter:joinGame(gameID)
 end
 
 function NetworkAdapter:recvJoinGame(packet)
-	print("HERE JOIN GAME")
+	print("JOINED GAME")
 	if packet.success then
 		self.game = gameMod.CollectGame(self, false)
 		self:startRecv()
@@ -92,30 +123,107 @@ function NetworkAdapter:recvJoinGame(packet)
 	end
 end
 
-
-function NetworkAdapter:recvLogin(packet)
-
-	if packet.success then
-		print("LOGGED IN")
-		--self:joinGame(1)
-		--self:createGame()
-	end
-end
-
-function NetworkAdapter:recvCreateGame(packet)
-	print("CREATEGAME")
-	if packet.success then
-		print("SUCCESS")
-		self.game = gameMod.CollectGame(self, true)
-		self:startRecv()
-	end
-end
+--[[
+----------------------------------------------------------------------------------------------------------------
+	Player Joined, Game Setup, Game Specifics
+]]
 
 function NetworkAdapter:playerJoined(packet)
 	--get choice of accepting the player or not
 	local outPacket = {type="Player Joined", accept=true}
 	self:sendData(outPacket)
 	self:startRecv()
+end
+
+
+
+function NetworkAdapter:gameSetup(packet)
+	print("GAME SETUP")	
+
+	self.game.gameSetup(packet)
+	
+	self:startGame()
+	--pass setup to game object setup method
+end
+
+function NetworkAdapter:startGame()
+	print("PINGING START GAME")
+	local packet = {type="Start Game"}
+	self:sendData(packet)
+	self:startRecv()
+	
+	--show the game's stage
+	--allow user to start interacting with game
+end
+
+function NetworkAdapter:recvStartGame(packet)
+	print("STARTING GAME")
+	self.game.show()
+end
+
+function NetworkAdapter:runEvents(packet)
+	print("RUN EVENTS")
+	self.game.runEvents(packet.events)
+end
+
+function NetworkAdapter:updateLocations(locations, scores)
+	print("SENDING UPDATE LOCATIONS")
+	local packet = {type="Update Locations", locations = locations, scores = scores}
+	self:sendData(packet)
+	self:startRecv()
+	
+end
+
+function NetworkAdapter:recvUpdateLocations(packet)
+	print("RECEIVING UPDATE LOCATIONS")
+	self.game.recvUpdateLocations(packet.locations)
+end
+
+function NetworkAdapter:gameOver(packet)
+	print("GAME OVER")
+	print('Winner: ' .. packet.winner)
+	self.game.gameOver(packet.winner)
+end
+
+function NetworkAdapter:endGame(rematch)
+	print("SENDING REMATCH RESPONSE")
+	local packet = {type='End Game', rematch=rematch}
+	
+	self:sendData(packet)
+	if rematch then
+		self:startRecv()
+	end
+
+	--if packet.rematch, reset game
+	--else kick to main menu
+	--self.game.destroy()
+	--self.game = nil
+end
+
+function NetworkAdapter:rematch(packet)
+	--TODO: need to handle rematch refusal?
+	print("RECEIVED REMATCH RESPONSE")
+	print_r(packet)
+	if packet.rematch then
+		self:startRecv()
+	end
+
+end
+
+
+
+
+
+function NetworkAdapter:playerLeft(packet)
+	print("OTHER PLAYER LEFT")
+	--kick to main menu
+	--self.game = nil
+end
+
+function NetworkAdapter:sendData(packet)
+	if not self.on then return end
+	local jsonString = JSON:encode(packet)
+	self.sock:send(jsonString)
 end
 
 function NetworkAdapter:browseGames(packet)
@@ -132,81 +240,8 @@ function NetworkAdapter:browseGames(packet)
 	]]
 end
 
-function NetworkAdapter:gameSetup(packet)
-	print("hello")
-	
+function NetworkAdapter:recvBrowseGames(packet)
 
-	self.game.gameSetup(packet)
-	
-	self:startGame()
-	--pass setup to game object setup method
-end
-
-function NetworkAdapter:startGame()
-	local packet = {type="Start Game"}
-	self:sendData(packet)
-	self:startRecv()
-	
-	--show the game's stage
-	--allow user to start interacting with game
-end
-
-function NetworkAdapter:recvStartGame(packet)
-	self.game.show()
-end
-
-function NetworkAdapter:runEvents(packet)
-	self.game.runEvents(packet.events)
-end
-
-function NetworkAdapter:updateLocations(locations, scores)
-	local packet = {type="Update Locations", locations = locations, scores = scores}
-	self:sendData(packet)
-	self:startRecv()
-	
-end
-
-function NetworkAdapter:recvUpdateLocations(packet)
-	self.game.recvUpdateLocations(packet.locations)
-	print("UPDATE")
-end
-
-function NetworkAdapter:endGame(rematch)
-	local packet = {type='End Game', rematch=rematch}
-	
-	self:sendData(packet)
-	if rematch then
-		self:startRecv()
-	end
-
-	--if packet.rematch, reset game
-	--else kick to main menu
-	--self.game.destroy()
-	--self.game = nil
-end
-
-function NetworkAdapter:gameOver(packet)
-	print('Winner: ' .. packet.winner)
-	self.game.gameOver(packet.winner)
-end
-
-function NetworkAdapter:rematch(packet)
-	print_r(packet)
-	if packet.rematch then
-		self:startRecv()
-	end
-
-end
-
-function NetworkAdapter:playerLeft(packet)
-	--kick to main menu
-	--self.game = nil
-end
-
-function NetworkAdapter:sendData(packet)
-	if not self.on then return end
-	local jsonString = JSON:encode(packet)
-	self.sock:send(jsonString)
 end
 
 
