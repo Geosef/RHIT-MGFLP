@@ -3,6 +3,7 @@
 login = Core.class(BaseScreen)
 
 function login:init()
+	self.sceneName = "Login"
 	local font = TTFont.new("fonts/arial-rounded.ttf", 60)
 
 	-- Add logo

@@ -3,6 +3,7 @@
 createAccount = Core.class(BaseScreen)
 
 function createAccount:init()
+	self.sceneName = "Create Account"
 	local font = TTFont.new("fonts/arial-rounded.ttf", 60)
 
 	-- Add logo

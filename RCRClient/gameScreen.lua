@@ -6,6 +6,8 @@ function gameScreen:init()
 	local gameBoard = Bitmap.new(Texture.new("images/8x8-board.png"))
 	gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - gameBoard:getHeight())
 	self:addChild(gameBoard)
+	-- Eventually sceneName will be set by the type of game
+	self.sceneName = "Game X"
 	local statementBox = Bitmap.new(Texture.new("images/statement-box.png"))
 	statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - statementBox:getHeight())
 	self:addChild(statementBox)

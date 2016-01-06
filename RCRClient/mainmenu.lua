@@ -102,7 +102,7 @@ mainMenu = Core.class(BaseScreen)
 
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
-	
+	self.sceneName = "Main Menu - Select Game"
 	if params ~= nill then
 		self.email = params.email
 		self.password = params.password
