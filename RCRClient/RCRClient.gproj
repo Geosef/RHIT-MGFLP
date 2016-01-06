@@ -29,10 +29,13 @@
   <file source="splash.lua"/>
  </folder>
  <file source="button.lua"/>
+ <file source="customButton.lua"/>
  <file source="radiobutton.lua"/>
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/submitButtonUp.png"/>
+  <file source="images/submitButtonDown.png"/>
   <file source="images/RcrLogoLarge.png"/>
   <file source="images/createAccountButtonUp.png"/>
   <file source="images/createAccountButtonDown.png"/>
