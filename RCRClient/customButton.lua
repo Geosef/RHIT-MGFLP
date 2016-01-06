@@ -43,7 +43,6 @@ function CustomButton:addHitArea()
 end
 
 function CustomButton:setPosition(x, y)
-	print("set " .. x .. " " .. y)
 	self.super.setPosition(self, x, y)
 	self:addHitArea()
 end
@@ -52,7 +51,6 @@ function CustomButton:onMouseDown(event)
 	if self.hitArea:hitTestPoint(event.x, event.y) then
 		self.focus = true
 		self:updateVisualState(true)
-		print("hit 2")
 		event:stopPropagation()
 		--print(self.name)
 	end

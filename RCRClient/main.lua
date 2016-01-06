@@ -11,11 +11,12 @@ sceneManager = SceneManager.new({
 	["mainMenu"] = mainMenu,
 	["create"] = createAccount,
 	["textBox"] = textBoxScene,
-	["gameWait"] = gameWait
+	["gameWait"] = gameWait,
+	["gameScreen"] = gameScreen
 })
 
 stage:addChild(sceneManager)
 
 
-sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 

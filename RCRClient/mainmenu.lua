@@ -98,13 +98,11 @@ function gameSelect:addButtons(rowVal, name)
 	table.insert(self.buttonList, hardButton)
 end
 
-mainMenu = Core.class(Sprite)
+mainMenu = Core.class(BaseScreen)
 
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	
-	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
-	self:addChild(titleBackground)
 	if params ~= nill then
 		self.email = params.email
 		self.password = params.password
@@ -127,7 +125,7 @@ function mainMenu:init(params)
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
@@ -142,7 +140,7 @@ function mainMenu:sendSelected(checkedButtons)
 		choice.diff = v.diff
 		table.insert(choices, choice)
 	end
-	netAdapter:browseGames(choices)
+	--netAdapter:browseGames(choices)
 	
 end
 

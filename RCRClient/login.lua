@@ -1,13 +1,9 @@
 -- program is being exported under the TSU exception
 
-login = Core.class(Sprite)
+login = Core.class(BaseScreen)
 
 function login:init()
 	local font = TTFont.new("fonts/arial-rounded.ttf", 60)
-
-	-- Add background
-	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
-	self:addChild(titleBackground)
 
 	-- Add logo
 	local logo = Bitmap.new(Texture.new("images/NewRcrLogo.png"))
