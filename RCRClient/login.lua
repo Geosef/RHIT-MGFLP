@@ -39,7 +39,7 @@ function login:init()
 	local loginButtonDown = Bitmap.new(Texture.new("images/loginButtonDown.png"))
 	
 	-- Create login button
-	local loginClick = Button.new(loginButtonUp, loginButtonDown, function() 
+	local loginClick = CustomButton.new(loginButtonUp, loginButtonDown, function() 
 		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
 			{userData = {email=emailTB:getText(), password=passwordTB:getText()}}) 
 	end)
@@ -51,7 +51,7 @@ function login:init()
 	local createButtonDown = Bitmap.new(Texture.new("images/createAccountButtonDown.png"))
 	
 	-- Create "create account" button
-	local createClick = Button.new(createButtonUp, createButtonDown, function() 
+	local createClick = CustomButton.new(createButtonUp, createButtonDown, function() 
 		sceneManager:changeScene("create", 1, SceneManager.crossfade, easing.outBack) 
 	end)
 	createClick:setPosition(700, 515)

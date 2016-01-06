@@ -35,7 +35,7 @@ function NetworkAdapter:login(username, password)
 end
 
 function NetworkAdapter:createGame()
-	if not self.on then 
+	--[[if not self.on then 
 	self.game = gameMod.CollectGame(self)
 	self.game.gameSetup(self:getGameState("Collect"))
 	self.game.show()
@@ -50,6 +50,7 @@ function NetworkAdapter:createGame()
 	stage:addChild(tf)
 	self:startRecv()
 	stage:removeChild(tf)
+	]]
 end
 
 function NetworkAdapter:joinGame(gameID)

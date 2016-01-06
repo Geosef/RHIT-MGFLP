@@ -123,26 +123,26 @@ function mainMenu:init(params)
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
 	self:addChild(gameSelectBox)
-	local loginButtonUp = Bitmap.new(Texture.new("images/loginButtonUp.png"))
-	local loginButtonDown = Bitmap.new(Texture.new("images/loginButtonDown.png"))
+	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
+	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
 		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
 	end
-	local submitButton = Button.new(loginButtonUp, loginButtonDown, submitFunc)
+	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
 	self:addChild(submitButton)
 end
 
 function mainMenu:sendSelected(checkedButtons)
-	local types = {}
-	local diffs = {}
-	local index = 1
+	local choices = {}
 	for i,v in ipairs(checkedButtons) do
-		types[index] = v.game
-		diffs[index] = v.diff
-		index = index + 1
+		local choice = {}
+		choice.game = v.game
+		choice.diff = v.diff
+		table.insert(choices, choice)
 	end
+	netAdapter:browseGames(choices)
 	
 end
 

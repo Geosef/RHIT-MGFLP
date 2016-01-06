@@ -4,7 +4,7 @@ splash = Core.class(Sprite)
 
 function splash:init()
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
-	local titleClick = Button.new(titleBackground, titleBackground, function() 
+	local titleClick = CustomButton.new(titleBackground, titleBackground, function() 
 		sceneManager:changeScene("login", 1, SceneManager.crossfade, easing.outBack)
 	end)
 	self:addChild(titleClick)

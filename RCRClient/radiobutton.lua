@@ -1,9 +1,9 @@
 -- program is being exported under the TSU exception
 
-RadioButton = Core.class(Button)
+RadioButton = Core.class(CustomButton)
 
 function RadioButton:onMouseDown(event)
-	if self:hitTestPoint(event.x, event.y) then
+	if self.hitArea:hitTestPoint(event.x, event.y) then
 		self.focus = true
 		self:toggle()
 		event:stopPropagation()
@@ -19,7 +19,6 @@ function RadioButton:onMouseUp(event)
 		self.func()
 	end
 end
-
 
 function RadioButton:toggle()
 	self.isChecked = not self.isChecked

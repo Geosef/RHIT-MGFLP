@@ -10,20 +10,17 @@ on 12/14/2015
 ]]
 
 Button = Core.class(Sprite)
--- Added func to constructor that is run in onMouseUp
-function Button:init(upState, downState, func)
-	--print(self.name)
+function Button:init(upState, downState)
 	self.upState = upState
 	self.downState = downState
+	
 	self.focus = false
-	self.func = func
 	
 	-- set the visual state as "up"
 	self:updateVisualState(false)
 	
 	--Extracted listeners to new register function and placed registry function in postInit
 	--self:registerListeners()
-	--print(self.name)
 end
 
 function Button:postInit()
@@ -40,6 +37,18 @@ function Button:registerListeners()
 	self:addEventListener(Event.TOUCHES_MOVE, self.onTouchesMove, self)
 	self:addEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
 	self:addEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
+end
+
+function Button:unregisterListeners()
+	-- unregister all mouse and touch event listeners
+	self:removeEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
+	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
+	self:removeEventListener(Event.MOUSE_UP, self.onMouseUp, self)
+	
+	self:removeEventListener(Event.TOUCHES_BEGIN, self.onTouchesBegin, self)
+	self:removeEventListener(Event.TOUCHES_MOVE, self.onTouchesMove, self)
+	self:removeEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
+	self:removeEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
 end
 
 function Button:onMouseDown(event)
@@ -67,8 +76,6 @@ function Button:onMouseUp(event)
 		self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
-		--Runs specified function
-		self.func()
 	end
 end
 

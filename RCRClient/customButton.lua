@@ -1,0 +1,80 @@
+-- program is being exported under the TSU exception
+
+CustomButton = Core.class(Button)
+-- Added func to constructor that is run in onMouseUp
+function CustomButton:init(upState, downState, func)
+	--print(self.name)
+	self.super = Core.class(Sprite)
+	self.upState = upState
+	self.downState = downState
+	self.focus = false
+	self.func = func
+	self.hitArea = self:makeHitArea()
+	self:addHitArea()
+	
+	-- set the visual state as "up"
+	self:updateVisualState(false)
+	
+	--Extracted listeners to new register function and placed registry function in postInit
+	--self:registerListeners()
+	--print(self.name)
+end
+
+local padding = 5
+
+function CustomButton:makeHitArea()
+	local shape = Shape.new()
+	shape:setFillStyle(Shape.SOLID, 0xff0000, 1)
+	shape:beginPath()
+	shape:moveTo(0,0)
+	
+	shape:lineTo(self.upState:getWidth() + padding*2, 0)
+	shape:lineTo(self.upState:getWidth() + padding*2, self.upState:getHeight() + padding*2)
+	shape:lineTo(0, self.upState:getHeight() + padding*2)
+	shape:lineTo(0, 0)
+	shape:endPath()
+	shape:setVisible(false)
+	return shape
+end
+
+function CustomButton:addHitArea()
+	self.hitArea:setPosition(-padding, -padding)
+	self:addChild(self.hitArea)
+end
+
+function CustomButton:setPosition(x, y)
+	print("set " .. x .. " " .. y)
+	self.super.setPosition(self, x, y)
+	self:addHitArea()
+end
+
+function CustomButton:onMouseDown(event)
+	if self.hitArea:hitTestPoint(event.x, event.y) then
+		self.focus = true
+		self:updateVisualState(true)
+		print("hit 2")
+		event:stopPropagation()
+		--print(self.name)
+	end
+end
+
+function CustomButton:onMouseMove(event)
+	if self.focus then
+		if not self.hitArea:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			self:updateVisualState(false)
+		end
+		event:stopPropagation()
+	end
+end
+
+function CustomButton:onMouseUp(event)
+	if self.focus then
+		self.focus = false
+		self:updateVisualState(false)
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		--Runs specified function
+		self.func()
+	end
+end
