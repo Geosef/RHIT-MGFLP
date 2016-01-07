@@ -36,6 +36,12 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/twitter-button-up.png"/>
+  <file source="images/twitter-button-down.png"/>
+  <file source="images/settings-button-up.png"/>
+  <file source="images/settings-button-down.png"/>
+  <file source="images/facebook-button-up.png"/>
+  <file source="images/facebook-button-down.png"/>
   <file source="images/RCRTopBar.png"/>
   <file source="images/command-box.png"/>
   <file source="images/statement-box.png"/>
