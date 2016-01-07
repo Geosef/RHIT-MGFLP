@@ -306,16 +306,19 @@ local packetRoute = {
 ["Game Over"] = NetworkAdapter.gameOver,
 ["Rematch"] = NetworkAdapter.rematch
 }
-function NetworkAdapter:startRecv()
-	if not self.on then
-		return
-	end
-	print("RECV")
 
-	while true do
-		local line, err, rBuf = self.sock:receive("*l", rBuf)
-		local inPacket = JSON:decode(line)
-		local type = inPacket.type
+function NetworkAdapter:recv(callback)
+	local line, err, rBuf = self.sock:receive("*l", rBuf)
+	
+	local inPacket
+	if pcall(function()
+		inPacket = JSON:decode(line)
+	end) then
+		callback(inPacket)
+		return true
+		
+		
+		--[[local type = inPacket.type
 		print("TYPE: "..type)
 		local method = packetRoute[type]
 		print(method)
@@ -325,10 +328,44 @@ function NetworkAdapter:startRecv()
 			method(self, inPacket)
 		else
 			print("METHOD MESS")
-		end
-		return
-		
+		end]]
+	else
+		print("Non-blocking recv got no data")
+		return false
 	end
+end
+
+-- intervalRate: milli
+-- numAttempts: max number of attempts allowed on calling recv()
+function NetworkAdapter:startRecv(callback, intervalRate, numAttempts)
+	if not self.on then
+		return
+	end
+	print("RECV")
+	
+	--ALWAYS USE CALLBACK, THIS IS ONLY FOR TESTING
+	if not callback then callback = function(x)
+	print(x) end end
+	
+	if not intervalRate then intervalRate = 50 end
+	if not numAttempts then numAttempts = 100000 end
+--	if not timeout then timeout = 10 end
+	
+	
+	local timer = Timer.new(intervalRate, numAttempts)
+	
+	local recvCR = coroutine.create(function()
+		if self:recv(callback) then
+			timer:stop()
+		end
+	end)
+	
+	local function onTimer(event)
+		coroutine.resume(recvCR)
+	end
+	timer:addEventListener(Event.TIMER, onTimer)
+
+	timer:start()	
 end
 
 M.NetworkAdapter = NetworkAdapter
