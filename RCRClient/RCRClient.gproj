@@ -1,5 +1,5 @@
 <project>
- <properties win_domain="giderosmobile.com" touchToMouse="1" orientation="1" packageName="com.yourdomain.yourapp" mouseTouchOrder="0" autorotation="0" version_code="1" osx_bundle="com.yourdomain." winrt_package="com.yourdomain.yourapp" logicalHeight="1024" windowWidth="0" mouseToTouch="1" encryptAssets="0" version="1.0" osx_domain="giderosmobile.com" encryptCode="0" ios_bundle="com.yourdomain." logicalWidth="768" win_org="GiderosMobile" fps="60" assetsOnly="0" winrt_org="GiderosMobile" architecture="0" windowHeight="0" osx_org="GiderosMobile" scaleMode="5" android_template="0" iosDevice="0" html5_host="" retinaDisplay="0">
+ <properties iosDevice="0" scaleMode="5" windowHeight="0" orientation="1" autorotation="0" retinaDisplay="0" logicalHeight="1024" encryptCode="0" mouseToTouch="1" windowWidth="0" osx_org="GiderosMobile" win_domain="giderosmobile.com" encryptAssets="0" packageName="com.yourdomain.yourapp" touchToMouse="1" osx_domain="giderosmobile.com" win_org="GiderosMobile" mouseTouchOrder="0" architecture="0" logicalWidth="768" fps="60" android_template="0" assetsOnly="0">
   <imageScales/>
  </properties>
  <folder name="http">
@@ -7,11 +7,11 @@
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
   <folder name="socket">
-   <file source="http/socket/http.lua" excludeFromExecution="1"/>
-   <file source="http/socket/smtp.lua" excludeFromExecution="1"/>
+   <file excludeFromExecution="1" source="http/socket/http.lua"/>
+   <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
    <file source="http/socket/tp.lua"/>
    <file source="http/socket/url.lua"/>
-   <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
+   <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
   </folder>
  </folder>
  <file source="networkadapter.lua"/>
@@ -36,6 +36,7 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/waitingForOppText.png"/>
   <file source="images/twitter-button-up.png"/>
   <file source="images/twitter-button-down.png"/>
   <file source="images/settings-button-up.png"/>

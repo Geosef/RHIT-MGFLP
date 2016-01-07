@@ -11,7 +11,7 @@ sceneManager = SceneManager.new({
 	["create"] = createAccount,
 	["textBox"] = textBoxScene,
 	["gameWait"] = gameWait,
-	["gameScreen"] = gameScreen
+	["gameScreen"] = gameScreen,
 })
 
 stage:addChild(sceneManager)

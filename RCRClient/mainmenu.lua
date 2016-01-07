@@ -103,20 +103,6 @@ mainMenu = Core.class(BaseScreen)
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
-	if params ~= nill then
-		self.email = params.email
-		self.password = params.password
-		local emailText = TextField.new(font, self.email)
-		emailText:setPosition(0, 50)
-		self:addChild(emailText)
-		local passwordText = TextField.new(font, self.password)
-		passwordText:setPosition(0, 100)
-		self:addChild(passwordText)
-	else
-		self.fail = "failed"
-		local failedText = TextField.new(font, self.fail)
-		self:addChild(failedText)
-	end
 	
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
@@ -125,7 +111,7 @@ function mainMenu:init(params)
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
+		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
