@@ -41,14 +41,14 @@ end
 
 function Button:unregisterListeners()
 	-- unregister all mouse and touch event listeners
-	self:removeEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
-	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove, self)
-	self:removeEventListener(Event.MOUSE_UP, self.onMouseUp, self)
+	self:removeEventListener(Event.MOUSE_DOWN, self.onMouseDown)
+	self:removeEventListener(Event.MOUSE_MOVE, self.onMouseMove)
+	self:removeEventListener(Event.MOUSE_UP, self.onMouseUp)
 	
-	self:removeEventListener(Event.TOUCHES_BEGIN, self.onTouchesBegin, self)
-	self:removeEventListener(Event.TOUCHES_MOVE, self.onTouchesMove, self)
-	self:removeEventListener(Event.TOUCHES_END, self.onTouchesEnd, self)
-	self:removeEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel, self)
+	self:removeEventListener(Event.TOUCHES_BEGIN, self.onTouchesBegin)
+	self:removeEventListener(Event.TOUCHES_MOVE, self.onTouchesMove)
+	self:removeEventListener(Event.TOUCHES_END, self.onTouchesEnd)
+	self:removeEventListener(Event.TOUCHES_CANCEL, self.onTouchesCancel)
 end
 
 function Button:onMouseDown(event)

@@ -62,22 +62,39 @@ function gameSelect:addButtons(rowVal, name)
 	local checkedBox3 = Bitmap.new(Texture.new("images/checked.png"))
 	buttonFunc = function()
 		for i,v in ipairs(self.buttonList) do
+			--print("Button " .. i .. ": ")
+			--print(v.game)
+			--print(v.diff)
 			if v.isChecked then
 				if inTable(self.checkedButtons, v) then
 				elseif table.getn(self.checkedButtons) >= 3 then
-					v:toggle()
+					--[[local alertDialog = AlertDialog.new("Too Many Choices!", "You can only pick three game categories!\nUnselect one to pick another.", "Close")
+					local function onComplete(event)
+						v:toggle()
+					end
+					alertDialog:addEventListener(Event.COMPLETE, onComplete)
+					alertDialog:show()]]
+					v:disable()
 				else
 					table.insert(self.checkedButtons, v)
+					if table.getn(self.checkedButtons) == 3 then
+						print("disabled")
+						self:disableUnchecked()
+					end
 				end
 			else
 				buttonIndex = inTable(self.checkedButtons, v)
 				if buttonIndex then
 					table.remove(self.checkedButtons, buttonIndex)
+				else
+					
 				end
+				self:enableButtons()
 			end
 		end
 	end
-	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
+	
+	local easyButton = GameSelectRadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
 	local midButton = RadioButton.new(uncheckedBox2, checkedBox2, buttonFunc)
 	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3, buttonFunc)
 	local adjRowVal = rowVal - buttonWidth
@@ -96,6 +113,20 @@ function gameSelect:addButtons(rowVal, name)
 	table.insert(self.buttonList, easyButton)
 	table.insert(self.buttonList, midButton)
 	table.insert(self.buttonList, hardButton)
+end
+
+function gameSelect:disableUnchecked()
+	for i,v in ipairs(self.buttonList) do
+		if not inTable(self.checkedButtons, v) then
+			v:disable()
+		end
+	end
+end
+
+function gameSelect:enableButtons()
+	for i,v in ipairs(self.buttonList) do
+		v:enable()
+	end
 end
 
 mainMenu = Core.class(BaseScreen)

@@ -17,6 +17,7 @@ function RadioButton:onMouseUp(event)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self.func()
+		print("super")
 	end
 end
 

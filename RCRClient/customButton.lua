@@ -5,19 +5,11 @@ CustomButton = Core.class(Button)
 function CustomButton:init(upState, downState, func)
 	--print(self.name)
 	self.super = Core.class(Sprite)
-	self.upState = upState
-	self.downState = downState
-	self.focus = false
 	self.func = func
 	self.hitArea = self:makeHitArea()
 	self:addHitArea()
 	
-	-- set the visual state as "up"
-	self:updateVisualState(false)
-	
-	--Extracted listeners to new register function and placed registry function in postInit
-	--self:registerListeners()
-	--print(self.name)
+	self.enabled = true
 end
 
 local padding = 5
@@ -75,4 +67,14 @@ function CustomButton:onMouseUp(event)
 		--Runs specified function
 		self.func()
 	end
+end
+
+function CustomButton:disable()
+	self:unregisterListeners()
+	self.disabled = true
+	print("disabled 2")
+end
+
+function CustomButton:enable()
+	self:registerListeners()
 end

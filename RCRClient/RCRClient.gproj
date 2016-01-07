@@ -33,6 +33,7 @@
  <file source="button.lua"/>
  <file source="customButton.lua"/>
  <file source="radiobutton.lua"/>
+ <file source="gameSelectRadioButton.lua"/>
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
