@@ -27,7 +27,7 @@ function createAccount:init()
 	self:addChild(passwordText)
 
 	-- Add password input box
-	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100, secure = true})
 	passwordTB:setPosition(350, 350)
 	self:addChild(passwordTB)
 	
@@ -41,7 +41,7 @@ function createAccount:init()
 	self:addChild(secondLine)
 	
 	-- Add confirm password input box
-	local confirmTB = TextBox.new({fontSize = 60, width = 600, height = 100})
+	local confirmTB = TextBox.new({fontSize = 60, width = 600, height = 100, secure = true})
 	confirmTB:setPosition(350, 475)
 	self:addChild(confirmTB)
 	
