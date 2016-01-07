@@ -1,14 +1,16 @@
 BaseScreen = Core.class(Sprite)
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
-local padding = 16
+local padding = 12
+local buttonPadding = 8
+local topBarTextStart = 200
+local topBarButtonSeparator = 875
 
 function BaseScreen:init()
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
 	self.topBar = Bitmap.new(Texture.new("images/RCRTopBar.png"))
 	self:addChild(self.topBar)
-	self.topBarTextLine = self.topBar:getHeight() / 2 + 5
-	self.topBarButtonSeparator = 875
+	self.topBarTextLine = self.topBar:getHeight() / 2
 end
 
 function BaseScreen:postInit()
@@ -21,27 +23,28 @@ function BaseScreen:initTopBar()
 	end
 	local sceneTitleText = TextField.new(font, self.sceneName)
 	sceneTitleText:setTextColor("0xffa500")
-	sceneTitleText:setPosition(200, self.topBarTextLine)
+	sceneTitleText:setPosition(topBarTextStart, self.topBarTextLine + (sceneTitleText:getHeight() / 2))
 	self:addChild(sceneTitleText)
 	local playerLevel = self:getPlayerLevel()
 	playerLevelText = TextField.new(font, playerLevel)
 	playerLevelText:setTextColor("0x34b8f9")
-	playerLevelText:setPosition(self.topBarButtonSeparator - (playerLevelText:getWidth() + padding), self.topBarTextLine)
+	playerLevelText:setPosition(topBarButtonSeparator - (playerLevelText:getWidth() + padding), self.topBarTextLine + (playerLevelText:getHeight() / 2))
+	print(playerLevelText:getHeight())
 	self:addChild(playerLevelText)
 	local settingsButtonUp = Bitmap.new(Texture.new("images/settings-button-up.png"))
 	local settingsButtonDown = Bitmap.new(Texture.new("images/settings-button-down.png"))
 	local settingsButton = CustomButton.new(settingsButtonUp, settingsButtonDown, function() end)
-	settingsButton:setPosition(self.topBarButtonSeparator + padding, self.topBarTextLine - settingsButton:getHeight()/2)
+	settingsButton:setPosition(topBarButtonSeparator + padding, self.topBarTextLine - settingsButton:getHeight()/2)
 	self:addChild(settingsButton)
 	local facebookButtonUp = Bitmap.new(Texture.new("images/facebook-button-up.png"))
 	local facebookButtonDown = Bitmap.new(Texture.new("images/facebook-button-down.png"))
 	local facebookButton = CustomButton.new(facebookButtonUp, facebookButtonDown, function() end)
-	facebookButton:setPosition(settingsButton:getX() + settingsButton:getWidth() + 5, self.topBarTextLine - facebookButton:getHeight()/2)
+	facebookButton:setPosition(settingsButton:getX() + settingsButton:getWidth() + buttonPadding, self.topBarTextLine - facebookButton:getHeight()/2)
 	self:addChild(facebookButton)
 	local twitterButtonUp = Bitmap.new(Texture.new("images/twitter-button-up.png"))
 	local twitterButtonDown = Bitmap.new(Texture.new("images/twitter-button-down.png"))
 	local twitterButton = CustomButton.new(twitterButtonUp, twitterButtonDown, function() end)
-	twitterButton:setPosition(facebookButton:getX() + facebookButton:getWidth() + 5, self.topBarTextLine - twitterButton:getHeight()/2)
+	twitterButton:setPosition(facebookButton:getX() + facebookButton:getWidth() + buttonPadding, self.topBarTextLine - twitterButton:getHeight()/2)
 	self:addChild(twitterButton)
 end
 

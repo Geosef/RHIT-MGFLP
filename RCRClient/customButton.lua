@@ -39,6 +39,14 @@ function CustomButton:setPosition(x, y)
 	self:addHitArea()
 end
 
+function CustomButton:getWidth()
+	return math.max(self.upState:getWidth(), self.downState:getWidth())
+end
+
+function CustomButton:getHeight()
+	return math.max(self.upState:getHeight(), self.downState:getHeight())
+end
+
 function CustomButton:onMouseDown(event)
 	if self.hitArea:hitTestPoint(event.x, event.y) then
 		self.focus = true
