@@ -342,8 +342,8 @@ function SceneManager:onEnterFrame(event)
 		dispatchEvent(self.scene1, "exitEnd")
 		dispatchEvent(self.scene2, "enterEnd")
 		self:onTransitionEnd()
-
-		self:removeChild(self.scene1)
+		-- had to make this change here to make popups work - can't subclass SceneManager for some reason?
+		--self:removeChild(self.scene1)
 		self.scene1 = self.scene2
 		self.scene2 = nil
 		self.tweening = false

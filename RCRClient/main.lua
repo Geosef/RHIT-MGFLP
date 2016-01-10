@@ -14,7 +14,12 @@ sceneManager = SceneManager.new({
 	["gameScreen"] = gameScreen,
 })
 
+popupManager = SceneManager.new({
+	["settings"] = settings
+})
+
 stage:addChild(sceneManager)
+stage:addChild(popupManager)
 
 sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 

@@ -1,3 +1,5 @@
+-- program is being exported under the TSU exception
+
 BaseScreen = Core.class(Sprite)
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 local padding = 12
@@ -29,11 +31,13 @@ function BaseScreen:initTopBar()
 	playerLevelText = TextField.new(font, playerLevel)
 	playerLevelText:setTextColor("0x34b8f9")
 	playerLevelText:setPosition(topBarButtonSeparator - (playerLevelText:getWidth() + padding), self.topBarTextLine + (playerLevelText:getHeight() / 2))
-	print(playerLevelText:getHeight())
+
 	self:addChild(playerLevelText)
 	local settingsButtonUp = Bitmap.new(Texture.new("images/settings-button-up.png"))
 	local settingsButtonDown = Bitmap.new(Texture.new("images/settings-button-down.png"))
-	local settingsButton = CustomButton.new(settingsButtonUp, settingsButtonDown, function() end)
+	local settingsButton = CustomButton.new(settingsButtonUp, settingsButtonDown, function() 
+		popupManager:changeScene("settings", 1, SceneManager.crossfade, easing.outBack)
+	end)
 	settingsButton:setPosition(topBarButtonSeparator + padding, self.topBarTextLine - settingsButton:getHeight()/2)
 	self:addChild(settingsButton)
 	local facebookButtonUp = Bitmap.new(Texture.new("images/facebook-button-up.png"))
@@ -52,4 +56,8 @@ function BaseScreen:getPlayerLevel()
 	-- Eventually, this method should use the netAdapter to query the server
 	-- for the user's level
 	return "Level 0"
+end
+
+function BaseScreen:disableButtons()
+	print("disableButtons() not implemented")
 end
