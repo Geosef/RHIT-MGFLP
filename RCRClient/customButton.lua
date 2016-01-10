@@ -9,7 +9,7 @@ function CustomButton:init(upState, downState, func)
 	self.hitArea = self:makeHitArea()
 	self:addHitArea()
 	
-	self.enabled = true
+	self:enable()
 end
 
 local padding = 5
@@ -48,6 +48,9 @@ function CustomButton:getHeight()
 end
 
 function CustomButton:onMouseDown(event)
+	if not self.enabled then
+		return
+	end
 	if self.hitArea:hitTestPoint(event.x, event.y) then
 		self.focus = true
 		self:updateVisualState(true)
@@ -57,6 +60,9 @@ function CustomButton:onMouseDown(event)
 end
 
 function CustomButton:onMouseMove(event)
+	if not self.enabled then
+		return
+	end
 	if self.focus then
 		if not self.hitArea:hitTestPoint(event.x, event.y) then	
 			self.focus = false
@@ -67,6 +73,9 @@ function CustomButton:onMouseMove(event)
 end
 
 function CustomButton:onMouseUp(event)
+	if not self.enabled then
+		return
+	end
 	if self.focus then
 		self.focus = false
 		self:updateVisualState(false)
@@ -78,11 +87,9 @@ function CustomButton:onMouseUp(event)
 end
 
 function CustomButton:disable()
-	self:unregisterListeners()
-	self.disabled = true
-	print("disabled 2")
+	self.enabled = false
 end
 
 function CustomButton:enable()
-	self:registerListeners()
+	self.enabled = true
 end

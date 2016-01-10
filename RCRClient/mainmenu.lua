@@ -62,39 +62,24 @@ function gameSelect:addButtons(rowVal, name)
 	local checkedBox3 = Bitmap.new(Texture.new("images/checked.png"))
 	buttonFunc = function()
 		for i,v in ipairs(self.buttonList) do
-			--print("Button " .. i .. ": ")
-			--print(v.game)
-			--print(v.diff)
+			buttonIndex = inTable(self.checkedButtons, v)
 			if v.isChecked then
-				if inTable(self.checkedButtons, v) then
-				elseif table.getn(self.checkedButtons) >= 3 then
-					--[[local alertDialog = AlertDialog.new("Too Many Choices!", "You can only pick three game categories!\nUnselect one to pick another.", "Close")
-					local function onComplete(event)
-						v:toggle()
-					end
-					alertDialog:addEventListener(Event.COMPLETE, onComplete)
-					alertDialog:show()]]
-					v:disable()
-				else
+				if not buttonIndex then
 					table.insert(self.checkedButtons, v)
 					if table.getn(self.checkedButtons) == 3 then
-						print("disabled")
 						self:disableUnchecked()
 					end
 				end
 			else
-				buttonIndex = inTable(self.checkedButtons, v)
 				if buttonIndex then
 					table.remove(self.checkedButtons, buttonIndex)
-				else
-					
+					self:enableButtons()
 				end
-				self:enableButtons()
 			end
 		end
 	end
 	
-	local easyButton = GameSelectRadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
+	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
 	local midButton = RadioButton.new(uncheckedBox2, checkedBox2, buttonFunc)
 	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3, buttonFunc)
 	local adjRowVal = rowVal - buttonWidth
@@ -134,6 +119,20 @@ mainMenu = Core.class(BaseScreen)
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
+	if params ~= nill then
+		self.email = params.email
+		self.password = params.password
+		local emailText = TextField.new(font, self.email)
+		emailText:setPosition(0, 50)
+		self:addChild(emailText)
+		local passwordText = TextField.new(font, self.password)
+		passwordText:setPosition(0, 100)
+		self:addChild(passwordText)
+	else
+		self.fail = "failed"
+		local failedText = TextField.new(font, self.fail)
+		self:addChild(failedText)
+	end
 	
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
@@ -142,7 +141,7 @@ function mainMenu:init(params)
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)

@@ -3,6 +3,9 @@
 RadioButton = Core.class(CustomButton)
 
 function RadioButton:onMouseDown(event)
+	if not self.enabled then
+		return
+	end
 	if self.hitArea:hitTestPoint(event.x, event.y) then
 		self.focus = true
 		self:toggle()
@@ -12,12 +15,14 @@ function RadioButton:onMouseDown(event)
 end
 
 function RadioButton:onMouseUp(event)
+	if not self.enabled then
+		return
+	end
 	if self.focus then
 		self.focus = false
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self.func()
-		print("super")
 	end
 end
 
