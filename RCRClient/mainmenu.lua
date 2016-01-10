@@ -46,13 +46,6 @@ function gameSelect:addGame(name)
 	self:addButtons(self.rowVals[self.numRows], name)
 end
 
-function inTable(tbl, item)
-    for key, value in pairs(tbl) do
-        if value == item then return key end
-    end
-    return false
-end
-
 function gameSelect:addButtons(rowVal, name)
 	local uncheckedBox1 = Bitmap.new(Texture.new("images/unchecked.png"))
 	local uncheckedBox2 = Bitmap.new(Texture.new("images/unchecked.png"))
