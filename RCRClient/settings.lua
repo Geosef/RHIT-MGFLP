@@ -9,7 +9,7 @@ function settings:init()
 	local closeButtonUp = Bitmap.new(Texture.new("images/closeSettingsButtonUp.png"))
 	local closeButtonDown = Bitmap.new(Texture.new("images/closeSettingsButtonDown.png"))
 	dismissalFunction = function()
-		popupManager:removeChild(self)
+		popupManager:changeScene("blank", 1, SceneManager.crossfade, easing.outBack)
 	end
 	local closeButton = CustomButton.new(closeButtonUp, closeButtonDown, dismissalFunction)
 	closeButton:setPosition((self.bgBox:getWidth() / 2) - (closeButton:getWidth() / 2), padding)
