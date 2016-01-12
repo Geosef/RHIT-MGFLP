@@ -66,6 +66,10 @@ class ClientThread(threading.Thread):
                 pprint(data)
                 print('Invalid Client Data')
                 continue
+        try:
+            self.sock.close()
+        except Exception as e:
+            pass
 
     def receiveData(self):
         try:
@@ -123,15 +127,18 @@ class ClientThread(threading.Thread):
         }
         self.sendData(data)
 
+    DEFAULT_USER = 'user'
+    DEFAULT_PASSWORD = 'password'
     def login(self, packet):
         playerID = 1
         self.userInfo['username'] = packet.get('username')
         self.userInfo['playerID'] = playerID
         print 'Logging in user:', self.userInfo.get('username')
+        success = packet.get('username') == self.DEFAULT_USER and packet.get('password') == self.DEFAULT_PASSWORD
         data = \
         {
             'type': 'Login',
-            'success': True,
+            'success': success,
             'playerID': playerID
         }
         self.loggedIn = True

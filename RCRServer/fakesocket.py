@@ -20,7 +20,7 @@ class FakeSocket(object):
         'password': 'pass'
     }
 
-    def __init__(self, host, numRematches):
+    def __init__(self, host, numRematches = 2):
         self.host = host
         self.lock = threading.Lock()
         self.packet = {}
