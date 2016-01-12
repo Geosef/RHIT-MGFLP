@@ -1,7 +1,8 @@
 <project>
- <properties osx_org="GiderosMobile" encryptAssets="0" architecture="0" orientation="1" mouseToTouch="1" windowWidth="0" fps="60" osx_domain="giderosmobile.com" win_org="GiderosMobile" logicalWidth="768" encryptCode="0" win_domain="giderosmobile.com" version="1.0" retinaDisplay="0" html5_host="" winrt_org="GiderosMobile" winrt_package="com.yourdomain.yourapp" touchToMouse="1" osx_bundle="com.yourdomain." assetsOnly="0" scaleMode="5" iosDevice="0" version_code="1" logicalHeight="1024" autorotation="0" windowHeight="0" ios_bundle="com.yourdomain." mouseTouchOrder="0" android_template="0" packageName="com.yourdomain.yourapp">
+ <properties fps="60" mouseTouchOrder="0" logicalWidth="768" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." windowHeight="0" version="1.0" osx_org="GiderosMobile" html5_host="" scaleMode="5" touchToMouse="1" encryptCode="0" encryptAssets="0" iosDevice="0" mouseToTouch="1" retinaDisplay="0" android_template="0" autorotation="0" win_org="GiderosMobile" winrt_package="com.yourdomain.yourapp" assetsOnly="0" win_domain="giderosmobile.com" winrt_org="GiderosMobile" logicalHeight="1024" architecture="0" windowWidth="0" osx_bundle="com.yourdomain." packageName="com.yourdomain.yourapp" orientation="1" version_code="1">
   <imageScales/>
  </properties>
+ <file source="printer.lua"/>
  <file source="RCRBasePopup.lua"/>
  <file source="settings.lua"/>
  <file source="util.lua"/>
