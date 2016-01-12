@@ -11,4 +11,15 @@ function splash:init()
 	local logo = Bitmap.new(Texture.new("images/RcrLogoLarge.png"))
 	logo:setPosition(70, 100)
 	self:addChild(logo)
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
+end
+
+function splash:onEnterEnd()
+	NET_ADAPTER:connect()
+end
+
+function splash:onExitBegin()
+	self:removeEventListener("enterEnd", self.onEnterEnd)
+	self:removeEventListener("exitBegin", self.onExitBegin)
 end

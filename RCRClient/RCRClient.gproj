@@ -1,21 +1,21 @@
 <project>
- <properties ios_bundle="com.yourdomain." assetsOnly="0" touchToMouse="1" winrt_org="GiderosMobile" autorotation="0" version_code="1" windowWidth="0" scaleMode="5" winrt_package="com.yourdomain.yourapp" version="1.0" html5_host="" mouseTouchOrder="0" encryptCode="0" win_org="GiderosMobile" logicalHeight="1024" iosDevice="0" logicalWidth="768" mouseToTouch="1" encryptAssets="0" windowHeight="0" win_domain="giderosmobile.com" osx_org="GiderosMobile" architecture="0" osx_bundle="com.yourdomain." fps="60" orientation="1" retinaDisplay="0" android_template="0" packageName="com.yourdomain.yourapp" osx_domain="giderosmobile.com">
+ <properties osx_org="GiderosMobile" encryptAssets="0" architecture="0" orientation="1" mouseToTouch="1" windowWidth="0" fps="60" osx_domain="giderosmobile.com" win_org="GiderosMobile" logicalWidth="768" encryptCode="0" win_domain="giderosmobile.com" version="1.0" retinaDisplay="0" html5_host="" winrt_org="GiderosMobile" winrt_package="com.yourdomain.yourapp" touchToMouse="1" osx_bundle="com.yourdomain." assetsOnly="0" scaleMode="5" iosDevice="0" version_code="1" logicalHeight="1024" autorotation="0" windowHeight="0" ios_bundle="com.yourdomain." mouseTouchOrder="0" android_template="0" packageName="com.yourdomain.yourapp">
   <imageScales/>
  </properties>
  <file source="RCRBasePopup.lua"/>
  <file source="settings.lua"/>
  <file source="util.lua"/>
+ <folder name="socket">
+  <file source="http/socket/http.lua" excludeFromExecution="1"/>
+  <file source="http/socket/smtp.lua" excludeFromExecution="1"/>
+  <file source="http/socket/tp.lua"/>
+  <file source="http/socket/url.lua"/>
+  <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
+ </folder>
  <folder name="http">
   <file source="http/socket.lua"/>
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
-  <folder name="socket">
-   <file excludeFromExecution="1" source="http/socket/http.lua"/>
-   <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
-   <file source="http/socket/tp.lua"/>
-   <file source="http/socket/url.lua"/>
-   <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
-  </folder>
  </folder>
  <file source="networkadapter.lua"/>
  <file source="JSON.lua"/>
@@ -38,7 +38,6 @@
  <file source="radiobutton.lua"/>
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
- <file source="moddedSceneManager.lua"/>
  <folder name="images">
   <file source="images/closeSettingsButtonUp.png"/>
   <file source="images/closeSettingsButtonDown.png"/>

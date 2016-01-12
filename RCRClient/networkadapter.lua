@@ -1,11 +1,11 @@
 -- program is being exported under the TSU exception
 
-M = {}
+
 
 --local gameMod = require('game')
-local serverIP = '137.112.226.230';
+local serverIP = '137.112.226.48';
 
-local NetworkAdapter = {}
+NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
 
 setmetatable(NetworkAdapter, {
@@ -252,17 +252,20 @@ function NetworkAdapter:recvBrowseGames(packet)
 
 end
 
+function NetworkAdapter:connect()
+	self.sock = socket.tcp()
+	self.sock:connect(self.ip, self.port)
+	self.sock:settimeout()
+end
+
 
 function NetworkAdapter:_init(multiplayerMode)
 	self.on = multiplayerMode
 	if self.on then
 		local http = require("socket.http")
 		local socket = require("socket")
-		local ip = serverIP
-		local port = 5005
-		self.sock = socket.tcp()
-		self.sock:connect(ip, port)
-		self.sock:settimeout()
+		self.ip = serverIP
+		self.port = 5005
 	else
 		--self.game = gameMod.CollectGame(self)
 		--self.game.gameSetup(self:getGameState("Collect"))
@@ -379,6 +382,3 @@ function NetworkAdapter:startRecv(callback, intervalRate, numAttempts)
 	timer:start()
 	print('hello')
 end
-
-M.NetworkAdapter = NetworkAdapter
-return M

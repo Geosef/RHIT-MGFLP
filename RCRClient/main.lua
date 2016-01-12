@@ -3,6 +3,13 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
+local multiplayerMode = true
+
+JSON = (loadfile "JSON.lua")()
+
+NET_ADAPTER = NetworkAdapter(true)
+--netAdapter:login()
+
 KEYBOARD = Keyboard.new()
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
@@ -24,5 +31,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 popupManager:changeScene("blank", 1, SceneManager.crossfade, easing.outBack)
+
