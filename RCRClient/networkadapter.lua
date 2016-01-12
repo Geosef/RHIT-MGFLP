@@ -3,7 +3,7 @@
 M = {}
 
 --local gameMod = require('game')
-local serverIP = '192.168.254.21';
+local serverIP = '137.112.226.230';
 
 local NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
@@ -38,6 +38,14 @@ function NetworkAdapter:login(username, password)
 		password=password
 	}
 	self:sendData(packet)
+	self:startRecv(function(res)
+		print("Received Login Response")
+		print_r(res)
+		self:startRecv(function(res)
+		print("Received Login Response")
+		print_r(res)
+	end)
+	end)
 end
 
 function NetworkAdapter:recvLogin(packet)
@@ -308,14 +316,13 @@ local packetRoute = {
 }
 
 function NetworkAdapter:recv(callback)
-	local line, err, rBuf = self.sock:receive("*l", rBuf)
 	
 	local inPacket
 	if pcall(function()
+		local line, err, rBuf = self.sock:receive("*l", rBuf)
 		inPacket = JSON:decode(line)
 	end) then
-		callback(inPacket)
-		return true
+		return inPacket
 		
 		
 		--[[local type = inPacket.type
@@ -355,17 +362,22 @@ function NetworkAdapter:startRecv(callback, intervalRate, numAttempts)
 	local timer = Timer.new(intervalRate, numAttempts)
 	
 	local recvCR = coroutine.create(function()
-		if self:recv(callback) then
-			timer:stop()
-		end
+		print('h2')
+		return self:recv(callback)
 	end)
 	
 	local function onTimer(event)
-		coroutine.resume(recvCR)
+		print('yo')
+		local noErr, val = coroutine.resume(recvCR)
+		if val then
+			timer:stop()
+			callback(val)
+		end
 	end
 	timer:addEventListener(Event.TIMER, onTimer)
 
-	timer:start()	
+	timer:start()
+	print('hello')
 end
 
 M.NetworkAdapter = NetworkAdapter
