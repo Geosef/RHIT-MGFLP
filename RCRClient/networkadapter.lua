@@ -27,7 +27,7 @@ function NetworkAdapter:createAccount(packet)
 
 end
 
-function NetworkAdapter:login(username, password)
+function NetworkAdapter:login(username, password, callback)
 	if not self.on then 
 	return end
 	print("LOGGING IN")
@@ -41,10 +41,7 @@ function NetworkAdapter:login(username, password)
 	self:startRecv(function(res)
 		print("Received Login Response")
 		print_r(res)
-		self:startRecv(function(res)
-		print("Received Login Response")
-		print_r(res)
-	end)
+		callback(res)
 	end)
 end
 
