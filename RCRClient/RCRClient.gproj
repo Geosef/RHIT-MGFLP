@@ -1,5 +1,5 @@
 <project>
- <properties scaleMode="5" windowHeight="0" logicalWidth="768" fps="60" assetsOnly="0" encryptCode="0" orientation="1" windowWidth="0" win_org="GiderosMobile" architecture="0" osx_org="GiderosMobile" mouseTouchOrder="0" logicalHeight="1024" encryptAssets="0" packageName="com.yourdomain.yourapp" android_template="0" iosDevice="0" autorotation="0" retinaDisplay="0" touchToMouse="1" mouseToTouch="1" osx_domain="giderosmobile.com" win_domain="giderosmobile.com">
+ <properties fps="60" osx_domain="giderosmobile.com" assetsOnly="0" scaleMode="5" logicalWidth="768" mouseTouchOrder="0" iosDevice="0" android_template="0" encryptCode="0" encryptAssets="0" windowHeight="0" orientation="1" mouseToTouch="1" touchToMouse="1" retinaDisplay="0" logicalHeight="1024" autorotation="0" architecture="0" win_org="GiderosMobile" win_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" osx_org="GiderosMobile" windowWidth="0">
   <imageScales/>
  </properties>
  <file source="printer.lua"/>
@@ -25,6 +25,7 @@
  </folder>
  <file source="keyboard.lua"/>
  <folder name="scenes">
+  <file source="acctSettings.lua"/>
   <file source="RCRBaseScreen.lua"/>
   <file source="gameScreen.lua"/>
   <file source="gameWait.lua"/>

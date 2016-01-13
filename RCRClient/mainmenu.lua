@@ -112,6 +112,8 @@ mainMenu = Core.class(BaseScreen)
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
+	--[[
+	-- Old code for testing. To be removed.
 	if params ~= nill then
 		self.email = params.email
 		self.password = params.password
@@ -126,10 +128,13 @@ function mainMenu:init(params)
 		local failedText = TextField.new(font, self.fail)
 		self:addChild(failedText)
 	end
-	
+	]]
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
 	self:addChild(gameSelectBox)
+	local helpText = TextField.new(font, "Select your top 3 games and hit submit.")
+	helpText:setPosition((WINDOW_WIDTH / 2) - (helpText:getWidth() / 2), gameSelectBox:getPosition() - helpText:getHeight() - 20)
+	self:addChild(helpText)
 	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
