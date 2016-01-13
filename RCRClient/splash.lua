@@ -16,7 +16,11 @@ function splash:init()
 end
 
 function splash:onEnterEnd()
-	NET_ADAPTER:connect()
+	if pcall(NET_ADAPTER.connect) then
+		sceneManager:changeScene("login", 1, SceneManager.crossfade, easing.outBack)
+	else
+		print("Not Connected")
+	end
 end
 
 function splash:onExitBegin()
