@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-splash = Core.class(Sprite)
+splash = Core.class(BaseScreen)
 
 function splash:init()
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
@@ -13,6 +13,7 @@ function splash:init()
 	self:addChild(logo)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
+	self.noBar = true
 end
 
 function splash:onEnterEnd()
@@ -21,6 +22,7 @@ function splash:onEnterEnd()
 	else
 		print("Not Connected")
 	end
+	self:dispatchEventToChildren()
 end
 
 function splash:onExitBegin()

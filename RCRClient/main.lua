@@ -10,6 +10,12 @@ JSON = (loadfile "JSON.lua")()
 NET_ADAPTER = NetworkAdapter(true)
 --netAdapter:login()
 
+function dispatchEvent(dispatcher, name)
+	if dispatcher:hasEventListener(name) then
+		dispatcher:dispatchEvent(Event.new(name))
+	end
+end
+
 KEYBOARD = Keyboard.new()
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
@@ -32,6 +38,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 popupManager:changeScene("blank", 1, SceneManager.crossfade, easing.outBack)
 
