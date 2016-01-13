@@ -1,5 +1,5 @@
 <project>
- <properties fps="60" mouseTouchOrder="0" logicalWidth="768" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." windowHeight="0" version="1.0" osx_org="GiderosMobile" html5_host="" scaleMode="5" touchToMouse="1" encryptCode="0" encryptAssets="0" iosDevice="0" mouseToTouch="1" retinaDisplay="0" android_template="0" autorotation="0" win_org="GiderosMobile" winrt_package="com.yourdomain.yourapp" assetsOnly="0" win_domain="giderosmobile.com" winrt_org="GiderosMobile" logicalHeight="1024" architecture="0" windowWidth="0" osx_bundle="com.yourdomain." packageName="com.yourdomain.yourapp" orientation="1" version_code="1">
+ <properties scaleMode="5" windowHeight="0" logicalWidth="768" fps="60" assetsOnly="0" encryptCode="0" orientation="1" windowWidth="0" win_org="GiderosMobile" architecture="0" osx_org="GiderosMobile" mouseTouchOrder="0" logicalHeight="1024" encryptAssets="0" packageName="com.yourdomain.yourapp" android_template="0" iosDevice="0" autorotation="0" retinaDisplay="0" touchToMouse="1" mouseToTouch="1" osx_domain="giderosmobile.com" win_domain="giderosmobile.com">
   <imageScales/>
  </properties>
  <file source="printer.lua"/>
@@ -40,6 +40,8 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/acctSettingsUp.png"/>
+  <file source="images/acctSettingsDown.png"/>
   <file source="images/closeSettingsButtonUp.png"/>
   <file source="images/closeSettingsButtonDown.png"/>
   <file source="images/settingsBox.png"/>
