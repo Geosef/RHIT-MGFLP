@@ -15,5 +15,4 @@ function acctSettings:init()
 	local helpText = TextField.new(font, "Hit submit to go to the game screen.")
 	helpText:setPosition((WINDOW_WIDTH / 2) - (helpText:getWidth() / 2), (WINDOW_HEIGHT / 2) - (helpText:getHeight() / 2))
 	self:addChild(helpText)
-
 end
