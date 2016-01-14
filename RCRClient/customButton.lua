@@ -8,7 +8,7 @@ function CustomButton:init(upState, downState, func)
 	self.func = func
 	self.hitArea = self:makeHitArea()
 	self:addHitArea()
-	
+	print(self:hasEventListener("enterEnd"))
 	self:enable()
 end
 

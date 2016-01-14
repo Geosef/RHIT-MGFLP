@@ -1,10 +1,12 @@
 <project>
- <properties fps="60" osx_domain="giderosmobile.com" assetsOnly="0" scaleMode="5" logicalWidth="768" mouseTouchOrder="0" iosDevice="0" android_template="0" encryptCode="0" encryptAssets="0" windowHeight="0" orientation="1" mouseToTouch="1" touchToMouse="1" retinaDisplay="0" logicalHeight="1024" autorotation="0" architecture="0" win_org="GiderosMobile" win_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" osx_org="GiderosMobile" windowWidth="0">
+ <properties touchToMouse="1" html5_host="" autorotation="0" osx_org="GiderosMobile" version_code="1" winrt_org="GiderosMobile" scaleMode="5" fps="60" retinaDisplay="0" orientation="1" win_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" mouseToTouch="1" logicalWidth="768" windowWidth="0" iosDevice="0" osx_bundle="com.yourdomain." android_template="0" version="1.0" architecture="0" windowHeight="0" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." winrt_package="com.yourdomain.yourapp" encryptCode="0" win_org="GiderosMobile" logicalHeight="1024" assetsOnly="0" mouseTouchOrder="0" encryptAssets="0">
   <imageScales/>
  </properties>
+ <file source="loading.lua"/>
  <file source="printer.lua"/>
  <file source="RCRBasePopup.lua"/>
  <file source="settings.lua"/>
+ <file source="sceneObject.lua"/>
  <file source="util.lua"/>
  <folder name="socket">
   <file source="http/socket/http.lua" excludeFromExecution="1"/>
@@ -29,7 +31,6 @@
   <file source="RCRBaseScreen.lua"/>
   <file source="gameScreen.lua"/>
   <file source="gameWait.lua"/>
-  <file source="textBoxScene.lua"/>
   <file source="mainmenu.lua"/>
   <file source="createAccount.lua"/>
   <file source="login.lua"/>
@@ -240,4 +241,43 @@
  </folder>
  <file source="main.lua"/>
  <file source="textbox.lua"/>
+ <dependency from="RCRBasePopup.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBasePopup.lua" to="scenemanager.lua"/>
+ <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="util.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="customButton.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="textbox.lua"/>
+ <dependency from="acctSettings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="button.lua" to="scenemanager.lua"/>
+ <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="customButton.lua" to="button.lua"/>
+ <dependency from="gameScreen.lua" to="util.lua"/>
+ <dependency from="gameScreen.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="gameWait.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="loading.lua" to="RCRBasePopup.lua"/>
+ <dependency from="loading.lua" to="scenemanager.lua"/>
+ <dependency from="loading.lua" to="textbox.lua"/>
+ <dependency from="login.lua" to="customButton.lua"/>
+ <dependency from="login.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="mainmenu.lua" to="radiobutton.lua"/>
+ <dependency from="mainmenu.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="networkadapter.lua" to="util.lua"/>
+ <dependency from="networkadapter.lua" to="JSON.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/http.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/smtp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/tp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/url.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket.lua"/>
+ <dependency from="networkadapter.lua" to="http/mime.lua"/>
+ <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="radiobutton.lua" to="customButton.lua"/>
+ <dependency from="sceneObject.lua" to="scenemanager.lua"/>
+ <dependency from="scenemanager.lua" to="easing.lua"/>
+ <dependency from="settings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="splash.lua" to="sceneObject.lua"/>
+ <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="main.lua" to="util.lua"/>
 </project>

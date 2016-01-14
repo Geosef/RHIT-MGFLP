@@ -9,7 +9,7 @@ Michael Kochell, Prithvi Kanherkar, Joseph Carroll and William Mader
 on 12/14/2015
 ]]
 
-Button = Core.class(Sprite)
+Button = Core.class(SceneObject)
 function Button:init(upState, downState)
 	self.upState = upState
 	self.downState = downState
@@ -19,12 +19,19 @@ function Button:init(upState, downState)
 	-- set the visual state as "up"
 	self:updateVisualState(false)
 	
-	--Extracted listeners to new register function and placed registry function in postInit
+	--Extracted listeners to new register function and placed registry function in onEnterEnd
+	--Also placed an unregister function in onExitBegin
 	--self:registerListeners()
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
-function Button:postInit()
+function Button:onEnterEnd()
 	self:registerListeners()
+end
+
+function Button:onExitBegin()
+	self:unregisterListeners()
 end
 
 function Button:registerListeners() 

@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-splash = Core.class(Sprite)
+splash = Core.class(BaseScreen)
 
 function splash:init()
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
@@ -13,10 +13,15 @@ function splash:init()
 	self:addChild(logo)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
+	self.noBar = true
 end
 
 function splash:onEnterEnd()
-	NET_ADAPTER:connect()
+	if pcall(NET_ADAPTER.connect) then
+		sceneManager:changeScene("login", 1, SceneManager.crossfade, easing.outBack)
+	else
+		print("Not Connected")
+	end
 end
 
 function splash:onExitBegin()

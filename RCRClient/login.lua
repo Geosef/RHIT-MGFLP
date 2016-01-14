@@ -37,7 +37,7 @@ function login:init()
 	
 	-- Create login button
 	local loginClick = CustomButton.new(loginButtonUp, loginButtonDown, function() 
-		NET_ADAPTER:login(emailTB:getText(), passwordTB:getText(), function(res)
+		--[[NET_ADAPTER:login(emailTB:getText(), passwordTB:getText(), function(res)
 			if res.success then
 				print('LOGIN WORKED!!')
 				sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
@@ -47,7 +47,8 @@ function login:init()
 				emailTB:setText("")
 				passwordTB:setText("")
 			end
-		end)
+		end)]]
+		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
 	end)
 	loginClick:setPosition(347, 515)
 	self:addChild(loginClick)
@@ -63,6 +64,13 @@ function login:init()
 	createClick:setPosition(700, 515)
 	self:addChild(createClick)
 	
+	self:addEventListener("enterEnd", self.onEnterEnd)
+	--self:addEventListener("exitBegin", self.onExitBegin, self)
+end
+
+function login:onEnterEnd()
+	print("works")
+	--self:dispatchEventToChildren()
 end
 
 --[[
