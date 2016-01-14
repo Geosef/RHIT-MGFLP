@@ -22,7 +22,9 @@ function RadioButton:onMouseUp(event)
 		self.focus = false
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
-		self.func()
+		if self.func ~= nil then
+			self.func()
+		end
 	end
 end
 
