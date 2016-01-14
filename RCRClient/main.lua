@@ -10,11 +10,6 @@ JSON = (loadfile "JSON.lua")()
 NET_ADAPTER = NetworkAdapter(true)
 --netAdapter:login()
 
-function dispatchEvent(dispatcher, name)
-	if dispatcher:hasEventListener(name) then
-		dispatcher:dispatchEvent(Event.new(name))
-	end
-end
 
 KEYBOARD = Keyboard.new()
 sceneManager = SceneManager.new({ 
@@ -32,12 +27,11 @@ BlankScene = Core.class(Sprite)
 
 popupManager = SceneManager.new({
 	["settings"] = settings,
-	["blank"] = BlankScene
+	["blank"] = BlankScene,
+	["loading"] = LoadingScreen
 })
 
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
-popupManager:changeScene("blank", 1, SceneManager.crossfade, easing.outBack)
-
+sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)

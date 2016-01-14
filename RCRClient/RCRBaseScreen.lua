@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-BaseScreen = Core.class(Sprite)
+BaseScreen = Core.class(SceneObject)
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 local padding = 12
 local buttonPadding = 8
@@ -10,13 +10,17 @@ local topBarButtonSeparator = 875
 function BaseScreen:init()
 	local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	self:addChild(titleBackground)
-	self.topBar = Bitmap.new(Texture.new("images/RCRTopBar.png"))
-	self:addChild(self.topBar)
-	self.topBarTextLine = self.topBar:getHeight() / 2
+	if not self.noBar then
+		self.topBar = Bitmap.new(Texture.new("images/RCRTopBar.png"))
+		self:addChild(self.topBar)
+		self.topBarTextLine = self.topBar:getHeight() / 2
+	end
 end
 
 function BaseScreen:postInit()
-	self:initTopBar()
+	if not self.noBar then
+		self:initTopBar()
+	end
 end
 
 function BaseScreen:initTopBar()
@@ -56,8 +60,4 @@ function BaseScreen:getPlayerLevel()
 	-- Eventually, this method should use the netAdapter to query the server
 	-- for the user's level
 	return "Level 0"
-end
-
-function BaseScreen:disableButtons()
-	print("disableButtons() not implemented")
 end

@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-gameSelect = Core.class(Sprite)
+gameSelect = Core.class(SceneObject)
 
 local spacing = 50
 local buttonWidth = 35

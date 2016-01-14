@@ -22,7 +22,6 @@ function splash:onEnterEnd()
 	else
 		print("Not Connected")
 	end
-	self:dispatchEventToChildren()
 end
 
 function splash:onExitBegin()

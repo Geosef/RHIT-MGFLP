@@ -9,7 +9,7 @@ Michael Kochell, Prithvi Kanherkar, Joseph Carroll and William Mader
 on 12/14/2015
 ]]
 
-Button = Core.class(Sprite)
+Button = Core.class(SceneObject)
 function Button:init(upState, downState)
 	self.upState = upState
 	self.downState = downState
