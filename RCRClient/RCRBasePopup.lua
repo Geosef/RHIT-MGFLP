@@ -16,8 +16,3 @@ end
 function BasePopup:dismiss()
 	self:removeChild(fadedBG)
 end
-
-function BasePopup:onEnterEnd()
-	print("works")
-	--self:dispatchEventToChildren()
-end

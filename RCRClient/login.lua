@@ -64,13 +64,11 @@ function login:init()
 	createClick:setPosition(700, 515)
 	self:addChild(createClick)
 	
-	self:addEventListener("enterEnd", self.onEnterEnd)
+	--self:addEventListener("enterEnd", self.onEnterEnd)
 	--self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
 function login:onEnterEnd()
-	print("works")
-	--self:dispatchEventToChildren()
 end
 
 --[[

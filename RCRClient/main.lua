@@ -17,7 +17,6 @@ sceneManager = SceneManager.new({
 	["login"] = login,
 	["mainMenu"] = mainMenu,
 	["create"] = createAccount,
-	["textBox"] = textBoxScene,
 	["gameWait"] = gameWait,
 	["gameScreen"] = gameScreen,
 	["acctSettings"] = acctSettings
@@ -27,11 +26,10 @@ BlankScene = Core.class(Sprite)
 
 popupManager = SceneManager.new({
 	["settings"] = settings,
-	["blank"] = BlankScene,
-	["loading"] = LoadingScreen
+	["blank"] = BlankScene
 })
 
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
