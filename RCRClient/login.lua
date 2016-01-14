@@ -44,7 +44,8 @@ function login:init()
 				{userData = {email=emailTB:getText(), password=passwordTB:getText()}})
 			else
 				print('handle in login screen, login failed')
-				--clear both text boxes
+				emailTB:setText("")
+				passwordTB:setText("")
 			end
 		end)
 	end)

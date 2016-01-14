@@ -10,6 +10,12 @@ JSON = (loadfile "JSON.lua")()
 NET_ADAPTER = NetworkAdapter(true)
 --netAdapter:login()
 
+function dispatchEvent(dispatcher, name)
+	if dispatcher:hasEventListener(name) then
+		dispatcher:dispatchEvent(Event.new(name))
+	end
+end
+
 KEYBOARD = Keyboard.new()
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
@@ -19,6 +25,7 @@ sceneManager = SceneManager.new({
 	["textBox"] = textBoxScene,
 	["gameWait"] = gameWait,
 	["gameScreen"] = gameScreen,
+	["acctSettings"] = acctSettings
 })
 
 BlankScene = Core.class(Sprite)
