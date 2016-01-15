@@ -7,7 +7,7 @@ local multiplayerMode = true
 
 JSON = (loadfile "JSON.lua")()
 
-NET_ADAPTER = NetworkAdapter(true)
+NET_ADAPTER = NetworkAdapter(multiplayerMode)
 --netAdapter:login()
 
 
