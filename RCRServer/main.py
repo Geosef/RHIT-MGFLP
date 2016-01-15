@@ -20,9 +20,8 @@ def main():
     host = '0.0.0.0'
     port = 5005
 
-    logging.basicConfig(filename='/var/log/RCR/server.log', level=logging.INFO)
-    logging.info('Started')
-    logging.info('Finished')
+    logging.basicConfig(filename='logs/server.log', level=logging.INFO)
+    logging.info('Server Started')
 
     def startListening():
 
@@ -48,13 +47,15 @@ def main():
         while True:
             tcpsock.listen(4)
             print 'Listening'
+            logging.info('Listening')
             (clientsock, (ip, port)) = tcpsock.accept()
             print 'client {0} connected'.format(str(index))
+            logging.info('client {0} connected'.format(str(index)))
             t = clienthandler.ClientThread(clientsock, gameFactory)
             t.start()
             index += 1
 
-    # startListening()
+    startListening()
 
 if __name__ == "__main__":
     main()
