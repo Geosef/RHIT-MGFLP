@@ -7,6 +7,7 @@ import json
 import clienthandler
 import gamefactory
 import fakesocket
+import logging
 
 def main():
 
@@ -19,33 +20,41 @@ def main():
     host = '0.0.0.0'
     port = 5005
 
-    tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    logging.basicConfig(filename='/var/log/RCR/server.log', level=logging.INFO)
+    logging.info('Started')
+    logging.info('Finished')
 
-    tcpsock.bind((host,port))
-    print('server created')
-    print 'Host: ' + host
-    print 'Port: ' + str(port)
+    def startListening():
 
-    peerSocket1 = fakesocket.FakeSocket(True)
+        tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    peerHandler1 = clienthandler.ClientThread(peerSocket1, gameFactory)
-    peerHandler1.start()
+        tcpsock.bind((host,port))
+        print('server created')
+        print 'Host: ' + host
+        print 'Port: ' + str(port)
 
-    peerSocket2 = fakesocket.FakeSocket(False)
+        peerSocket1 = fakesocket.FakeSocket(True)
 
-    peerHandler2 = clienthandler.ClientThread(peerSocket2, gameFactory)
-    # peerHandler2.start()
+        peerHandler1 = clienthandler.ClientThread(peerSocket1, gameFactory)
+        peerHandler1.start()
 
-    index = 0
-    while True:
-        tcpsock.listen(4)
-        print 'Listening'
-        (clientsock, (ip, port)) = tcpsock.accept()
-        print 'client {0} connected'.format(str(index))
-        t = clienthandler.ClientThread(clientsock, gameFactory)
-        t.start()
-        index += 1
+        peerSocket2 = fakesocket.FakeSocket(False)
+
+        peerHandler2 = clienthandler.ClientThread(peerSocket2, gameFactory)
+        # peerHandler2.start()
+
+        index = 0
+        while True:
+            tcpsock.listen(4)
+            print 'Listening'
+            (clientsock, (ip, port)) = tcpsock.accept()
+            print 'client {0} connected'.format(str(index))
+            t = clienthandler.ClientThread(clientsock, gameFactory)
+            t.start()
+            index += 1
+
+    # startListening()
 
 if __name__ == "__main__":
     main()
