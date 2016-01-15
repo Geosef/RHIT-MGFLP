@@ -18,12 +18,12 @@ def main():
     # host = '192.168.5.100'
     # host = '54.201.206.189'
     host = '0.0.0.0'
-    port = 5005
 
     logging.basicConfig(filename='logs/server.log', level=logging.INFO)
     logging.info('Server Started')
 
     def startListening():
+        port = 5005
 
         tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
