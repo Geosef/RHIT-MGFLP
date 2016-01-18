@@ -14,7 +14,7 @@ def main():
     gameFactory = gamefactory.GameFactory()
 
     # host = 'localhost'
-    # host = '137.112.226.48'
+    # host = '137.112.226.156'
     # host = '192.168.5.100'
     # host = '54.201.206.189'
     host = '0.0.0.0'
@@ -36,7 +36,7 @@ def main():
         peerSocket1 = fakesocket.FakeSocket(True)
 
         peerHandler1 = clienthandler.ClientThread(peerSocket1, gameFactory)
-        peerHandler1.start()
+        # peerHandler1.start()
 
         peerSocket2 = fakesocket.FakeSocket(False)
 
