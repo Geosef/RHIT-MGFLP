@@ -34,6 +34,11 @@ class GameFactory(object):
         self.gameIDLock = threading.Lock()
         self.gameWaitListLock = threading.Lock()
 
+    def removeWaiterHandler(self, clientHandler):
+        for waiter in self.clientWaitList:
+            if clientHandler is waiter.client_handler:
+                return self.removeWaiter(waiter)
+
     def removeWaiter(self, clientWaitObj):
         #remove all things from both lists
         self.clientWaitList.remove(clientWaitObj)
@@ -119,6 +124,5 @@ if __name__ == '__main__':
         }
     ]}
     gf.browseGames(ch1, browsePacket.copy())
+    # gf.removeWaiterHandler(ch1)
     gf.browseGames(ch2, browsePacket.copy())
-    pass
-    #make fakesocket

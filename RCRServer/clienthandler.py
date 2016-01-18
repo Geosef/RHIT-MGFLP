@@ -62,6 +62,7 @@ class ClientThread(threading.Thread):
                 continue
         try:
             self.sock.close()
+            self.gameFactory.removeWaiterHandler(self)
         except Exception as e:
             pass
 
