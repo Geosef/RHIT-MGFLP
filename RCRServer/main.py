@@ -61,6 +61,7 @@ def main():
 
         def signal_handler(signal, frame):
             tcpsock.close()
+            print 'Socket Closed'
             sys.exit(0)
         signal.signal(signal.SIGINT, signal_handler)
 
