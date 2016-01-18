@@ -3,7 +3,7 @@
 
 
 --local gameMod = require('game')
-local serverIP = '54.201.206.189';
+local serverIP = '137.112.226.156';
 
 NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
@@ -231,23 +231,14 @@ function NetworkAdapter:sendData(packet)
 	self.sock:send(jsonString)
 end
 
-function NetworkAdapter:browseGames(packet)
-	--display packet.games
-	--[[
-	[
-		{
-			'gameid':
-			'gametype':
-			'difficulty':
-			'hostname':
-		}, ...
-	]
-	]]
+function NetworkAdapter:browseGames(choices, callback)
+	local packet = {}
+	packet.type = "Browse Games"
+	packet.choices = choices
+	self:sendData(packet)
+	self:startRecv(callback)
 end
 
-function NetworkAdapter:recvBrowseGames(packet)
-
-end
 
 function NetworkAdapter:connect()
 	self.sock = socket.tcp()

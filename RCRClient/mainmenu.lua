@@ -154,8 +154,28 @@ function mainMenu:sendSelected(checkedButtons)
 		choice.diff = v.diff
 		table.insert(choices, choice)
 	end
-	--netAdapter:browseGames(choices)
-	
+	NET_ADAPTER:browseGames(choices, function(res)
+		self:receiveBrowseResponse(res)
+	end)
+end
+
+function mainMenu:receiveBrowseResponse(response)
+	print_r(response)
+	if response.match then --joining game
+		--goToJoiningGame()
+		--switch to joining game screen while server processes game setup and removal from joinable games
+		--then show initial game screen
+		
+		
+		
+		
+	else	--put in waitlist on server,
+		--goToSearchingScreen()
+		--stay in searching for game, cancel if want to back out.
+		--if press cancel during game join too bad
+		--have lock on clienthandler for knowing whether you are joining a game or cancelling
+	end
+		
 end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)

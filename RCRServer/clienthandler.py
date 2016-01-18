@@ -139,7 +139,7 @@ class ClientThread(threading.Thread):
         self.sendData(data)
 
     def browseGames(self, packet):
-        self.gameFactory.browseGames(packet)
+        self.gameFactory.browseGames(self, packet)
         # game factory takes care of responses
 
         # self.sendData(games)
