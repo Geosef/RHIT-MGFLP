@@ -9,6 +9,10 @@ import gamefactory
 import fakesocket
 import logging
 
+import signal
+import sys
+
+
 def main():
 
     gameFactory = gamefactory.GameFactory()
@@ -54,6 +58,11 @@ def main():
             t = clienthandler.ClientThread(clientsock, gameFactory)
             t.start()
             index += 1
+
+        def signal_handler(signal, frame):
+            tcpsock.close()
+            sys.exit(0)
+        signal.signal(signal.SIGINT, signal_handler)
 
     startListening()
 
