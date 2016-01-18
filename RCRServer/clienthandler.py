@@ -2,7 +2,7 @@ __author__ = 'kochelmj'
 
 import json, threading
 from pprint import pprint
-
+import logging
 
 class ClientThread(threading.Thread):
 
@@ -62,6 +62,8 @@ class ClientThread(threading.Thread):
                 continue
         try:
             self.sock.close()
+            logging.info('Client Disconnected')
+            print 'Client Disconnected'
             self.gameFactory.removeWaiterHandler(self)
         except Exception as e:
             pass
