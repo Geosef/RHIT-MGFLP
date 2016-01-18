@@ -5,6 +5,7 @@
  <file source="printer.lua"/>
  <file source="RCRBasePopup.lua"/>
  <file source="settings.lua"/>
+ <file source="scriptObject.lua"/>
  <file source="sceneObject.lua"/>
  <file source="util.lua"/>
  <folder name="socket">
@@ -37,10 +38,18 @@
  </folder>
  <file source="button.lua"/>
  <file source="customButton.lua"/>
+ <file source="gameButton.lua"/>
  <file source="radiobutton.lua"/>
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/script-up-button-up.png"/>
+  <file source="images/script-up-button-down.png"/>
+  <file source="images/script-down-button-up.png"/>
+  <file source="images/script-down-button-down.png"/>
+  <file source="images/resource-box.png"/>
+  <file source="images/game-button-down.png"/>
+  <file source="images/game-button.png"/>
   <file source="images/acctSettingsUp.png"/>
   <file source="images/acctSettingsDown.png"/>
   <file source="images/closeSettingsButtonUp.png"/>
@@ -251,6 +260,7 @@
  <dependency from="button.lua" to="scenemanager.lua"/>
  <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
  <dependency from="customButton.lua" to="button.lua"/>
+ <dependency from="gameButton.lua" to="customButton.lua"/>
  <dependency from="gameScreen.lua" to="util.lua"/>
  <dependency from="gameScreen.lua" to="customButton.lua"/>
  <dependency from="gameScreen.lua" to="RCRBaseScreen.lua"/>
@@ -272,6 +282,7 @@
  <dependency from="radiobutton.lua" to="customButton.lua"/>
  <dependency from="sceneObject.lua" to="scenemanager.lua"/>
  <dependency from="scenemanager.lua" to="easing.lua"/>
+ <dependency from="scriptObject.lua" to="sceneObject.lua"/>
  <dependency from="settings.lua" to="RCRBasePopup.lua"/>
  <dependency from="splash.lua" to="sceneObject.lua"/>
  <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
