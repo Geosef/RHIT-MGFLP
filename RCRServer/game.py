@@ -11,8 +11,10 @@ class Game(object):
 
     MAXTURNS = 10
     MAXSCORE = 5
-    def __init__(self, p1Thread, gameID, packet):
+
+    def __init__(self, p1Thread, p2Thread, gameID, gamePref):
         p1Thread.index = 0
+        p2Thread.index = 1
         self.gameID = gameID
         self.threads = [p1Thread]
         self.lock = threading.Lock()
@@ -22,8 +24,8 @@ class Game(object):
         self.gridSize = 10
         self.maxMoves = 8
         self.full = False
-        self.gameType = packet.get('gametype')
-        self.difficulty = packet.get('difficulty')
+        self.gameType = gamePref.get('gametype')
+        self.difficulty = gamePref.get('difficulty')
         self.ready = [False, False]
         self.rematchBools = [False, False]
 

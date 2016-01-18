@@ -3,12 +3,6 @@ __author__ = 'kochelmj'
 import json, threading
 from pprint import pprint
 
-receivedbools = []
-receivedevents = []
-lock = threading.Lock()
-
-games = []
-
 
 class ClientThread(threading.Thread):
 
@@ -145,8 +139,10 @@ class ClientThread(threading.Thread):
         self.sendData(data)
 
     def browseGames(self, packet):
-        games = self.gameFactory.browseGames(packet)
-        self.sendData(games)
+        self.gameFactory.browseGames(packet)
+        # game factory takes care of responses
+
+        # self.sendData(games)
         # pprint(games)
 
     def playerJoined(self, packet):
@@ -157,3 +153,6 @@ class ClientThread(threading.Thread):
 
     def startGame(self, packet):
         self.game.startGame(self)
+
+    def setGame(self, game):
+        self.game = game
