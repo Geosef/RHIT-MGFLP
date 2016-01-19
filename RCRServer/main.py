@@ -48,20 +48,31 @@ def main():
         # peerHandler2.start()
 
         index = 0
-        while True:
-            tcpsock.listen(4)
-            print 'Listening'
-            logging.info('Listening')
-            (clientsock, (ip, port)) = tcpsock.accept()
-            print 'client {0} connected'.format(str(index))
-            logging.info('client {0} connected'.format(str(index)))
-            t = clienthandler.ClientThread(clientsock, gameFactory)
-            t.start()
-            index += 1
-
+        try:
+            while True:
+                tcpsock.listen(4)
+                print 'Listening'
+                logging.info('Listening')
+                (clientsock, (ip, port)) = tcpsock.accept()
+                print 'client {0} connected'.format(str(index))
+                logging.info('client {0} connected'.format(str(index)))
+                t = clienthandler.ClientThread(clientsock, gameFactory)
+                t.start()
+                index += 1
+        except Exception as e:
+            print str(e)
+            logging.error(str(e))
+            try:
+                tcpsock.close()
+                print 'Socket Closed'
+            except:
+                pass
         def signal_handler(signal, frame):
-            tcpsock.close()
-            print 'Socket Closed'
+            try:
+                tcpsock.close()
+                print 'Socket Closed'
+            except:
+                pass
             sys.exit(0)
         signal.signal(signal.SIGINT, signal_handler)
 

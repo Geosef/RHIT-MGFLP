@@ -368,5 +368,4 @@ function NetworkAdapter:startRecv(callback, intervalRate, numAttempts)
 	timer:addEventListener(Event.TIMER, onTimer)
 
 	timer:start()
-	print('hello')
 end

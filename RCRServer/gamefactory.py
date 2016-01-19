@@ -35,9 +35,11 @@ class GameFactory(object):
         self.gameWaitListLock = threading.Lock()
 
     def removeWaiterHandler(self, clientHandler):
-        for waiter in self.clientWaitList:
-            if clientHandler is waiter.client_handler:
-                return self.removeWaiter(waiter)
+        #called from client handler so we need the thread lock
+        with self.gameWaitListLock:
+            waiter = next((temp for temp in self.clientWaitList if clientHandler is temp.client_handler), None)
+            if waiter:
+                self.removeWaiter(waiter)
 
     def removeWaiter(self, clientWaitObj):
         #remove all things from both lists
