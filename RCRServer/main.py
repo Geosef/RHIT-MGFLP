@@ -23,7 +23,14 @@ def main():
     # host = '54.201.206.189'
     host = '0.0.0.0'
 
-    logging.basicConfig(filename='logs/server.log', level=logging.INFO)
+
+    loggingConfig = {
+        'filename': 'logs/server.log',
+        'level': logging.INFO,
+        'format': '%(asctime)s %(message)s',
+        'datefmt': '%Y-%m-%d %I:%M:%S'
+    }
+    logging.basicConfig(**loggingConfig)
     logging.info('Server Started')
 
     def startListening():
