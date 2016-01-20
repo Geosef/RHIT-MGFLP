@@ -139,7 +139,7 @@ function mainMenu:init(params)
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
+		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
