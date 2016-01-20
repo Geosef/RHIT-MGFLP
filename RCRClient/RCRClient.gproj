@@ -1,5 +1,5 @@
 <project>
- <properties android_template="0" architecture="0" win_org="GiderosMobile" encryptCode="0" encryptAssets="0" windowHeight="0" win_domain="giderosmobile.com" osx_org="GiderosMobile" mouseTouchOrder="0" mouseToTouch="1" orientation="1" osx_domain="giderosmobile.com" packageName="com.yourdomain.yourapp" logicalHeight="1024" retinaDisplay="0" windowWidth="0" fps="60" scaleMode="5" assetsOnly="0" autorotation="0" iosDevice="0" touchToMouse="1" logicalWidth="768">
+ <properties winrt_package="com.yourdomain.yourapp" fps="60" osx_bundle="com.yourdomain." version="1.0" orientation="1" touchToMouse="1" autorotation="0" version_code="1" packageName="com.yourdomain.yourapp" osx_domain="giderosmobile.com" windowWidth="0" win_org="GiderosMobile" logicalHeight="1024" mouseTouchOrder="0" ios_bundle="com.yourdomain." winrt_org="GiderosMobile" android_template="0" encryptAssets="0" assetsOnly="0" scaleMode="5" osx_org="GiderosMobile" logicalWidth="768" mouseToTouch="1" html5_host="" encryptCode="0" windowHeight="0" iosDevice="0" win_domain="giderosmobile.com" retinaDisplay="0" architecture="0">
   <imageScales/>
  </properties>
  <file source="printer.lua"/>
@@ -58,6 +58,7 @@
    <file source="images/LoadingSpinner/Spinner 2.png"/>
    <file source="images/LoadingSpinner/Spinner 1.png"/>
   </folder>
+  <file source="images/ScriptObject.png"/>
   <file source="images/script-up-button-up.png"/>
   <file source="images/script-up-button-down.png"/>
   <file source="images/script-down-button-up.png"/>
@@ -302,4 +303,42 @@
  <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
  <dependency from="splash.lua" to="sceneObject.lua"/>
  <dependency from="main.lua" to="util.lua"/>
+ <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
+ <dependency to="scenemanager.lua" from="RCRBasePopup.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
+ <dependency to="sceneObject.lua" from="RCRBaseScreen.lua"/>
+ <dependency to="util.lua" from="RCRBaseScreen.lua"/>
+ <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
+ <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
+ <dependency to="RCRBasePopup.lua" from="acctSettings.lua"/>
+ <dependency to="scenemanager.lua" from="button.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="createAccount.lua"/>
+ <dependency to="button.lua" from="customButton.lua"/>
+ <dependency to="customButton.lua" from="gameButton.lua"/>
+ <dependency to="util.lua" from="gameScreen.lua"/>
+ <dependency to="customButton.lua" from="gameScreen.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="gameScreen.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="gameWait.lua"/>
+ <dependency to="customButton.lua" from="login.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="login.lua"/>
+ <dependency to="radiobutton.lua" from="mainmenu.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="mainmenu.lua"/>
+ <dependency to="util.lua" from="networkadapter.lua"/>
+ <dependency to="JSON.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/url.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/ftp.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket.lua" from="networkadapter.lua"/>
+ <dependency to="http/mime.lua" from="networkadapter.lua"/>
+ <dependency to="http/ltn12.lua" from="networkadapter.lua"/>
+ <dependency to="customButton.lua" from="radiobutton.lua"/>
+ <dependency to="scenemanager.lua" from="sceneObject.lua"/>
+ <dependency to="easing.lua" from="scenemanager.lua"/>
+ <dependency to="sceneObject.lua" from="scriptObject.lua"/>
+ <dependency to="RCRBasePopup.lua" from="settings.lua"/>
+ <dependency to="sceneObject.lua" from="splash.lua"/>
+ <dependency to="RCRBaseScreen.lua" from="splash.lua"/>
+ <dependency to="util.lua" from="main.lua"/>
 </project>
