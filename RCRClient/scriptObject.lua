@@ -90,11 +90,6 @@ end
 
 -- if touches are cancelled, reset the state of the button
 function ScriptObject:onTouchesCancel(event)
-	--[[if self.focus then
-		self.focus = false;
-		self:updateVisualState(false)
-		event:stopPropagation()
-	end]]
 end
 
 DoubleScriptObject = Core.class(ScriptObject)

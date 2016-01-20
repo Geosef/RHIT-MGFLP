@@ -21,7 +21,7 @@ function StatementBox:initScriptControlButtons()
 	local scriptUpButtonDown = Bitmap.new(Texture.new("images/script-up-button-down.png"))
 	self.scriptUpButton = CustomButton.new(scriptUpButtonUp, scriptUpButtonDown, function() 
 		self.scrollCount = self.scrollCount - 1
-		self:scriptCountCheck()
+		self:scriptCountCheck(true)
 	end)
 	self.scriptUpButton:setPosition((self:getWidth() / 2) - (self.scriptUpButton:getWidth() / 2), self.resourceBox:getY() + self.resourceBox:getHeight() + padding)
 	self:addChild(self.scriptUpButton)
@@ -29,7 +29,7 @@ function StatementBox:initScriptControlButtons()
 	local scriptDownButtonDown = Bitmap.new(Texture.new("images/script-down-button-down.png"))
 	self.scriptDownButton = CustomButton.new(scriptDownButtonUp, scriptDownButtonDown, function() 
 		self.scrollCount = self.scrollCount + 1
-		self:scriptCountCheck()
+		self:scriptCountCheck(true)
 	end)
 	-- This is calculated assuming 4 script objects of height 75 px
 	local scriptDownHeight = self.scriptUpButton:getY() + self.scriptUpButton:getHeight() + scriptPadding + 4 * (scriptPadding + 75)
@@ -38,7 +38,31 @@ function StatementBox:initScriptControlButtons()
 	self:scriptCountCheck()
 end
 
-function StatementBox:scriptCountCheck()
+function StatementBox:scroll(scriptIndex)
+	self:removeScript()
+	self.s1 = self.script[self.scrollCount+1]
+	self.s2 = self.script[self.scrollCount+2]
+	self.s3 = self.script[self.scrollCount+3]
+	self.s4 = self.script[self.scrollCount+4]
+	self:drawScript()
+end
+
+function StatementBox:removeScript()
+	if self.s1 then
+		self:removeChild(self.s1)
+	end
+	if self.s2 then
+		self:removeChild(self.s2)
+	end
+	if self.s3 then
+		self:removeChild(self.s3)
+	end
+	if self.s4 then
+		self:removeChild(self.s4)
+	end
+end
+
+function StatementBox:scriptCountCheck(needScroll)
 	local scriptCount = table.getn(self.script)
 	if self.scrollCount > 0 then
 		self.scriptUpButton:enable()
@@ -51,11 +75,15 @@ function StatementBox:scriptCountCheck()
 	elseif scriptLocation <= 4 then
 		self.scriptDownButton:disable()
 	end
+	if needScroll then
+		self:scroll()
+	end
 end
 
 function StatementBox:addNewScript(name)
 	local newCommand = DoubleScriptObject.new(name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
 	table.insert(self.script, newCommand)
+	print(table.getn(self.script))
 	if not self.s1 then
 		self.s1 = newCommand
 	elseif not self.s2 then
@@ -112,7 +140,7 @@ function CommandBox:initButtons()
 	local moveButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 	local addButton = function(name)
 		self.parentScreen.statementBox:addNewScript(name)
-		self.parentScreen.statementBox:scriptCountCheck()
+		self.parentScreen.statementBox:scriptCountCheck(false)
 	end
 	local moveButton = GameButton.new(moveButtonUp, moveButtonDown, addButton, "Move")
 	moveButton:setPosition((self:getWidth() / 2) - (moveButton:getWidth() / 2), self.headerBottom + padding)
