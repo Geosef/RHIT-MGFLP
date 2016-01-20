@@ -5,7 +5,6 @@ function GameButton:init(upState, downState, func, action)
 	self.action = action
 	self.buttonNameField = TextField.new(font, self.action)
 	self.buttonNameField:setPosition((self:getWidth() / 2) - (self.buttonNameField:getWidth() / 2), (self:getHeight() / 2) + (self.buttonNameField:getHeight() / 2))
-	self:addChild(self.buttonNameField)
 end
 
 function GameButton:onMouseDown(event)
@@ -38,4 +37,12 @@ function GameButton:onMouseUp(event)
 		--Runs specified function
 		self.func(self.action)
 	end
+end
+
+function GameButton:updateVisualState(state)
+	if self:contains(self.buttonNameField) then
+		self:removeChild(self.buttonNameField)
+	end
+	Button.updateVisualState(self, state)
+	self:addChild(self.buttonNameField)
 end
