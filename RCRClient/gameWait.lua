@@ -20,11 +20,11 @@ function gameWait:init()
 	-- Add cancel button
 	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
-	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function() 
+	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function() 
 		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 	end)
-	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
-	self:addChild(submitButton)
+	self.submitButton:setPosition((WINDOW_WIDTH / 2) - (self.submitButton:getWidth() / 2) , WINDOW_HEIGHT - self.submitButton:getHeight() - 70)
+	self:addChild(self.submitButton)
 	
 	-- Add waiting text
 	local logo = Bitmap.new(Texture.new("images/waitingForOppText.png"))
@@ -40,7 +40,8 @@ function gameWait:init()
 	self.spriteCounter = 0
 	self.sprite = loadingSprites[self.spriteCounter]
 	
-	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), submitButton:getY() - self.sprite:getHeight() - 20)	
+	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.submitButton:getY() - self.sprite:getHeight() - 70)
+	self:addChild(self.sprite)
 end
 
 function gameWait:onEnterEnd()
@@ -60,9 +61,11 @@ function gameWait:onEnterFrame()
 end
 
 function gameWait:animate()
-	self.spriteCounter = (self.spriteCounter + 1) % 12
-	sprite = loadingSprites[self.spriteCounter]
-	--sprite:setPosition((WINDOW_WIDTH / 2) - (sprite:getWidth() / 2), submitButton:getY() - sprite:getHeight() - 20)	
+	self:removeChild(self.sprite)
+	self.spriteCounter = (self.spriteCounter + 1) % table.getn(loadingSprites)
+	self.sprite = loadingSprites[self.spriteCounter]
+	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.submitButton:getY() - self.sprite:getHeight() - 70)
+	self:addChild(self.sprite)
 end
 
 
