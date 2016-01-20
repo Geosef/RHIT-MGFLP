@@ -39,23 +39,55 @@ function StatementBox:initScriptControlButtons()
 end
 
 function StatementBox:scriptCountCheck()
+	local scriptCount = table.getn(self.script)
 	if self.scrollCount > 0 then
 		self.scriptUpButton:enable()
 	else 
 		self.scriptUpButton:disable()
 	end
-	local scriptLocation = table.getn(self.script) - self.scrollCount
+	local scriptLocation = scriptCount - self.scrollCount
 	if scriptLocation > 4 then
 		self.scriptDownButton:enable()
-	elseif scriptLocation == 4 then
+	elseif scriptLocation <= 4 then
 		self.scriptDownButton:disable()
 	end
 end
 
 function StatementBox:addNewScript(name)
-	
-	table.insert(self.script, "script obj")
-	print(name)
+	local newCommand = DoubleScriptObject.new(name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
+	table.insert(self.script, newCommand)
+	if not self.s1 then
+		self.s1 = newCommand
+	elseif not self.s2 then
+		self.s2 = newCommand
+	elseif not self.s3 then
+		self.s3 = newCommand
+	elseif not self.s4 then
+		self.s4 = newCommand
+	else
+		return
+	end
+	self:drawScript()
+	--print(name)
+end
+
+function StatementBox:drawScript()
+	if self.s1 then
+		self.s1:setPosition((self:getWidth() / 2) - (self.s1:getWidth() / 2), self.scriptUpButton:getY() + self.scriptUpButton:getHeight() + scriptPadding)
+		self:addChild(self.s1)
+	end
+	if self.s2 then
+		self.s2:setPosition((self:getWidth() / 2) - (self.s2:getWidth() / 2), self.s1:getY() + self.s1:getHeight() + scriptPadding)
+		self:addChild(self.s2)
+	end
+	if self.s3 then
+		self.s3:setPosition((self:getWidth() / 2) - (self.s3:getWidth() / 2), self.s2:getY() + self.s2:getHeight() + scriptPadding)
+		self:addChild(self.s3)
+	end
+	if self.s4 then
+		self.s4:setPosition((self:getWidth() / 2) - (self.s4:getWidth() / 2), self.s3:getY() + self.s3:getHeight() + scriptPadding)
+		self:addChild(self.s4)
+	end
 end
 
 local ScriptArea = Core.class(SceneObject)
