@@ -70,7 +70,7 @@ function TextBox:getText()
 end
 
 function TextBox:onMouseDown(event)
-	if self:hitTestPoint(event.x, event.y) then
+	if self.shape:hitTestPoint(event.x, event.y) then
 		local textInputDialog = TextInputDialog.new(self.params.dialogTitle, self.params.dialogMessage, self:getText(), self.params.dialogNo, self.params.dialogYes)
 		textInputDialog:setSecureInput(self.params.secure)
 		local onComplete
@@ -101,17 +101,19 @@ function TextBox:createTextField(params)
 	local tf = TextField.new(myfont, params.defaultText)
 	self.tf = tf
 	tf:setPosition(10, 2 * params.height / 3)
-	self:addChild(tf)
+	self.shape:addChild(tf)
 end
 
 function TextBox:createBox(params)
-	self:setLineStyle(3, 0x000000)
-	self:setFillStyle(Shape.SOLID, params.color, 0.5)
-	self:beginPath()
-	self:moveTo(0, 0)
-	self:lineTo(params.width, 0)
-	self:lineTo(params.width, params.height)
-	self:lineTo(0, params.height)
-	self:closePath()
-	self:endPath()
+	self.shape = Shape.new()
+	self.shape:setLineStyle(3, 0x000000)
+	self.shape:setFillStyle(Shape.SOLID, params.color, 0.5)
+	self.shape:beginPath()
+	self.shape:moveTo(0, 0)
+	self.shape:lineTo(params.width, 0)
+	self.shape:lineTo(params.width, params.height)
+	self.shape:lineTo(0, params.height)
+	self.shape:closePath()
+	self.shape:endPath()
+	self:addChild(self.shape)
 end
