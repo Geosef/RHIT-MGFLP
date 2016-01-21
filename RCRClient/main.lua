@@ -19,7 +19,8 @@ sceneManager = SceneManager.new({
 	["create"] = createAccount,
 	["gameWait"] = gameWait,
 	["gameScreen"] = gameScreen,
-	["acctSettings"] = acctSettings
+	["acctSettings"] = acctSettings,
+	["joinGame"] = joiningGame
 })
 
 BlankScene = Core.class(Sprite)
@@ -32,4 +33,4 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
