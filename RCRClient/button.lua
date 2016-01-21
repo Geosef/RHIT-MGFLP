@@ -16,7 +16,8 @@ function Button:init(upState, downState)
 	
 	self.focus = false
 	
-	
+	-- set the visual state as "up"
+	self:addChild(self.upState)
 	
 	--Extracted listeners to new register function and placed registry function in onEnterEnd
 	--Also placed an unregister function in onExitBegin
@@ -26,8 +27,7 @@ function Button:init(upState, downState)
 end
 
 function Button:onEnterEnd()
-	-- set the visual state as "up"
-	self:updateVisualState(false)
+	
 	self:registerListeners()
 end
 
