@@ -146,34 +146,22 @@ end
 function DoubleScriptObject:onMouseDown(event)
 	if self.dataSet1IncrementButton:hitTestPoint(event.x, event.y) then
 		self.focus = "I1"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	elseif self.dataSet1DecrementButton:hitTestPoint(event.x, event.y) then
 		self.focus = "D1"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	elseif self.dataSet2IncrementButton:hitTestPoint(event.x, event.y) then
 		self.focus = "I2"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	elseif self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then
 		self.focus = "D2"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	elseif self.removeButton:hitTestPoint(event.x, event.y) then
 		self.focus = "R"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	elseif self.moveButton:hitTestPoint(event.x, event.y) then
 		self.focus = "M"
-		--self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	end
 end
 
@@ -181,38 +169,33 @@ function DoubleScriptObject:onMouseMove(event)
 	if self.focus == "I1" then
 		if not self.dataSet1IncrementButton:hitTestPoint(event.x, event.y) then	
 			self.focus = false
-			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
 	elseif self.focus == "D1" then
 		if not self.dataSet1DecrementButton:hitTestPoint(event.x, event.y) then	
 			self.focus = false
-			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
 	elseif self.focus == "I2" then
 		if not self.dataSet2IncrementButton:hitTestPoint(event.x, event.y) then	
 			self.focus = false
-			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
 	elseif self.focus == "D2" then
 		if not self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then	
 			self.focus = false
-			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
 	elseif self.focus == "R" then
-		if not self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then	
+		if not self.removeButton:hitTestPoint(event.x, event.y) then	
 			self.focus = false
-			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
 	elseif self.focus == "M" then
-		if not self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then	
-			self.focus = false
-			--self:updateVisualState(false)
+		if not self:hitTestPoint(event.x, event.y) then	
 			event:stopPropagation()
+			self.parent:moveCommand(event.y)
+			--print("X: " .. event.x .. " Y:" .. event.y)
 		end
 	end
 end
@@ -220,40 +203,33 @@ end
 function DoubleScriptObject:onMouseUp(event)
 	if self.focus == "I1" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self:incrementDataset1()
 	elseif self.focus == "D1" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self:decrementDataset1()
 	elseif self.focus == "I2" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self:incrementDataset2()
 	elseif self.focus == "D2" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self:decrementDataset2()
 	elseif self.focus == "R" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
 		self.parent:removeCommand(self)
 	elseif self.focus == "M" then
 		self.focus = false
-		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
-		self:decrementDataset2()
 	end
 end
 

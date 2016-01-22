@@ -130,6 +130,48 @@ function StatementBox:removeCommand(command)
 	end
 end
 
+function StatementBox:moveCommand(y)
+	local scriptUpX, scriptUpY = self:localToGlobal(self.scriptUpButton:getX(), self.scriptUpButton:getY())
+	local scriptDownX, scriptDownY = self:localToGlobal(self.scriptDownButton:getX(), self.scriptDownButton:getY())
+	local scriptButtonUpBottom = scriptUpY + self.scriptUpButton:getHeight()
+	if y < scriptButtonUpBottom then
+		if self.scrollCount > 0 then
+			self.scrollCount = self.scrollCount - 1
+		end
+		self:scriptCountCheck(true)
+	elseif y > scriptDownY then
+		if self.scrollCount < table.getn(self.script) - 4 then
+			self.scrollCount = self.scrollCount + 1
+		end
+		self:scriptCountCheck(true)
+	elseif self.s1 then
+		local s1X, s1Y = self:localToGlobal(self.s1:getX(), self.s1:getY())
+		local s1Bottom = s1Y + self.s1:getHeight()
+		if y < s1Bottom and y > scriptButtonUpBottom then
+			
+		end
+	elseif self.s2 then
+		local s2X, s2Y = self:localToGlobal(self.s2:getX(), self.s2:getY())
+		local s2Bottom = s2Y + self.s2:getHeight()
+		if y < s2Bottom and y > s1Bottom then
+			
+		end
+	elseif self.s3 then
+		local s3X, s3Y = self:localToGlobal(self.s3:getX(), self.s3:getY())
+		local s3Bottom = s3Y + self.s3:getHeight()
+		if y < s3Bottom and y > s2Bottom then
+			
+		end
+	elseif self.s4 then
+		local s4X, s4Y = self:localToGlobal(self.s4:getX(), self.s4:getY())
+		local s4Bottom = s4Y + self.s4:getHeight()
+		if y < s4Bottom and y > s3Bottom then
+			
+		end
+	end
+	
+end
+
 local ScriptArea = Core.class(SceneObject)
 
 function ScriptArea:init()
