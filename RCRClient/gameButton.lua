@@ -5,6 +5,7 @@ function GameButton:init(upState, downState, func, action)
 	self.action = action
 	self.buttonNameField = TextField.new(font, self.action)
 	self.buttonNameField:setPosition((self:getWidth() / 2) - (self.buttonNameField:getWidth() / 2), (self:getHeight() / 2) + (self.buttonNameField:getHeight() / 2))
+	self:addChild(self.buttonNameField)
 end
 
 function GameButton:onMouseDown(event)
