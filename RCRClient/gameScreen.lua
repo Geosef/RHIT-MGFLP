@@ -82,7 +82,7 @@ function StatementBox:scriptCountCheck(needScroll)
 end
 
 function StatementBox:addNewScript(name)
-	local newCommand = DoubleScriptObject.new(name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
+	local newCommand = DoubleScriptObject.new(self, name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
 	table.insert(self.script, newCommand)
 	print(table.getn(self.script))
 	if not self.s1 then
@@ -116,6 +116,17 @@ function StatementBox:drawScript()
 	if self.s4 then
 		self.s4:setPosition((self:getWidth() / 2) - (self.s4:getWidth() / 2), self.s3:getY() + self.s3:getHeight() + scriptPadding)
 		self:addChild(self.s4)
+	end
+end
+
+function StatementBox:removeCommand(command)
+	local index = inTable(self.script, command)
+	if index then
+		removedCommand = table.remove(self.script, index)
+		if self.scrollCount > 0 then
+			self.scrollCount = self.scrollCount - 1
+		end
+		self:scriptCountCheck(true)
 	end
 end
 

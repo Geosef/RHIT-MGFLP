@@ -95,7 +95,8 @@ end
 DoubleScriptObject = Core.class(ScriptObject)
 local doubleScriptButtonWidth = 67.5
 
-function DoubleScriptObject:init(name, data1, data2)
+function DoubleScriptObject:init(parent, name, data1, data2)
+	self.parent = parent
 	self.image = Bitmap.new(Texture.new("images/ScriptObject.png"))
 	self:addChild(self.image)
 	self.name = name
@@ -111,10 +112,14 @@ function DoubleScriptObject:setUpScriptButtons()
 	self.dataSet1DecrementButton = self:makeHitArea(doubleScriptButtonWidth, scriptButtonHeight, 67.5, 50)
 	self.dataSet2IncrementButton = self:makeHitArea(doubleScriptButtonWidth, scriptButtonHeight, 202.5, 25)
 	self.dataSet2DecrementButton = self:makeHitArea(doubleScriptButtonWidth, scriptButtonHeight, 202.5, 50)
+	self.removeButton = self:makeHitArea(25, 25, 0, 0)
+	self.moveButton = self:makeHitArea(25, 25, 245, 0)
 	self:addChild(self.dataSet1IncrementButton)
 	self:addChild(self.dataSet1DecrementButton)
 	self:addChild(self.dataSet2IncrementButton)
 	self:addChild(self.dataSet2DecrementButton)
+	self:addChild(self.removeButton)
+	self:addChild(self.moveButton)
 	self:setTextBoxes()
 end
 
@@ -159,6 +164,16 @@ function DoubleScriptObject:onMouseDown(event)
 		--self:updateVisualState(true)
 		event:stopPropagation()
 		--print(self.name)
+	elseif self.removeButton:hitTestPoint(event.x, event.y) then
+		self.focus = "R"
+		--self:updateVisualState(true)
+		event:stopPropagation()
+		--print(self.name)
+	elseif self.moveButton:hitTestPoint(event.x, event.y) then
+		self.focus = "M"
+		--self:updateVisualState(true)
+		event:stopPropagation()
+		--print(self.name)
 	end
 end
 
@@ -187,6 +202,18 @@ function DoubleScriptObject:onMouseMove(event)
 			--self:updateVisualState(false)
 			event:stopPropagation()
 		end
+	elseif self.focus == "R" then
+		if not self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			--self:updateVisualState(false)
+			event:stopPropagation()
+		end
+	elseif self.focus == "M" then
+		if not self.dataSet2DecrementButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			--self:updateVisualState(false)
+			event:stopPropagation()
+		end
 	end
 end
 
@@ -210,6 +237,18 @@ function DoubleScriptObject:onMouseUp(event)
 		event:stopPropagation()
 		self:incrementDataset2()
 	elseif self.focus == "D2" then
+		self.focus = false
+		--self:updateVisualState(false)
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self:decrementDataset2()
+	elseif self.focus == "R" then
+		self.focus = false
+		--self:updateVisualState(false)
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self.parent:removeCommand(self)
+	elseif self.focus == "M" then
 		self.focus = false
 		--self:updateVisualState(false)
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
