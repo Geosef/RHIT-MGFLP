@@ -44,6 +44,8 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/board-rat-icon.png"/>
+  <file source="images/board-cat-icon.png"/>
   <file source="images/joinGameText.png"/>
   <folder name="LoadingSpinner">
    <file source="images/LoadingSpinner/Spinner 12.png"/>

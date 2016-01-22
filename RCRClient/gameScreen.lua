@@ -1,6 +1,7 @@
 gameScreen = Core.class(BaseScreen)
 local padding = 12
 local scriptPadding = 10
+local spritePadding = 3
 
 local StatementBox = Core.class(SceneObject)
 
@@ -148,12 +149,23 @@ function CommandBox:initButtons()
 end
 
 function gameScreen:init()
-	--local titleBackground = Bitmap.new(Texture.new("images/background.png"))
-	--self:addChild(titleBackground)
 	local gameBoard = Bitmap.new(Texture.new("images/8x8-board.png"))
 	gameBoard:setScale(480/gameBoard:getWidth(), 480/gameBoard:getHeight())
 	gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - gameBoard:getHeight())
 	self:addChild(gameBoard)
+	
+	-- Add sprite images
+	local player1 = Bitmap.new(Texture.new("images/board-cat-icon.png"))
+	player1:setScale(60/player1:getWidth(), 60/player1:getHeight())
+	player1:setPosition(gameBoard:getX() + spritePadding, gameBoard:getY() + spritePadding)
+	self:addChild(player1)
+	
+	local player2 = Bitmap.new(Texture.new("images/board-rat-icon.png"))
+		player2:setScale(60/player2:getWidth(), 60/player2:getHeight())
+	player2:setPosition(gameBoard:getX() + gameBoard:getWidth() - player2:getWidth() - spritePadding,
+		gameBoard:getY() + gameBoard:getHeight() - player2:getHeight() - spritePadding)
+	self:addChild(player2)
+	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Game X"
 	self.statementBox = StatementBox.new()
