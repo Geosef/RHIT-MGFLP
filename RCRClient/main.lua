@@ -10,8 +10,6 @@ JSON = (loadfile "JSON.lua")()
 NET_ADAPTER = NetworkAdapter(multiplayerMode)
 --netAdapter:login()
 
-
-KEYBOARD = Keyboard.new()
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
 	["login"] = login,

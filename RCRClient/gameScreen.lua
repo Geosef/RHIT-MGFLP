@@ -151,6 +151,7 @@ function gameScreen:init()
 	--local titleBackground = Bitmap.new(Texture.new("images/background.png"))
 	--self:addChild(titleBackground)
 	local gameBoard = Bitmap.new(Texture.new("images/8x8-board.png"))
+	gameBoard:setScale(480/gameBoard:getWidth(), 480/gameBoard:getHeight())
 	gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - gameBoard:getHeight())
 	self:addChild(gameBoard)
 	-- Eventually sceneName will be set by the type of game
