@@ -13,8 +13,18 @@ function StatementBox:init()
 	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + padding)
 	self:addChild(self.resourceBox)
 	self.script = {}
+	self.visibleScript = {}
 	self.scrollCount = 0
 	self:initScriptControlButtons()
+	self.movementLine = Shape.new()
+	self.movementLine:setFillStyle(Shape.SOLID, 0xff0000, 2)
+	self.movementLine:beginPath()
+	self.movementLine:moveTo(0,0)
+	self.movementLine:lineTo(self:getWidth(), 0)
+	self.movementLine:lineTo(self:getWidth(), 1)
+	self.movementLine:lineTo(0, 1)
+	self.movementLine:lineTo(0, 0)
+	self.movementLine:endPath()
 end
 
 function StatementBox:initScriptControlButtons()
@@ -39,27 +49,17 @@ function StatementBox:initScriptControlButtons()
 	self:scriptCountCheck()
 end
 
-function StatementBox:scroll(scriptIndex)
+function StatementBox:scroll()
 	self:removeScript()
-	self.s1 = self.script[self.scrollCount+1]
-	self.s2 = self.script[self.scrollCount+2]
-	self.s3 = self.script[self.scrollCount+3]
-	self.s4 = self.script[self.scrollCount+4]
+	for i, v in ipairs(self.visibleScript) do
+		self.visibleScript[i] = self.script[self.scrollCount+i]
+	end
 	self:drawScript()
 end
 
 function StatementBox:removeScript()
-	if self.s1 then
-		self:removeChild(self.s1)
-	end
-	if self.s2 then
-		self:removeChild(self.s2)
-	end
-	if self.s3 then
-		self:removeChild(self.s3)
-	end
-	if self.s4 then
-		self:removeChild(self.s4)
+	for i, v in ipairs(self.visibleScript) do
+		self:removeChild(v)
 	end
 end
 
@@ -84,39 +84,28 @@ end
 function StatementBox:addNewScript(name)
 	local newCommand = DoubleScriptObject.new(self, name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
 	table.insert(self.script, newCommand)
-	print(table.getn(self.script))
-	if not self.s1 then
-		self.s1 = newCommand
-	elseif not self.s2 then
-		self.s2 = newCommand
-	elseif not self.s3 then
-		self.s3 = newCommand
-	elseif not self.s4 then
-		self.s4 = newCommand
+	if table.getn(self.visibleScript) < 4 then
+		table.insert(self.visibleScript, newCommand)
+		self:drawScript()
 	else
-		return
+		self.scrollCount = table.getn(self.script) - 4
+		self:scroll()
 	end
-	self:drawScript()
 	--print(name)
 end
 
 function StatementBox:drawScript()
-	if self.s1 then
-		self.s1:setPosition((self:getWidth() / 2) - (self.s1:getWidth() / 2), self.scriptUpButton:getY() + self.scriptUpButton:getHeight() + scriptPadding)
-		self:addChild(self.s1)
+	local containerLocation = self.scriptUpButton:getY() + self.scriptUpButton:getHeight()
+	for i, v in ipairs(self.visibleScript) do
+		v:setPosition((self:getWidth() / 2) - (v:getWidth() / 2), containerLocation + scriptPadding)
+		self:addChild(v)
+		containerLocation = v:getY() + v:getHeight()
 	end
-	if self.s2 then
-		self.s2:setPosition((self:getWidth() / 2) - (self.s2:getWidth() / 2), self.s1:getY() + self.s1:getHeight() + scriptPadding)
-		self:addChild(self.s2)
-	end
-	if self.s3 then
-		self.s3:setPosition((self:getWidth() / 2) - (self.s3:getWidth() / 2), self.s2:getY() + self.s2:getHeight() + scriptPadding)
-		self:addChild(self.s3)
-	end
-	if self.s4 then
-		self.s4:setPosition((self:getWidth() / 2) - (self.s4:getWidth() / 2), self.s3:getY() + self.s3:getHeight() + scriptPadding)
-		self:addChild(self.s4)
-	end
+end
+
+function StatementBox:redrawScript()
+	self:removeScript()
+	self:drawScript()
 end
 
 function StatementBox:removeCommand(command)
@@ -131,46 +120,78 @@ function StatementBox:removeCommand(command)
 end
 
 function StatementBox:moveCommand(y)
+	if self:contains(self.movementLine) then
+		self:removeChild(self.movementLine)
+	end
 	local scriptUpX, scriptUpY = self:localToGlobal(self.scriptUpButton:getX(), self.scriptUpButton:getY())
 	local scriptDownX, scriptDownY = self:localToGlobal(self.scriptDownButton:getX(), self.scriptDownButton:getY())
-	local scriptButtonUpBottom = scriptUpY + self.scriptUpButton:getHeight()
-	if y < scriptButtonUpBottom then
+	local scriptButtonUpMiddle = scriptUpY + (self.scriptUpButton:getHeight()/2)
+	local scriptButtonDownMiddle = scriptDownY + (self.scriptDownButton:getHeight()/2)
+	if y < scriptButtonUpMiddle then
 		if self.scrollCount > 0 then
 			self.scrollCount = self.scrollCount - 1
 		end
 		self:scriptCountCheck(true)
-	elseif y > scriptDownY then
+		return nil
+	elseif y > scriptButtonDownMiddle then
 		if self.scrollCount < table.getn(self.script) - 4 then
 			self.scrollCount = self.scrollCount + 1
 		end
 		self:scriptCountCheck(true)
-	elseif self.s1 then
-		local s1X, s1Y = self:localToGlobal(self.s1:getX(), self.s1:getY())
-		local s1Bottom = s1Y + self.s1:getHeight()
-		if y < s1Bottom and y > scriptButtonUpBottom then
-			
-		end
-	elseif self.s2 then
-		local s2X, s2Y = self:localToGlobal(self.s2:getX(), self.s2:getY())
-		local s2Bottom = s2Y + self.s2:getHeight()
-		if y < s2Bottom and y > s1Bottom then
-			
-		end
-	elseif self.s3 then
-		local s3X, s3Y = self:localToGlobal(self.s3:getX(), self.s3:getY())
-		local s3Bottom = s3Y + self.s3:getHeight()
-		if y < s3Bottom and y > s2Bottom then
-			
-		end
-	elseif self.s4 then
-		local s4X, s4Y = self:localToGlobal(self.s4:getX(), self.s4:getY())
-		local s4Bottom = s4Y + self.s4:getHeight()
-		if y < s4Bottom and y > s3Bottom then
-			
+		return nil
+	end
+	for i, v in ipairs(self.visibleScript) do
+		local vX, vY = self:localToGlobal(v:getX(), v:getY())
+		local vMiddle = vY + (v:getHeight()/2)
+		if y < vMiddle then	
+			self.movementLine:setPosition(0, v:getY() - (scriptPadding/2))
+			self:addChild(self.movementLine)
+			return i
 		end
 	end
-	
+	if y < scriptButtonDownMiddle then
+		local bottomScript = self.visibleScript[table.getn(self.visibleScript)]
+		self.movementLine:setPosition(0, bottomScript:getY() + bottomScript:getHeight() + (scriptPadding/2))
+		self:addChild(self.movementLine)
+		return table.getn(self.visibleScript) + 1
+	end
 end
+
+function StatementBox:replaceCommand(targetCommand, moveRegion)
+	if self:contains(self.movementLine) then
+		self:removeChild(self.movementLine)
+	end
+	scriptIndex = inTable(self.script, targetCommand)
+	if not moveRegion then
+		return
+	end
+	if moveRegion == 1 then
+		if self.visibleScript[moveRegion] == targetCommand then
+			return
+		end
+	elseif moveRegion == 2 then
+		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
+			return
+		end
+	elseif moveRegion == 3 then
+		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
+			return
+		end
+	elseif moveRegion == 4 then
+		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
+			return
+		end
+	elseif moveRegion == 5 then
+		if self.visibleScript[moveRegion-1] == targetCommand then
+			return
+		end
+		local removedCommand = table.remove(self.script, scriptIndex)
+		table.insert(self.script, removedCommand)
+	end
+	local removedCommand = table.remove(self.script, scriptIndex)
+	table.insert(self.script, self.scrollCount + moveRegion, removedCommand)
+	self:scroll()
+end	
 
 local ScriptArea = Core.class(SceneObject)
 

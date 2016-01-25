@@ -194,8 +194,7 @@ function DoubleScriptObject:onMouseMove(event)
 	elseif self.focus == "M" then
 		if not self:hitTestPoint(event.x, event.y) then	
 			event:stopPropagation()
-			self.parent:moveCommand(event.y)
-			--print("X: " .. event.x .. " Y:" .. event.y)
+			self.moveLocation = self.parent:moveCommand(event.y)
 		end
 	end
 end
@@ -230,6 +229,7 @@ function DoubleScriptObject:onMouseUp(event)
 		self.focus = false
 		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
 		event:stopPropagation()
+		self.parent:replaceCommand(self, self.moveLocation)
 	end
 end
 
