@@ -1,7 +1,8 @@
 <project>
- <properties windowWidth="0" orientation="1" osx_domain="giderosmobile.com" scaleMode="5" touchToMouse="1" logicalWidth="768" iosDevice="0" mouseTouchOrder="0" mouseToTouch="1" fps="60" encryptAssets="0" windowHeight="0" logicalHeight="1024" packageName="com.yourdomain.yourapp" assetsOnly="0" win_org="GiderosMobile" retinaDisplay="0" android_template="0" architecture="0" autorotation="0" win_domain="giderosmobile.com" encryptCode="0" osx_org="GiderosMobile">
+ <properties mouseToTouch="1" logicalWidth="768" assetsOnly="0" windowHeight="0" mouseTouchOrder="0" osx_org="GiderosMobile" packageName="com.yourdomain.yourapp" fps="60" architecture="0" logicalHeight="1024" orientation="1" win_domain="giderosmobile.com" encryptAssets="0" scaleMode="5" windowWidth="0" encryptCode="0" touchToMouse="1" autorotation="0" iosDevice="0" retinaDisplay="0" android_template="0" osx_domain="giderosmobile.com" win_org="GiderosMobile">
   <imageScales/>
  </properties>
+ <file source="game.lua"/>
  <file source="printer.lua"/>
  <file source="RCRBasePopup.lua"/>
  <file source="settings.lua"/>
@@ -100,43 +101,43 @@
  </folder>
  <file source="main.lua"/>
  <file source="textbox.lua"/>
- <dependency to="scenemanager.lua" from="RCRBasePopup.lua"/>
- <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
- <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
- <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
- <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
- <dependency to="sceneObject.lua" from="RCRBaseScreen.lua"/>
- <dependency to="util.lua" from="RCRBaseScreen.lua"/>
- <dependency to="RCRBasePopup.lua" from="acctSettings.lua"/>
- <dependency to="scenemanager.lua" from="button.lua"/>
- <dependency to="sceneObject.lua" from="button.lua"/>
- <dependency to="RCRBaseScreen.lua" from="createAccount.lua"/>
- <dependency to="button.lua" from="customButton.lua"/>
- <dependency to="customButton.lua" from="gameButton.lua"/>
- <dependency to="customButton.lua" from="gameScreen.lua"/>
- <dependency to="RCRBaseScreen.lua" from="gameScreen.lua"/>
- <dependency to="util.lua" from="gameScreen.lua"/>
- <dependency to="RCRBaseScreen.lua" from="gameWait.lua"/>
- <dependency to="customButton.lua" from="login.lua"/>
- <dependency to="RCRBaseScreen.lua" from="login.lua"/>
- <dependency to="radiobutton.lua" from="mainmenu.lua"/>
- <dependency to="RCRBaseScreen.lua" from="mainmenu.lua"/>
- <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/url.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/ftp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket.lua" from="networkadapter.lua"/>
- <dependency to="http/mime.lua" from="networkadapter.lua"/>
- <dependency to="http/ltn12.lua" from="networkadapter.lua"/>
- <dependency to="util.lua" from="networkadapter.lua"/>
- <dependency to="JSON.lua" from="networkadapter.lua"/>
- <dependency to="customButton.lua" from="radiobutton.lua"/>
- <dependency to="scenemanager.lua" from="sceneObject.lua"/>
- <dependency to="easing.lua" from="scenemanager.lua"/>
- <dependency to="sceneObject.lua" from="scriptObject.lua"/>
- <dependency to="RCRBasePopup.lua" from="settings.lua"/>
- <dependency to="RCRBaseScreen.lua" from="splash.lua"/>
- <dependency to="sceneObject.lua" from="splash.lua"/>
- <dependency to="util.lua" from="main.lua"/>
+ <dependency from="RCRBasePopup.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBasePopup.lua" to="scenemanager.lua"/>
+ <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="util.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="customButton.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="textbox.lua"/>
+ <dependency from="acctSettings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="button.lua" to="sceneObject.lua"/>
+ <dependency from="button.lua" to="scenemanager.lua"/>
+ <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="customButton.lua" to="button.lua"/>
+ <dependency from="gameButton.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="util.lua"/>
+ <dependency from="gameScreen.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="gameWait.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="login.lua" to="customButton.lua"/>
+ <dependency from="login.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="mainmenu.lua" to="radiobutton.lua"/>
+ <dependency from="mainmenu.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/http.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/smtp.lua"/>
+ <dependency from="networkadapter.lua" to="util.lua"/>
+ <dependency from="networkadapter.lua" to="JSON.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/tp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/url.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket.lua"/>
+ <dependency from="networkadapter.lua" to="http/mime.lua"/>
+ <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="radiobutton.lua" to="customButton.lua"/>
+ <dependency from="sceneObject.lua" to="scenemanager.lua"/>
+ <dependency from="scenemanager.lua" to="easing.lua"/>
+ <dependency from="scriptObject.lua" to="sceneObject.lua"/>
+ <dependency from="settings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="splash.lua" to="sceneObject.lua"/>
+ <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="main.lua" to="util.lua"/>
 </project>
