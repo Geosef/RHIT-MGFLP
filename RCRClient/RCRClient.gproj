@@ -18,40 +18,20 @@
   <file source="http/socket/tp.lua"/>
   <file source="http/socket/url.lua"/>
   <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
+ <folder name="fonts">
+  <file source="fonts/arial-rounded.TTF"/>
  </folder>
  <folder name="http">
   <file source="http/socket.lua"/>
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
  </folder>
- <file source="networkadapter.lua"/>
- <file source="JSON.lua"/>
- <folder name="fonts">
-  <file source="fonts/arial-rounded.TTF"/>
- </folder>
- <file source="keyboard.lua"/>
- <folder name="scenes">
-  <file source="joiningGame.lua"/>
-  <file source="acctSettings.lua"/>
-  <file source="RCRBaseScreen.lua"/>
-  <file source="gameScreen.lua"/>
-  <file source="gameWait.lua"/>
-  <file source="mainmenu.lua"/>
-  <file source="createAccount.lua"/>
-  <file source="login.lua"/>
-  <file source="splash.lua"/>
- </folder>
- <file source="button.lua"/>
- <file source="customButton.lua"/>
- <file source="gameButton.lua"/>
- <file source="radiobutton.lua"/>
- <file source="easing.lua"/>
- <file source="scenemanager.lua"/>
  <folder name="images">
   <file source="images/mute-button-up.png"/>
   <file source="images/mute-button-down.png"/>
   <file source="images/about-button-up.png"/>
   <file source="images/about-button-down.png"/>
+  <file source="images/blank-box.png"/>
   <file source="images/barthick.png"/>
   <file source="images/bevel.png"/>
   <file source="images/board-rat-icon.png"/>
@@ -108,7 +88,47 @@
   <file source="images/checked.png"/>
   <file source="images/joinGameText.png"/>
  </folder>
+ <folder name="scenes">
+  <file source="joiningGame.lua"/>
+  <file source="acctSettings.lua"/>
+  <file source="RCRBaseScreen.lua"/>
+  <file source="gameScreen.lua"/>
+  <file source="gameWait.lua"/>
+  <file source="mainmenu.lua"/>
+  <file source="createAccount.lua"/>
+  <file source="login.lua"/>
+  <file source="splash.lua"/>
+ </folder>
+ <folder name="socket">
+  <file excludeFromExecution="1" source="http/socket/http.lua"/>
+  <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
+  <file source="http/socket/tp.lua"/>
+  <file source="http/socket/url.lua"/>
+  <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
+ </folder>
+ <file source="JSON.lua"/>
+ <file source="RCRBasePopup.lua"/>
+ <file source="button.lua"/>
+ <file source="collectible.lua"/>
+ <file source="customButton.lua"/>
+ <file source="easing.lua"/>
+ <file source="gameButton.lua"/>
+ <file source="grid.lua"/>
+ <file source="hslider.lua"/>
+ <file source="keyboard.lua"/>
+ <file source="list.lua"/>
  <file source="main.lua"/>
+ <file source="music.lua"/>
+ <file source="music.mp3"/>
+ <file source="networkadapter.lua"/>
+ <file source="notifier.lua"/>
+ <file source="player.lua"/>
+ <file source="printer.lua"/>
+ <file source="radiobutton.lua"/>
+ <file source="sceneObject.lua"/>
+ <file source="scenemanager.lua"/>
+ <file source="scriptObject.lua"/>
+ <file source="settings.lua"/>
  <file source="textbox.lua"/>
  <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
  <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
@@ -149,4 +169,44 @@
  <dependency to="RCRBaseScreen.lua" from="splash.lua"/>
  <dependency to="sceneObject.lua" from="splash.lua"/>
  <dependency to="util.lua" from="main.lua"/>
+ <file source="util.lua"/>
+ <dependency from="RCRBasePopup.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBasePopup.lua" to="scenemanager.lua"/>
+ <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="sceneObject.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="util.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="customButton.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="textbox.lua"/>
+ <dependency from="acctSettings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="button.lua" to="sceneObject.lua"/>
+ <dependency from="button.lua" to="scenemanager.lua"/>
+ <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="customButton.lua" to="button.lua"/>
+ <dependency from="gameButton.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="util.lua"/>
+ <dependency from="gameScreen.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="gameWait.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="login.lua" to="customButton.lua"/>
+ <dependency from="login.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="mainmenu.lua" to="radiobutton.lua"/>
+ <dependency from="mainmenu.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/http.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/smtp.lua"/>
+ <dependency from="networkadapter.lua" to="util.lua"/>
+ <dependency from="networkadapter.lua" to="JSON.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/tp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/url.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket.lua"/>
+ <dependency from="networkadapter.lua" to="http/mime.lua"/>
+ <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="radiobutton.lua" to="customButton.lua"/>
+ <dependency from="sceneObject.lua" to="scenemanager.lua"/>
+ <dependency from="scenemanager.lua" to="easing.lua"/>
+ <dependency from="scriptObject.lua" to="sceneObject.lua"/>
+ <dependency from="settings.lua" to="RCRBasePopup.lua"/>
+ <dependency from="splash.lua" to="sceneObject.lua"/>
+ <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="main.lua" to="util.lua"/>
 </project>
