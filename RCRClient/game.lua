@@ -4,11 +4,10 @@ local M = {}
 
 local gridMod = require('grid')
 local playerMod = require('player')
-local engineMod = require('inputengine')
-local buttonMod = require('inputbutton')
-local commandMod = require('command')
-local collectibleMod = require('collectible')
-local musicMod = require('music')
+--local engineMod = require('inputengine')
+--local buttonMod = require('inputbutton')
+--local commandMod = require('command')
+--local collectibleMod = require('collectible')
 
 local Game = {}
 Game.__index = Game
@@ -50,10 +49,6 @@ end
 
 function Game:setupPanel()
 	print("Game panel not implemented!")
-end
-
-function Game:setSound()
-	print("Sound not implemented!")
 end
 
 function Game:sendMoves()
@@ -106,15 +101,6 @@ function CollectGame(netAdapter, hostBool)
 		self.maxPlayerMoves = 8
 		self.player1 = playerMod.CollectPlayer(self.grid, 1, self.maxPlayerMoves, testing)
 		self.player2 = playerMod.CollectPlayer(self.grid, 2, self.maxPlayerMoves, testing)
-		self.alien = playerMod.Alien(self.grid, self.maxPlayerMoves + 1, gameState.celldata.alienStart, testing)
-	end
-	
-	local setSound = function(testing)
-		if testing then
-			return
-		end
-		local music = musicMod.Music.new("audio/music.mp3")
-		--music:on()
 	end
 	
 	local setupPanel = function(numButtons)
@@ -141,7 +127,7 @@ function CollectGame(netAdapter, hostBool)
 		
 		self.goButton = Button.new(buttonImage, buttonImage, function()
 			--self:reset() 
-			if not (self.player1.getAction() or self.player2.getAction() or self.alien.getAction()) then
+			if not (self.player1.getAction() or self.player2.getAction() then
 				self:sendMoves()
 			end
 			self.engine:clearBuffer()
@@ -173,18 +159,12 @@ function CollectGame(netAdapter, hostBool)
 			local eventObj = eventObjConst(self.player2, 1, index)
 			table.insert(self.player2.loadedMoves, eventObj)
 		end
-		for index,value in ipairs(events.alien) do
-			local eventObjConst = commandMod.getEvent(value)
-			local eventObj = eventObjConst(self.alien, 1, index)
-			table.insert(self.alien.loadedMoves, eventObj)
-		end
 		self.resetTurn()
 	end
 	
 	local resetTurn = function()
 		self.player1.setAction(true)
 		self.player2.setAction(true)
-		self.alien.setAction(true)
 		self.player1.endTurn()
 		self.player2.endTurn()
 	end
@@ -204,12 +184,6 @@ function CollectGame(netAdapter, hostBool)
 		if p2ActionBefore and not p2ActionAfter then
 			finished[2] = true
 		end
-		local alienActionBefore = self.alien.getAction()
-		self.alien.update()
-		local alienActionAfter = self.alien.getAction()
-		if alienActionBefore and not alienActionAfter then
-			finished[3] = true
-		end
 		if finished[1] and finished[2] and finished[3] then
 			finished = {false, false, false}
 			self.idle = true
@@ -226,7 +200,6 @@ function CollectGame(netAdapter, hostBool)
 		self.grid.destroy()
 		self.player1.destroy()
 		self.player2.destroy()
-		self.alien.destroy()
 		
 		
 		self.rightButton:destroy()
@@ -248,7 +221,6 @@ function CollectGame(netAdapter, hostBool)
 		self.grid.show()
 		self.player1.show()
 		self.player2.show()
-		self.alien.show()
 		
 		self.rightButton:show()
 		self.downButton:show()
@@ -274,8 +246,7 @@ function CollectGame(netAdapter, hostBool)
 	local updateLocations = function()
 		local locations = {
 		p1={x=self.player1.getX(), y=self.player1.getY()},
-		p2={x=self.player2.getX(), y=self.player2.getY()},
-		alien={x=self.alien.getX(), y=self.alien.getY()}
+		p2={x=self.player2.getX(), y=self.player2.getY()}
 		}
 		local scores = {self.player1.getScore(), self.player2.getScore()}
 		self.netAdapter:updateLocations(locations, scores)
@@ -349,7 +320,6 @@ function CollectGame(netAdapter, hostBool)
 	--setupGrid("images/dirtcell.png", gameState, false)
 	--setupPlayers(gameState, false)
 	self:setupEngine(8, false)
-	setSound(false)
 	
 	self.updateLocations = updateLocations
 	self.recvUpdateLocations = recvUpdateLocations
