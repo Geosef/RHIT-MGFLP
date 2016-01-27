@@ -2,50 +2,14 @@
  <properties touchToMouse="1" iosDevice="0" encryptCode="0" assetsOnly="0" autorotation="0" retinaDisplay="0" win_domain="giderosmobile.com" mouseToTouch="1" logicalWidth="768" orientation="1" mouseTouchOrder="0" packageName="com.yourdomain.yourapp" windowHeight="0" fps="60" windowWidth="0" scaleMode="5" android_template="0" win_org="GiderosMobile" logicalHeight="1024" osx_org="GiderosMobile" architecture="0" osx_domain="giderosmobile.com" encryptAssets="0">
   <imageScales/>
  </properties>
- <file source="music.mp3"/>
- <file source="music.lua"/>
- <file source="hslider.lua"/>
- <file source="printer.lua"/>
- <file source="RCRBasePopup.lua"/>
- <file source="settings.lua"/>
- <file source="scriptObject.lua"/>
- <file source="sceneObject.lua"/>
- <file source="util.lua"/>
- <folder name="socket">
-  <file excludeFromExecution="1" source="http/socket/http.lua"/>
-  <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
-  <file source="http/socket/tp.lua"/>
-  <file source="http/socket/url.lua"/>
-  <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
+ <folder name="fonts">
+  <file source="fonts/arial-rounded.TTF"/>
  </folder>
  <folder name="http">
   <file source="http/socket.lua"/>
   <file source="http/mime.lua"/>
   <file source="http/ltn12.lua"/>
  </folder>
- <file source="networkadapter.lua"/>
- <file source="JSON.lua"/>
- <folder name="fonts">
-  <file source="fonts/arial-rounded.TTF"/>
- </folder>
- <file source="keyboard.lua"/>
- <folder name="scenes">
-  <file source="joiningGame.lua"/>
-  <file source="acctSettings.lua"/>
-  <file source="RCRBaseScreen.lua"/>
-  <file source="gameScreen.lua"/>
-  <file source="gameWait.lua"/>
-  <file source="mainmenu.lua"/>
-  <file source="createAccount.lua"/>
-  <file source="login.lua"/>
-  <file source="splash.lua"/>
- </folder>
- <file source="button.lua"/>
- <file source="customButton.lua"/>
- <file source="gameButton.lua"/>
- <file source="radiobutton.lua"/>
- <file source="easing.lua"/>
- <file source="scenemanager.lua"/>
  <folder name="images">
   <file source="images/blank-box.png"/>
   <file source="images/barthick.png"/>
@@ -104,8 +68,49 @@
   <file source="images/checked.png"/>
   <file source="images/joinGameText.png"/>
  </folder>
+ <folder name="scenes">
+  <file source="joiningGame.lua"/>
+  <file source="acctSettings.lua"/>
+  <file source="RCRBaseScreen.lua"/>
+  <file source="gameScreen.lua"/>
+  <file source="gameWait.lua"/>
+  <file source="mainmenu.lua"/>
+  <file source="createAccount.lua"/>
+  <file source="login.lua"/>
+  <file source="splash.lua"/>
+ </folder>
+ <folder name="socket">
+  <file excludeFromExecution="1" source="http/socket/http.lua"/>
+  <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
+  <file source="http/socket/tp.lua"/>
+  <file source="http/socket/url.lua"/>
+  <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
+ </folder>
+ <file source="JSON.lua"/>
+ <file source="RCRBasePopup.lua"/>
+ <file source="button.lua"/>
+ <file source="collectible.lua"/>
+ <file source="customButton.lua"/>
+ <file source="easing.lua"/>
+ <file source="gameButton.lua"/>
+ <file source="grid.lua"/>
+ <file source="hslider.lua"/>
+ <file source="keyboard.lua"/>
+ <file source="list.lua"/>
  <file source="main.lua"/>
+ <file source="music.lua"/>
+ <file source="music.mp3"/>
+ <file source="networkadapter.lua"/>
+ <file source="notifier.lua"/>
+ <file source="player.lua"/>
+ <file source="printer.lua"/>
+ <file source="radiobutton.lua"/>
+ <file source="sceneObject.lua"/>
+ <file source="scenemanager.lua"/>
+ <file source="scriptObject.lua"/>
+ <file source="settings.lua"/>
  <file source="textbox.lua"/>
+ <file source="util.lua"/>
  <dependency from="RCRBasePopup.lua" to="sceneObject.lua"/>
  <dependency from="RCRBasePopup.lua" to="scenemanager.lua"/>
  <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
