@@ -1,8 +1,8 @@
 -- program is being exported under the TSU exception
 
-login = Core.class(BaseScreen)
+loginScreen = Core.class(BaseScreen)
 
-function login:init()
+function loginScreen:init()
 	self.sceneName = "Login"
 	local font = TTFont.new("fonts/arial-rounded.ttf", 60)
 
@@ -20,6 +20,7 @@ function login:init()
 	local emailTB = TextBox.new({fontSize = 60, width = 600, height = 100})
 	emailTB:setPosition(350, 275)
 	self:addChild(emailTB)
+	self.emailTB = emailTB
 	
 	-- Add passowrd text
 	local emailText = TextField.new(font, "Password")
@@ -30,6 +31,7 @@ function login:init()
 	local passwordTB = TextBox.new({fontSize = 60, width = 600, height = 100, secure = true})
 	passwordTB:setPosition(350, 400)
 	self:addChild(passwordTB)
+	self.passwordTB = passwordTB
 	
 	-- Create login image
 	local loginButtonUp = Bitmap.new(Texture.new("images/loginButtonUp.png"))
@@ -37,21 +39,7 @@ function login:init()
 	
 	-- Create login button
 	local loginClick = CustomButton.new(loginButtonUp, loginButtonDown, function() 
-		if NET_ADAPTER.on then
-			NET_ADAPTER:login(emailTB:getText(), passwordTB:getText(), function(res)
-				if res.success then
-					print('LOGIN WORKED!!')
-					sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
-					{userData = {email=emailTB:getText(), password=passwordTB:getText()}})
-				else
-					print('handle in login screen, login failed')
-					emailTB:setText("")
-					passwordTB:setText("")
-				end
-			end)
-		else
-			sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
-		end
+			self:login()
 	end)
 	loginClick:setPosition(347, 515)
 	self:addChild(loginClick)
@@ -67,11 +55,43 @@ function login:init()
 	createClick:setPosition(700, 515)
 	self:addChild(createClick)
 	
-	--self:addEventListener("enterEnd", self.onEnterEnd)
-	--self:addEventListener("exitBegin", self.onExitBegin, self)
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
-function login:onEnterEnd()
+function loginScreen:login()
+	if NET_ADAPTER.on then
+		NET_ADAPTER:registerCallback('Login', function(data)
+			if data.success then
+				print('Logged in')
+				NET_ADAPTER:unregisterCallback('Login')
+				sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack,
+				{userData = {email=self.emailTB:getText(), password=self.passwordTB:getText()}})
+			else
+				print('Login failed')
+				self.emailTB:setText("")
+				self.passwordTB:setText("")
+			end
+		end)
+		
+		local loginPacket = {}
+		loginPacket.type = 'Login'
+		loginPacket.username = self.emailTB:getText()
+		loginPacket.password = self.passwordTB:getText()
+		
+		NET_ADAPTER:sendData(loginPacket)
+		
+	else
+		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
+	end
+end
+
+function loginScreen:onEnterEnd()
+	
+end
+
+function loginScreen:onExitBegin()
+	
 end
 
 --[[

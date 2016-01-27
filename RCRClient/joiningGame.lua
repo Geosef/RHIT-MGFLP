@@ -12,7 +12,15 @@ function joiningGame:init()
 end
 
 function joiningGame:onEnterEnd()
-	--NET_ADAPTER:connect()
+	NET_ADAPTER:registerCallback('Game Setup', function(data)
+		if data.success == true then
+			print('goto game')
+			sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+		else
+			print('got wrong packet')
+			print_r(data)
+		end
+	end)
 end
 
 function joiningGame:onExitBegin()

@@ -12,7 +12,7 @@ To add a new row of buttons for a game, just call self:addGame() and pass in the
 function gameSelect:init(mainMenu)
 	local game1Text = TextField.new(font, "Space Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
-	local midDiffText = TextField.new(font, "Normal")
+	local midDiffText = TextField.new(font, "Medium")
 	local hardDiffText = TextField.new(font, "Hard")
 	self.numRows = 1
 	self.rowVals = {easyDiffText:getHeight() + (spacing / 2) + game1Text:getHeight()}
@@ -20,17 +20,18 @@ function gameSelect:init(mainMenu)
 	self.secondCol = game1Text:getWidth() + spacing + (easyDiffText:getWidth() / 2)
 	self.thirdCol = self.secondCol + (easyDiffText:getWidth() / 2) + spacing + (midDiffText:getWidth() / 2)
 	self.fourthCol = self.thirdCol + (midDiffText:getWidth() / 2) + spacing + (hardDiffText:getWidth() / 2)
-	game1Text:setPosition(self.firstCol - (game1Text:getWidth() / 2), self.rowVals[self.numRows] - (game1Text:getHeight() / 2))
+	--game1Text:setPosition(self.firstCol - (game1Text:getWidth() / 2), self.rowVals[self.numRows] - (game1Text:getHeight() / 2))
 	easyDiffText:setPosition(self.secondCol - (easyDiffText:getWidth() / 2), 0)
 	midDiffText:setPosition(self.thirdCol - (midDiffText:getWidth() / 2), 0)
 	hardDiffText:setPosition(self.fourthCol - (hardDiffText:getWidth() / 2), 0)
-	self:addChild(game1Text)
+	--self:addChild(game1Text)
 	self:addChild(easyDiffText)
 	self:addChild(midDiffText)
 	self:addChild(hardDiffText)
 	self.buttonList = {}
 	self.checkedButtons = {}
-	self:addButtons(self.rowVals[self.numRows])
+	--self:addButtons(self.rowVals[self.numRows])
+	self:addGame("Space Collectors")
 	self:addGame("Zombie Survivors")
 	self:addGame("Game 3")
 	
@@ -76,9 +77,9 @@ function gameSelect:addButtons(rowVal, name)
 	local midButton = RadioButton.new(uncheckedBox2, checkedBox2, buttonFunc)
 	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3, buttonFunc)
 	local adjRowVal = rowVal - buttonWidth
-	easyButton.diff = "easy"
-	midButton.diff = "medium"
-	hardButton.diff = "hard"
+	easyButton.diff = "Easy"
+	midButton.diff = "Medium"
+	hardButton.diff = "Hard"
 	easyButton.game = name
 	midButton.game = name
 	hardButton.game = name
@@ -139,7 +140,7 @@ function mainMenu:init(params)
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
 		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
+		--sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
@@ -154,9 +155,30 @@ function mainMenu:sendSelected(checkedButtons)
 		choice.diff = v.diff
 		table.insert(choices, choice)
 	end
-	NET_ADAPTER:browseGames(choices, function(res)
-		self:receiveBrowseResponse(res)
+	print_r(choices)
+	local packet = {}
+	packet.type = 'Browse Games'
+	packet.choices = choices
+	
+	NET_ADAPTER:registerCallback('Browse Games', function(data)
+		NET_ADAPTER:unregisterCallback('Browse Games')
+		if data.success then
+			sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
+		else
+			sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
+		end
 	end)
+	
+	NET_ADAPTER:registerCallback('Game Setup', function(data)
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack, 
+		{userData=data})
+		NET_ADAPTER:unregisterCallback('Game Setup')
+	end)
+	
+	NET_ADAPTER:sendData(packet)
+	--[[NET_ADAPTER:browseGames(choices, function(res)
+		self:receiveBrowseResponse(res)
+	end)]]
 end
 
 function mainMenu:receiveBrowseResponse(response)
@@ -165,6 +187,7 @@ function mainMenu:receiveBrowseResponse(response)
 		--goToJoiningGame()
 		--switch to joining game screen while server processes game setup and removal from joinable games
 		--then show initial game screen
+		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack) 
 		
 		
 		
@@ -174,6 +197,7 @@ function mainMenu:receiveBrowseResponse(response)
 		--stay in searching for game, cancel if want to back out.
 		--if press cancel during game join too bad
 		--have lock on clienthandler for knowing whether you are joining a game or cancelling
+		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 	end
 		
 end

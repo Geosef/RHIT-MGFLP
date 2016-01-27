@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-TextBox = Core.class(Shape)
+TextBox = Core.class(SceneObject)
 
 --[[
 	width: width of TextBox
@@ -47,8 +47,11 @@ function TextBox:init(params)
 	
 	self:createTextField(params)
 	
-	self:addDialogListener(params)
+	--self:addDialogListener(params)
 	self.currentText = ""
+	
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
 function TextBox:setText(str)
@@ -88,8 +91,16 @@ function TextBox:onMouseDown(event)
 	
 end
 
+function TextBox:onEnterEnd()
+	self:addDialogListener(self.params)
+end
+
 function TextBox:addDialogListener(params)
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
+end
+
+function TextBox:onExitBegin()
+	self:removeListener()
 end
 
 function TextBox:removeListener()
