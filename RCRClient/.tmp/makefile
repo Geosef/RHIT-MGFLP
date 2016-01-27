@@ -1,6 +1,6 @@
 LUAC = "/Applications/Gideros Studio/Gideros Studio.app/Contents/Tools/luac"
 
-all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easing.lua.bin .tmp/radiobutton.lua.bin .tmp/customButton.lua.bin .tmp/button.lua.bin .tmp/splash.lua.bin .tmp/login.lua.bin .tmp/createAccount.lua.bin .tmp/mainmenu.lua.bin .tmp/textBoxScene.lua.bin .tmp/gameWait.lua.bin .tmp/gameScreen.lua.bin .tmp/RCRBaseScreen.lua.bin .tmp/acctSettings.lua.bin .tmp/keyboard.lua.bin .tmp/JSON.lua.bin .tmp/networkadapter.lua.bin .tmp/ltn12.lua.bin .tmp/mime.lua.bin .tmp/socket.lua.bin .tmp/ftp.lua.bin .tmp/url.lua.bin .tmp/tp.lua.bin .tmp/smtp.lua.bin .tmp/http.lua.bin .tmp/util.lua.bin .tmp/sceneObject.lua.bin .tmp/settings.lua.bin .tmp/RCRBasePopup.lua.bin .tmp/printer.lua.bin
+all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easing.lua.bin .tmp/radiobutton.lua.bin .tmp/gameButton.lua.bin .tmp/customButton.lua.bin .tmp/button.lua.bin .tmp/splash.lua.bin .tmp/login.lua.bin .tmp/createAccount.lua.bin .tmp/mainmenu.lua.bin .tmp/gameWait.lua.bin .tmp/gameScreen.lua.bin .tmp/RCRBaseScreen.lua.bin .tmp/acctSettings.lua.bin .tmp/joiningGame.lua.bin .tmp/keyboard.lua.bin .tmp/JSON.lua.bin .tmp/networkadapter.lua.bin .tmp/ltn12.lua.bin .tmp/mime.lua.bin .tmp/socket.lua.bin .tmp/ftp.lua.bin .tmp/url.lua.bin .tmp/tp.lua.bin .tmp/smtp.lua.bin .tmp/http.lua.bin .tmp/util.lua.bin .tmp/sceneObject.lua.bin .tmp/scriptObject.lua.bin .tmp/settings.lua.bin .tmp/RCRBasePopup.lua.bin .tmp/printer.lua.bin .tmp/init.lua.bin
 
 .tmp/textbox.lua.bin: textbox.lua
 	$(LUAC) -o ".tmp/textbox.lua.bin" "textbox.lua"
@@ -16,6 +16,9 @@ all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easin
 
 .tmp/radiobutton.lua.bin: radiobutton.lua
 	$(LUAC) -o ".tmp/radiobutton.lua.bin" "radiobutton.lua"
+
+.tmp/gameButton.lua.bin: gameButton.lua
+	$(LUAC) -o ".tmp/gameButton.lua.bin" "gameButton.lua"
 
 .tmp/customButton.lua.bin: customButton.lua
 	$(LUAC) -o ".tmp/customButton.lua.bin" "customButton.lua"
@@ -35,9 +38,6 @@ all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easin
 .tmp/mainmenu.lua.bin: mainmenu.lua
 	$(LUAC) -o ".tmp/mainmenu.lua.bin" "mainmenu.lua"
 
-.tmp/textBoxScene.lua.bin: textBoxScene.lua
-	$(LUAC) -o ".tmp/textBoxScene.lua.bin" "textBoxScene.lua"
-
 .tmp/gameWait.lua.bin: gameWait.lua
 	$(LUAC) -o ".tmp/gameWait.lua.bin" "gameWait.lua"
 
@@ -49,6 +49,9 @@ all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easin
 
 .tmp/acctSettings.lua.bin: acctSettings.lua
 	$(LUAC) -o ".tmp/acctSettings.lua.bin" "acctSettings.lua"
+
+.tmp/joiningGame.lua.bin: joiningGame.lua
+	$(LUAC) -o ".tmp/joiningGame.lua.bin" "joiningGame.lua"
 
 .tmp/keyboard.lua.bin: keyboard.lua
 	$(LUAC) -o ".tmp/keyboard.lua.bin" "keyboard.lua"
@@ -89,6 +92,9 @@ all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easin
 .tmp/sceneObject.lua.bin: sceneObject.lua
 	$(LUAC) -o ".tmp/sceneObject.lua.bin" "sceneObject.lua"
 
+.tmp/scriptObject.lua.bin: scriptObject.lua
+	$(LUAC) -o ".tmp/scriptObject.lua.bin" "scriptObject.lua"
+
 .tmp/settings.lua.bin: settings.lua
 	$(LUAC) -o ".tmp/settings.lua.bin" "settings.lua"
 
@@ -97,4 +103,7 @@ all: .tmp/textbox.lua.bin .tmp/main.lua.bin .tmp/scenemanager.lua.bin .tmp/easin
 
 .tmp/printer.lua.bin: printer.lua
 	$(LUAC) -o ".tmp/printer.lua.bin" "printer.lua"
+
+.tmp/init.lua.bin: init.lua
+	$(LUAC) -o ".tmp/init.lua.bin" "init.lua"
 
