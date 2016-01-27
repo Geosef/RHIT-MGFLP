@@ -4,7 +4,7 @@ local M = {}
 
 local gridMod = require('grid')
 local playerMod = require('player')
---local engineMod = require('inputengine')
+local engineMod = require('inputengine')
 --local buttonMod = require('inputbutton')
 --local commandMod = require('command')
 --local collectibleMod = require('collectible')
@@ -135,9 +135,7 @@ function CollectGame(netAdapter, hostBool)
 		self.goButton:setScale(scaleX, scaleY)
 		local xPos = numButtons * (WINDOW_WIDTH / (numButtons + 1))
 		local yPos = WINDOW_HEIGHT / 20
-		self.goButton:setPosition(xPos, yPos)
-		
-		
+		self.goButton:setPosition(xPos, yPos)	
 		
 	end
 	

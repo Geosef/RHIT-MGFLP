@@ -1,23 +1,7 @@
 <project>
- <properties fps="60" iosDevice="0" scaleMode="5" encryptCode="0" packageName="com.yourdomain.yourapp" architecture="0" autorotation="0" encryptAssets="0" mouseToTouch="1" win_domain="giderosmobile.com" touchToMouse="1" retinaDisplay="0" logicalWidth="768" android_template="0" orientation="1" logicalHeight="1024" mouseTouchOrder="0" assetsOnly="0" win_org="GiderosMobile" windowWidth="0" osx_org="GiderosMobile" osx_domain="giderosmobile.com" windowHeight="0">
+ <properties retinaDisplay="0" windowHeight="0" osx_org="GiderosMobile" orientation="1" architecture="0" windowWidth="0" win_domain="giderosmobile.com" touchToMouse="1" scaleMode="5" iosDevice="0" encryptCode="0" android_template="0" autorotation="0" encryptAssets="0" logicalHeight="1024" mouseTouchOrder="0" osx_domain="giderosmobile.com" win_org="GiderosMobile" fps="60" mouseToTouch="1" assetsOnly="0" logicalWidth="768" packageName="com.yourdomain.yourapp">
   <imageScales/>
  </properties>
- <file source="about.lua"/>
- <file source="music.mp3"/>
- <file source="music.lua"/>
- <file source="hslider.lua"/>
- <file source="printer.lua"/>
- <file source="RCRBasePopup.lua"/>
- <file source="settings.lua"/>
- <file source="scriptObject.lua"/>
- <file source="sceneObject.lua"/>
- <file source="util.lua"/>
- <folder name="socket">
-  <file source="http/socket/http.lua" excludeFromExecution="1"/>
-  <file source="http/socket/smtp.lua" excludeFromExecution="1"/>
-  <file source="http/socket/tp.lua"/>
-  <file source="http/socket/url.lua"/>
-  <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
  <folder name="fonts">
   <file source="fonts/arial-rounded.TTF"/>
  </folder>
@@ -27,15 +11,6 @@
   <file source="http/ltn12.lua"/>
  </folder>
  <folder name="images">
-  <file source="images/mute-button-up.png"/>
-  <file source="images/mute-button-down.png"/>
-  <file source="images/about-button-up.png"/>
-  <file source="images/about-button-down.png"/>
-  <file source="images/blank-box.png"/>
-  <file source="images/barthick.png"/>
-  <file source="images/bevel.png"/>
-  <file source="images/board-rat-icon.png"/>
-  <file source="images/board-cat-icon.png"/>
   <folder name="LoadingSpinner">
    <file source="images/LoadingSpinner/Spinner 12.png"/>
    <file source="images/LoadingSpinner/Spinner 11.png"/>
@@ -50,43 +25,52 @@
    <file source="images/LoadingSpinner/Spinner 2.png"/>
    <file source="images/LoadingSpinner/Spinner 1.png"/>
   </folder>
+  <file source="images/8x8-board.png"/>
+  <file source="images/NewRcrLogo.png"/>
+  <file source="images/RCRTopBar.png"/>
+  <file source="images/RcrLogoLarge.png"/>
   <file source="images/ScriptObject.png"/>
-  <file source="images/script-up-button-up.png"/>
-  <file source="images/script-up-button-down.png"/>
-  <file source="images/script-down-button-up.png"/>
-  <file source="images/script-down-button-down.png"/>
-  <file source="images/resource-box.png"/>
+  <file source="images/about-button-down.png"/>
+  <file source="images/about-button-up.png"/>
+  <file source="images/acctSettingsDown.png"/>
+  <file source="images/acctSettingsUp.png"/>
+  <file source="images/background.png"/>
+  <file source="images/barthick.png"/>
+  <file source="images/bevel.png"/>
+  <file source="images/blank-box.png"/>
+  <file source="images/board-cat-icon.png"/>
+  <file source="images/board-rat-icon.png"/>
+  <file source="images/checked.png"/>
+  <file source="images/closeSettingsButtonDown.png"/>
+  <file source="images/closeSettingsButtonUp.png"/>
+  <file source="images/command-box.png"/>
+  <file source="images/createAccountButtonDown.png"/>
+  <file source="images/createAccountButtonUp.png"/>
+  <file source="images/facebook-button-down.png"/>
+  <file source="images/facebook-button-up.png"/>
+  <file source="images/fadeoutOverlay.png"/>
   <file source="images/game-button-down.png"/>
   <file source="images/game-button.png"/>
-  <file source="images/acctSettingsUp.png"/>
-  <file source="images/acctSettingsDown.png"/>
-  <file source="images/closeSettingsButtonUp.png"/>
-  <file source="images/closeSettingsButtonDown.png"/>
-  <file source="images/settingsBox.png"/>
-  <file source="images/fadeoutOverlay.png"/>
-  <file source="images/waitingForOppText.png"/>
-  <file source="images/twitter-button-up.png"/>
-  <file source="images/twitter-button-down.png"/>
-  <file source="images/settings-button-up.png"/>
-  <file source="images/settings-button-down.png"/>
-  <file source="images/facebook-button-up.png"/>
-  <file source="images/facebook-button-down.png"/>
-  <file source="images/RCRTopBar.png"/>
-  <file source="images/command-box.png"/>
-  <file source="images/statement-box.png"/>
-  <file source="images/8x8-board.png"/>
-  <file source="images/submitButtonUp.png"/>
-  <file source="images/submitButtonDown.png"/>
-  <file source="images/RcrLogoLarge.png"/>
-  <file source="images/createAccountButtonUp.png"/>
-  <file source="images/createAccountButtonDown.png"/>
+  <file source="images/joinGameText.png"/>
   <file source="images/loginButtonDown.png"/>
   <file source="images/loginButtonUp.png"/>
-  <file source="images/NewRcrLogo.png"/>
-  <file source="images/background.png"/>
+  <file source="images/mute-button-down.png"/>
+  <file source="images/mute-button-up.png"/>
+  <file source="images/resource-box.png"/>
+  <file source="images/script-down-button-down.png"/>
+  <file source="images/script-down-button-up.png"/>
+  <file source="images/script-up-button-down.png"/>
+  <file source="images/script-up-button-up.png"/>
+  <file source="images/settings-button-down.png"/>
+  <file source="images/settings-button-up.png"/>
+  <file source="images/settingsBox.png"/>
+  <file source="images/statement-box.png"/>
+  <file source="images/submitButtonDown.png"/>
+  <file source="images/submitButtonUp.png"/>
+  <file source="images/twitter-button-down.png"/>
+  <file source="images/twitter-button-up.png"/>
   <file source="images/unchecked.png"/>
-  <file source="images/checked.png"/>
-  <file source="images/joinGameText.png"/>
+  <file source="images/waitingForOppText.png"/>
  </folder>
  <folder name="scenes">
   <file source="joiningGame.lua"/>
@@ -108,16 +92,22 @@
  </folder>
  <file source="JSON.lua"/>
  <file source="RCRBasePopup.lua"/>
+ <file source="about.lua"/>
  <file source="button.lua"/>
  <file source="collectible.lua"/>
+ <file source="command.lua"/>
+ <file source="controlstatements.lua"/>
  <file source="customButton.lua"/>
  <file source="easing.lua"/>
  <file source="gameButton.lua"/>
  <file source="grid.lua"/>
  <file source="hslider.lua"/>
+ <file source="inputengine.lua"/>
+ <file source="inputobj.lua"/>
  <file source="keyboard.lua"/>
  <file source="list.lua"/>
  <file source="main.lua"/>
+ <file source="movement.lua"/>
  <file source="music.lua"/>
  <file source="music.mp3"/>
  <file source="networkadapter.lua"/>
@@ -130,83 +120,44 @@
  <file source="scriptObject.lua"/>
  <file source="settings.lua"/>
  <file source="textbox.lua"/>
- <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
- <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
- <dependency to="scenemanager.lua" from="RCRBasePopup.lua"/>
- <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
- <dependency to="sceneObject.lua" from="RCRBaseScreen.lua"/>
- <dependency to="util.lua" from="RCRBaseScreen.lua"/>
- <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
- <dependency to="RCRBasePopup.lua" from="acctSettings.lua"/>
- <dependency to="sceneObject.lua" from="button.lua"/>
- <dependency to="scenemanager.lua" from="button.lua"/>
- <dependency to="RCRBaseScreen.lua" from="createAccount.lua"/>
- <dependency to="button.lua" from="customButton.lua"/>
- <dependency to="customButton.lua" from="gameButton.lua"/>
- <dependency to="RCRBaseScreen.lua" from="gameScreen.lua"/>
- <dependency to="util.lua" from="gameScreen.lua"/>
- <dependency to="customButton.lua" from="gameScreen.lua"/>
- <dependency to="RCRBaseScreen.lua" from="gameWait.lua"/>
- <dependency to="RCRBaseScreen.lua" from="login.lua"/>
- <dependency to="customButton.lua" from="login.lua"/>
- <dependency to="RCRBaseScreen.lua" from="mainmenu.lua"/>
- <dependency to="radiobutton.lua" from="mainmenu.lua"/>
- <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/url.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/ftp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket.lua" from="networkadapter.lua"/>
- <dependency to="http/mime.lua" from="networkadapter.lua"/>
- <dependency to="http/ltn12.lua" from="networkadapter.lua"/>
- <dependency to="util.lua" from="networkadapter.lua"/>
- <dependency to="JSON.lua" from="networkadapter.lua"/>
- <dependency to="customButton.lua" from="radiobutton.lua"/>
- <dependency to="scenemanager.lua" from="sceneObject.lua"/>
- <dependency to="easing.lua" from="scenemanager.lua"/>
- <dependency to="sceneObject.lua" from="scriptObject.lua"/>
- <dependency to="RCRBasePopup.lua" from="settings.lua"/>
- <dependency to="RCRBaseScreen.lua" from="splash.lua"/>
- <dependency to="sceneObject.lua" from="splash.lua"/>
- <dependency to="util.lua" from="main.lua"/>
  <file source="util.lua"/>
+ <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
  <dependency from="RCRBasePopup.lua" to="sceneObject.lua"/>
  <dependency from="RCRBasePopup.lua" to="scenemanager.lua"/>
- <dependency from="RCRBasePopup.lua" to="RCRBaseScreen.lua"/>
- <dependency from="RCRBaseScreen.lua" to="sceneObject.lua"/>
- <dependency from="RCRBaseScreen.lua" to="util.lua"/>
  <dependency from="RCRBaseScreen.lua" to="customButton.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="sceneObject.lua"/>
  <dependency from="RCRBaseScreen.lua" to="textbox.lua"/>
+ <dependency from="RCRBaseScreen.lua" to="util.lua"/>
  <dependency from="acctSettings.lua" to="RCRBasePopup.lua"/>
  <dependency from="button.lua" to="sceneObject.lua"/>
  <dependency from="button.lua" to="scenemanager.lua"/>
  <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
  <dependency from="customButton.lua" to="button.lua"/>
  <dependency from="gameButton.lua" to="customButton.lua"/>
- <dependency from="gameScreen.lua" to="util.lua"/>
- <dependency from="gameScreen.lua" to="customButton.lua"/>
  <dependency from="gameScreen.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="gameScreen.lua" to="customButton.lua"/>
+ <dependency from="gameScreen.lua" to="util.lua"/>
  <dependency from="gameWait.lua" to="RCRBaseScreen.lua"/>
- <dependency from="login.lua" to="customButton.lua"/>
  <dependency from="login.lua" to="RCRBaseScreen.lua"/>
- <dependency from="mainmenu.lua" to="radiobutton.lua"/>
+ <dependency from="login.lua" to="customButton.lua"/>
  <dependency from="mainmenu.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="mainmenu.lua" to="radiobutton.lua"/>
+ <dependency from="networkadapter.lua" to="http/mime.lua"/>
+ <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/http.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/smtp.lua"/>
- <dependency from="networkadapter.lua" to="util.lua"/>
- <dependency from="networkadapter.lua" to="JSON.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/tp.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/url.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
- <dependency from="networkadapter.lua" to="http/socket.lua"/>
- <dependency from="networkadapter.lua" to="http/mime.lua"/>
- <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="networkadapter.lua" to="JSON.lua"/>
+ <dependency from="networkadapter.lua" to="util.lua"/>
  <dependency from="radiobutton.lua" to="customButton.lua"/>
  <dependency from="sceneObject.lua" to="scenemanager.lua"/>
  <dependency from="scenemanager.lua" to="easing.lua"/>
  <dependency from="scriptObject.lua" to="sceneObject.lua"/>
  <dependency from="settings.lua" to="RCRBasePopup.lua"/>
- <dependency from="splash.lua" to="sceneObject.lua"/>
  <dependency from="splash.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="splash.lua" to="sceneObject.lua"/>
  <dependency from="main.lua" to="util.lua"/>
 </project>
