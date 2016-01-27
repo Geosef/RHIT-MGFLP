@@ -25,6 +25,7 @@ BlankScene = Core.class(Sprite)
 
 popupManager = SceneManager.new({
 	["settings"] = settings,
+	["about"] = about,
 	["blank"] = BlankScene
 })
 

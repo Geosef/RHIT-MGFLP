@@ -37,6 +37,8 @@ function BaseScreen:initTopBar()
 	playerLevelText:setPosition(topBarButtonSeparator - (playerLevelText:getWidth() + padding), self.topBarTextLine + (playerLevelText:getHeight() / 2))
 
 	self:addChild(playerLevelText)
+	
+	-- Add settings button
 	local settingsButtonUp = Bitmap.new(Texture.new("images/settings-button-up.png"))
 	local settingsButtonDown = Bitmap.new(Texture.new("images/settings-button-down.png"))
 	local settingsButton = CustomButton.new(settingsButtonUp, settingsButtonDown, function() 
@@ -44,16 +46,22 @@ function BaseScreen:initTopBar()
 	end)
 	settingsButton:setPosition(topBarButtonSeparator + padding, self.topBarTextLine - settingsButton:getHeight()/2)
 	self:addChild(settingsButton)
-	local facebookButtonUp = Bitmap.new(Texture.new("images/facebook-button-up.png"))
-	local facebookButtonDown = Bitmap.new(Texture.new("images/facebook-button-down.png"))
-	local facebookButton = CustomButton.new(facebookButtonUp, facebookButtonDown, function() end)
-	facebookButton:setPosition(settingsButton:getX() + settingsButton:getWidth() + buttonPadding, self.topBarTextLine - facebookButton:getHeight()/2)
-	self:addChild(facebookButton)
-	local twitterButtonUp = Bitmap.new(Texture.new("images/twitter-button-up.png"))
-	local twitterButtonDown = Bitmap.new(Texture.new("images/twitter-button-down.png"))
-	local twitterButton = CustomButton.new(twitterButtonUp, twitterButtonDown, function() end)
-	twitterButton:setPosition(facebookButton:getX() + facebookButton:getWidth() + buttonPadding, self.topBarTextLine - twitterButton:getHeight()/2)
-	self:addChild(twitterButton)
+	
+	-- Add about button
+	local aboutButtonUp = Bitmap.new(Texture.new("images/about-button-up.png"))
+	local aboutButtonDown = Bitmap.new(Texture.new("images/about-button-down.png"))
+	local aboutButton = CustomButton.new(aboutButtonUp, aboutButtonDown, function() 
+		popupManager:changeScene("about", 0.2, SceneManager.crossfade, easing.outBack)
+	end)
+	aboutButton:setPosition(settingsButton:getX() + settingsButton:getWidth() + buttonPadding, self.topBarTextLine - aboutButton:getHeight()/2)
+	self:addChild(aboutButton)
+	
+	-- Add mute button
+	local muteButtonUp = Bitmap.new(Texture.new("images/mute-button-up.png"))
+	local muteButtonDown = Bitmap.new(Texture.new("images/mute-button-down.png"))
+	local muteButton = RadioButton.new(muteButtonUp, muteButtonDown, function() end)
+	muteButton:setPosition(aboutButton:getX() + aboutButton:getWidth() + buttonPadding, self.topBarTextLine - muteButton:getHeight()/2)
+	self:addChild(muteButton)
 end
 
 function BaseScreen:getPlayerLevel()

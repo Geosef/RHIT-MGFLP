@@ -1,7 +1,8 @@
 <project>
- <properties osx_org="GiderosMobile" touchToMouse="1" packageName="com.yourdomain.yourapp" assetsOnly="0" logicalHeight="1024" architecture="0" mouseTouchOrder="0" retinaDisplay="0" orientation="1" autorotation="0" android_template="0" mouseToTouch="1" logicalWidth="768" osx_domain="giderosmobile.com" encryptAssets="0" windowHeight="0" fps="60" windowWidth="0" iosDevice="0" encryptCode="0" scaleMode="5" win_org="GiderosMobile" win_domain="giderosmobile.com">
+ <properties fps="60" iosDevice="0" scaleMode="5" encryptCode="0" packageName="com.yourdomain.yourapp" architecture="0" autorotation="0" encryptAssets="0" mouseToTouch="1" win_domain="giderosmobile.com" touchToMouse="1" retinaDisplay="0" logicalWidth="768" android_template="0" orientation="1" logicalHeight="1024" mouseTouchOrder="0" assetsOnly="0" win_org="GiderosMobile" windowWidth="0" osx_org="GiderosMobile" osx_domain="giderosmobile.com" windowHeight="0">
   <imageScales/>
  </properties>
+ <file source="about.lua"/>
  <file source="music.mp3"/>
  <file source="music.lua"/>
  <file source="hslider.lua"/>
@@ -12,11 +13,11 @@
  <file source="sceneObject.lua"/>
  <file source="util.lua"/>
  <folder name="socket">
-  <file excludeFromExecution="1" source="http/socket/http.lua"/>
-  <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
+  <file source="http/socket/http.lua" excludeFromExecution="1"/>
+  <file source="http/socket/smtp.lua" excludeFromExecution="1"/>
   <file source="http/socket/tp.lua"/>
   <file source="http/socket/url.lua"/>
-  <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
+  <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
  </folder>
  <folder name="http">
   <file source="http/socket.lua"/>
@@ -47,6 +48,10 @@
  <file source="easing.lua"/>
  <file source="scenemanager.lua"/>
  <folder name="images">
+  <file source="images/mute-button-up.png"/>
+  <file source="images/mute-button-down.png"/>
+  <file source="images/about-button-up.png"/>
+  <file source="images/about-button-down.png"/>
   <file source="images/barthick.png"/>
   <file source="images/bevel.png"/>
   <file source="images/board-rat-icon.png"/>
@@ -108,10 +113,10 @@
  <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
  <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
  <dependency to="scenemanager.lua" from="RCRBasePopup.lua"/>
+ <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
  <dependency to="sceneObject.lua" from="RCRBaseScreen.lua"/>
  <dependency to="util.lua" from="RCRBaseScreen.lua"/>
  <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
- <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
  <dependency to="RCRBasePopup.lua" from="acctSettings.lua"/>
  <dependency to="sceneObject.lua" from="button.lua"/>
  <dependency to="scenemanager.lua" from="button.lua"/>
@@ -126,6 +131,9 @@
  <dependency to="customButton.lua" from="login.lua"/>
  <dependency to="RCRBaseScreen.lua" from="mainmenu.lua"/>
  <dependency to="radiobutton.lua" from="mainmenu.lua"/>
+ <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
+ <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>
  <dependency to="http/socket/url.lua" from="networkadapter.lua"/>
  <dependency to="http/socket/ftp.lua" from="networkadapter.lua"/>
  <dependency to="http/socket.lua" from="networkadapter.lua"/>
@@ -133,9 +141,6 @@
  <dependency to="http/ltn12.lua" from="networkadapter.lua"/>
  <dependency to="util.lua" from="networkadapter.lua"/>
  <dependency to="JSON.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
- <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>
  <dependency to="customButton.lua" from="radiobutton.lua"/>
  <dependency to="scenemanager.lua" from="sceneObject.lua"/>
  <dependency to="easing.lua" from="scenemanager.lua"/>
