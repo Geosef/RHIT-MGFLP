@@ -34,7 +34,7 @@ function gameSelect:init(mainMenu)
 	self:addGame("Space Collectors")
 	self:addGame("Zombie Survivors")
 	self:addGame("Game 3")
-	
+
 end
 
 function gameSelect:addGame(name)
@@ -72,7 +72,7 @@ function gameSelect:addButtons(rowVal, name)
 			end
 		end
 	end
-	
+
 	local easyButton = RadioButton.new(uncheckedBox1, checkedBox1, buttonFunc)
 	local midButton = RadioButton.new(uncheckedBox2, checkedBox2, buttonFunc)
 	local hardButton = RadioButton.new(uncheckedBox3, checkedBox3, buttonFunc)
@@ -110,7 +110,7 @@ end
 
 mainMenu = Core.class(BaseScreen)
 
-function mainMenu:init(params)	
+function mainMenu:init(params)
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
 	local gameSelectBox = gameSelect.new()
@@ -119,13 +119,13 @@ function mainMenu:init(params)
 	local helpText = TextField.new(font, "Select your top 3 games and hit submit.")
 	helpText:setPosition((WINDOW_WIDTH / 2) - (helpText:getWidth() / 2), gameSelectBox:getPosition() - helpText:getHeight() - 20)
 	self:addChild(helpText)
-	
+
 	-- Add submit button
 	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
-	submitFunc = function() 
-		--mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
+	submitFunc = function()
+		mainMenu:sendSelected(gameSelectBox.checkedButtons)
+		--sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
@@ -144,22 +144,24 @@ function mainMenu:sendSelected(checkedButtons)
 	local packet = {}
 	packet.type = 'Browse Games'
 	packet.choices = choices
-	
+
 	NET_ADAPTER:registerCallback('Browse Games', function(data)
 		NET_ADAPTER:unregisterCallback('Browse Games')
-		if data.success then
+		if data.match then
+			print('here1')
 			sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 		else
+			print('here2')
 			sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 		end
 	end)
-	
+
 	NET_ADAPTER:registerCallback('Game Setup', function(data)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack, 
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
 		{userData=data})
 		NET_ADAPTER:unregisterCallback('Game Setup')
 	end)
-	
+
 	NET_ADAPTER:sendData(packet)
 	--[[NET_ADAPTER:browseGames(choices, function(res)
 		self:receiveBrowseResponse(res)
@@ -172,11 +174,11 @@ function mainMenu:receiveBrowseResponse(response)
 		--goToJoiningGame()
 		--switch to joining game screen while server processes game setup and removal from joinable games
 		--then show initial game screen
-		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack) 
-		
-		
-		
-		
+		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
+
+
+
+
 	else	--put in waitlist on server,
 		--goToSearchingScreen()
 		--stay in searching for game, cancel if want to back out.
@@ -184,11 +186,11 @@ function mainMenu:receiveBrowseResponse(response)
 		--have lock on clienthandler for knowing whether you are joining a game or cancelling
 		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 	end
-		
+
 end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)
-	return rowVal - (currentObj:getHeight()/2) - (spacing / 2) - (newObj:getHeight()/2) 
+	return rowVal - (currentObj:getHeight()/2) - (spacing / 2) - (newObj:getHeight()/2)
 end
 
 function mainMenu:getNextRow(rowVal, currentObj, newObj)
