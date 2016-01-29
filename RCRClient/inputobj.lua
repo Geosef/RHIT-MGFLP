@@ -1,7 +1,7 @@
 -- program is being exported under the TSU exception
 
 local M = {}
-local listMod = require('list')
+local listMod = Core.class(list)
 
 local EventObject = {}
 EventObject.__index = EventObject

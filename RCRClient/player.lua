@@ -2,7 +2,7 @@
 
 local M = {}
 
-notifyModule = require('notifier')
+notifyModule = Core.class(notifier)
 
 local Character = {}
 Character.__index = Character

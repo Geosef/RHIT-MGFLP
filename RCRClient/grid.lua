@@ -1,8 +1,8 @@
 -- program is being exported under the TSU exception
 
 local M = {}
-local listMod = require('list')
-local collectibleMod = require('collectible')
+local listMod = Core.class(list)
+local collectibleMod = Core.class(collectible)
 
 local Cell = {}
 Cell.__index = Cell

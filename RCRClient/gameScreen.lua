@@ -3,6 +3,7 @@ local padding = 12
 local scriptPadding = 10
 local spritePadding = 3
 local ScriptArea = Core.class(SceneObject)
+local GameMod = Core.class(Game)
 
 function ScriptArea:init(parent)
 	-- width is based on ScriptObject.png width, height is assuming 4 ScriptObject.png plus padding
@@ -261,11 +262,14 @@ function gameScreen:init()
 	self:addChild(player2)
 	
 	-- Eventually sceneName will be set by the type of game
-	self.sceneName = "Game X"
+	self.sceneName = "Collect Game"
 	self.statementBox = StatementBox.new()
 	self.statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
 	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, (WINDOW_HEIGHT - padding) - self.commandBox:getHeight())
 	self:addChild(self.commandBox)
+	self.GameMod = GameMod.CollectGame(self)
+	self.GameMod.gameSetup(self:getGameState("Collect"))
+	self.GameMod.show()
 end

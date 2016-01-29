@@ -2,8 +2,8 @@
 
 local M = {}
 
-local movementMod = require("movement")
-local controlStatements = require("controlstatements")
+local movementMod = Core.class(movement)
+local controlStatements = Core.class(controlstatements)
 
 -- Movement Commands
 M.LeftMove = movementMod.LeftMove

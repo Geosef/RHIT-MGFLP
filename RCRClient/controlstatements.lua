@@ -2,7 +2,7 @@
 
 local M={}
 
-inputMod = require('inputobj')
+inputMod = Core.class(inputobj)
 local EventObject = inputMod.EventObject
 
 local LoopStartCommand = {}

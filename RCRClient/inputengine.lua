@@ -2,8 +2,8 @@
 
 local M = {}
 
-local inputMod = require('inputobj')
-local commandMod = require('command')
+local inputMod = Core.class(inputobj)
+local commandMod = Core.class(command)
 
 local InputEngine = {}
 InputEngine.__index = InputEngine

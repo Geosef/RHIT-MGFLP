@@ -2,12 +2,12 @@
 
 local M = {}
 
-local gridMod = require('grid')
-local playerMod = require('player')
-local engineMod = require('inputengine')
---local buttonMod = require('inputbutton')
---local commandMod = require('command')
---local collectibleMod = require('collectible')
+local gridMod = Core.class(grid)
+local playerMod = Core.class(player)
+local engineMod = Core.class(inputengine)
+local buttonMod = Core.class(inputbutton)
+local commandMod = Core.class(command)
+local collectibleMod = Core.class(collectible)
 
 local Game = {}
 Game.__index = Game
@@ -85,6 +85,7 @@ function Game:exit()
 	print("Exit not implemented")
 end
 
+--need to remove dependency upon net adapter
 function CollectGame(netAdapter, hostBool)
 	local self = Game(netAdapter, "images/moonbackground.png", false)
 	self.host = hostBool
@@ -127,7 +128,7 @@ function CollectGame(netAdapter, hostBool)
 		
 		self.goButton = Button.new(buttonImage, buttonImage, function()
 			--self:reset() 
-			if not (self.player1.getAction() or self.player2.getAction() then
+			if not (self.player1.getAction() or self.player2.getAction()) then
 				self:sendMoves()
 			end
 			self.engine:clearBuffer()
