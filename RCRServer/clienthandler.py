@@ -3,6 +3,7 @@ __author__ = 'kochelmj'
 import json, threading
 from pprint import pprint
 import logging
+import time
 
 class ClientThread(threading.Thread):
 
@@ -83,7 +84,11 @@ class ClientThread(threading.Thread):
             # print 'Sending', data['type']
             self.sock.send(json.dumps(data) + "\n")
         except Exception as e:
+
+            print('error sendData')
             print(str(e))
+            time.sleep(3)
+            pprint(data)
             #TODO: handle json error
             #TODO: if socket is gone, clean up thread and game
 

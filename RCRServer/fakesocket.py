@@ -118,7 +118,8 @@ class FakeSocket(object):
             if self.host:
                 return self.creategame
             else:
-                return self.browsegames
+                pass
+                # return self.browsegames
         if type == 'Create Game':
             return {}
         if type == 'Player Joined':
@@ -129,13 +130,14 @@ class FakeSocket(object):
             else:
                 return {}
         if type == 'Browse Games':
-            games = data.get('games')
-            if len(games) == 0:
-                time.sleep(1)
-                return self.browsegames
-            else:
-                game = games[0]
-                return {'type': 'Join Game', 'gameID': game.get('gameID')}
+            match = data.get('match')
+
+            # if len(games) == 0:
+            #     time.sleep(1)
+            #     return self.browsegames
+            # else:
+            #     game = games[0]
+            #     return {'type': 'Join Game', 'gameID': game.get('gameID')}
         if type == 'Game Setup':
             # pprint(data)
             self.gridsize = data.get('gridSize')

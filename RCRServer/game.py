@@ -16,7 +16,7 @@ class Game(object):
         p1Thread.index = 0
         p2Thread.index = 1
         self.gameID = gameID
-        self.threads = [p1Thread]
+        self.threads = [p1Thread, p2Thread]
         self.lock = threading.Lock()
         self.rematchLock = threading.Lock()
         self.currentTurn = 0
@@ -29,6 +29,8 @@ class Game(object):
         self.ready = [False, False]
         self.rematchBools = [False, False]
 
+        self.setup(True)
+
 
 
     joinSuccess = \
@@ -40,11 +42,14 @@ class Game(object):
     def setup(self, initial):
         self.currentTurn = 0
         if initial:
-            self.threads[1].sendData(self.joinSuccess)
+            pass
+            # self.threads[0].sendData(self.joinSuccess)
+            # self.threads[1].sendData(self.joinSuccess)
+
 
         gamesetup = staticdata.gamesetup
 
-        time.sleep(1)
+        time.sleep(4)
 
         for client in self.threads:
             client.sendData(gamesetup)

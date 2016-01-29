@@ -6,6 +6,9 @@ from pprint import pprint
 import fakeclienthandler
 import weakref
 
+import clienthandler as ch
+import fakesocket
+
 class ClientWait(object):
 
 
@@ -33,6 +36,12 @@ class GameFactory(object):
         self.currentGameID = 0
         self.gameIDLock = threading.Lock()
         self.gameWaitListLock = threading.Lock()
+
+        # ch = fakeclienthandler.FakeClientThread()
+        # ch = FakeClientHandler()
+        fakech = ch.ClientThread(fakesocket.FakeSocket(False), self)
+        fakech.start()
+        self.browseGames(fakech, {'choices': [{'game': 'Space Collectors', 'diff': 'Hard'}]})
 
     def removeWaiterHandler(self, clientHandler):
         #called from client handler so we need the thread lock
@@ -94,6 +103,7 @@ class GameFactory(object):
 
 
     def browseGames(self, client, packet):
+        print str(packet)
         choices = packet.get('choices')
         noPrefs = len(choices) == 0
         match = False
@@ -105,9 +115,14 @@ class GameFactory(object):
                     hostWaitObj = gameWaitObj.client_wait()
                     self.removeWaiter(hostWaitObj)
             if not match:
-                return self.waitForMatch(client, choices)
-
-        return self.joinGame(client, choices, hostWaitObj, gameWaitObj)
+                self.waitForMatch(client, choices)
+        if match:
+            self.joinGame(client, choices, hostWaitObj, gameWaitObj)
+        else:
+            pass
+            # self.joinGame(client, choices, self.hw, self.gw)
+            # ch = fakeclienthandler.FakeClientThread()
+            # self.browseGames(ch, {'choices': [{'game': 'Space Collectors', 'diff': 'Hard'}]})
 
 
     def getGameID(self):
