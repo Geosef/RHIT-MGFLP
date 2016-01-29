@@ -2,8 +2,8 @@ gameScreen = Core.class(BaseScreen)
 local padding = 12
 local scriptPadding = 10
 local spritePadding = 3
+local gameActionButtonHeight = 50
 local ScriptArea = Core.class(SceneObject)
-local GameMod = Core.class(Game)
 
 function ScriptArea:init(parent)
 	-- width is based on ScriptObject.png width, height is assuming 4 ScriptObject.png plus padding
@@ -60,7 +60,7 @@ end
 function ScriptArea:addCommand(name)
 	local newCommand = DoubleScriptObject.new(self, name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
 	table.insert(self.script, newCommand)
-	print(table.getn(self.script))
+	--print(table.getn(self.script))
 	if table.getn(self.script) >= 4 then
 		self.scrollCount = table.getn(self.script) - 4
 	end
@@ -78,7 +78,7 @@ function ScriptArea:removeCommand(command)
 	end
 end
 
-function ScriptArea:moveCommand(y)
+function ScriptArea:moveCommand(toMove, y)
 	if self:contains(self.movementLine) then
 		self:removeChild(self.movementLine)
 	end
@@ -98,16 +98,18 @@ function ScriptArea:moveCommand(y)
 		self:drawScript()
 		return nil
 	end
+	local location = myY
 	for i, v in ipairs(self.visibleScript) do
 		local vX, vY = self:localToGlobal(v:getX(), v:getY())
 		local vMiddle = vY + (v:getHeight()/2)
-		if y < vMiddle then	
-			self.movementLine:setPosition(0, v:getY() - (scriptPadding/2))
+		location = vY + v:getHeight()
+		if y < location then
+			self.movementLine:setPosition(0, v:getY())
 			self:addChild(self.movementLine)
 			return i
 		end
 	end
-	if y > (myY + self:getHeight()) then
+	if y > location then
 		local bottomScript = self.visibleScript[table.getn(self.visibleScript)]
 		self.movementLine:setPosition(0, bottomScript:getY() + bottomScript:getHeight() + (scriptPadding/2))
 		self:addChild(self.movementLine)
@@ -115,50 +117,24 @@ function ScriptArea:moveCommand(y)
 	end
 end
 
-function ScriptArea:replaceCommand(targetCommand, moveRegion)
+function ScriptArea:replaceCommand(toMove, moveRegion)
 	if self:contains(self.movementLine) then
 		self:removeChild(self.movementLine)
 	end
-	--[[
-		Need to fix the bug that happens when moving commands down
-	]]
-	local scriptIndex = inTable(self.script, targetCommand)
-	local visibleIndex = inTable(self.visibleScript, targetCommand)
-	if not moveRegion then
+	local visibleIndex = inTable(self.visibleScript, toMove)
+	local removedCommand = table.remove(self.script, self.scrollCount + visibleIndex)
+	if moveRegion == visibleIndex or moveRegion == nil then
+		table.insert(self.script, self.scrollCount + visibleIndex, removedCommand)
 		return
-	end
-	if moveRegion == 1 then
-		if self.visibleScript[moveRegion] == targetCommand then
-			return
+	elseif moveRegion > table.getn(self.visibleScript) then
+		if moveRegion > table.getn(self.script) then
+			table.insert(self.script, removedCommand)
+		else
+			table.insert(self.script, self.scrollCount + (moveRegion - 1), removedCommand)
 		end
-	elseif moveRegion == 2 then
-		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
-			return
-		end
-	elseif moveRegion == 3 then
-		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
-			return
-		end
-	elseif moveRegion == 4 then
-		if self.visibleScript[moveRegion] == targetCommand or self.visibleScript[moveRegion-1] == targetCommand then
-			return
-		end
-	elseif moveRegion == 5 then
-		if self.visibleScript[moveRegion-1] == targetCommand then
-			return
-		end
-		local removedCommand = table.remove(self.script, scriptIndex)
-		table.insert(self.script, table.getn(self.visibleScript) + self.scrollCount, removedCommand)
-		return
-	end
-	local removedCommand = table.remove(self.script, scriptIndex)
-	print(visibleIndex)
-	if visibleIndex > moveRegion then
-		table.insert(self.script, self.scrollCount + moveRegion - 1, removedCommand)
 	else
 		table.insert(self.script, self.scrollCount + moveRegion, removedCommand)
 	end
-	
 	self:drawScript()
 end
 
@@ -172,6 +148,7 @@ function StatementBox:init()
 	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + padding)
 	self:addChild(self.resourceBox)
 	self:initScript()
+	self.savedScript = nil
 end
 
 function StatementBox:initScript()
@@ -219,6 +196,9 @@ function StatementBox:scrollCheck()
 	end
 end
 
+function StatementBox:saveScript()
+	self.savedScript = deepcopy(self.scriptArea.script)
+end
 
 local CommandBox = Core.class(SceneObject)
 
@@ -232,6 +212,10 @@ function CommandBox:init(parentScreen)
 end
 
 function CommandBox:initButtons()
+	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parentScreen.sceneName)
+	for i,v in pairs(commandSet) do
+		print(v)
+	end
 	local moveButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
 	local moveButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 	local addButton = function(name)
@@ -262,14 +246,37 @@ function gameScreen:init()
 	self:addChild(player2)
 	
 	-- Eventually sceneName will be set by the type of game
-	self.sceneName = "Collect Game"
+	self.sceneName = "Space Collectors"
 	self.statementBox = StatementBox.new()
-	self.statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - self.statementBox:getHeight())
+	self.statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
-	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, (WINDOW_HEIGHT - padding) - self.commandBox:getHeight())
+	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())
 	self:addChild(self.commandBox)
-	--self.GameMod = GameMod.CollectGame(self)
-	--self.GameMod.gameSetup(self:getGameState("Collect"))
-	--self.GameMod.show()
+	local saveButtonUp = Bitmap.new(Texture.new("images/save-button-up.png"))
+	local saveButtonDown = Bitmap.new(Texture.new("images/save-button-down.png"))
+	self.saveButton = CustomButton.new(saveButtonUp, saveButtonDown, function()
+		self.statementBox:saveScript()
+	end)
+	local submitButtonUp = Bitmap.new(Texture.new("images/script-submit-buttom-up.png"))
+	local submitButtonDown = Bitmap.new(Texture.new("images/script-submit-button-down.png"))
+	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function()
+		
+	end)
+	local helpButtonUp = Bitmap.new(Texture.new("images/help-button-up.png"))
+	local helpButtonDown = Bitmap.new(Texture.new("images/help-button-down.png"))
+	self.helpButton = CustomButton.new(helpButtonUp, helpButtonDown, function()
+		
+	end)
+	
+	self.saveButton:setPosition(self.statementBox:getX(), self.statementBox:getY() + self.statementBox:getHeight() + padding)
+	self:addChild(self.saveButton)
+	self.submitButton:setPosition(self.saveButton:getX() + self.saveButton:getWidth() + padding, self.saveButton:getY())
+	self:addChild(self.submitButton)
+	self.helpButton:setPosition(self.commandBox:getX(), self.saveButton:getY())
+	self:addChild(self.helpButton)
+	
 end
+
+
+

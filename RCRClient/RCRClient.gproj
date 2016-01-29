@@ -1,5 +1,5 @@
 <project>
- <properties orientation="1" fps="60" packageName="com.yourdomain.yourapp" logicalWidth="768" mouseToTouch="1" mouseTouchOrder="0" retinaDisplay="0" windowHeight="0" osx_domain="giderosmobile.com" scaleMode="5" iosDevice="0" windowWidth="0" architecture="0" assetsOnly="0" android_template="0" encryptCode="0" win_org="GiderosMobile" win_domain="giderosmobile.com" touchToMouse="1" logicalHeight="1024" autorotation="0" osx_org="GiderosMobile" encryptAssets="0">
+ <properties assetsOnly="0" version="1.0" packageName="com.yourdomain.yourapp" architecture="0" windowHeight="0" win_org="GiderosMobile" html5_host="" orientation="1" android_template="0" win_domain="giderosmobile.com" retinaDisplay="0" windowWidth="0" osx_org="GiderosMobile" winrt_org="GiderosMobile" touchToMouse="1" autorotation="0" encryptCode="0" version_code="1" scaleMode="5" winrt_package="com.yourdomain.yourapp" osx_bundle="com.yourdomain." fps="60" iosDevice="0" logicalHeight="1024" mouseToTouch="1" logicalWidth="768" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." mouseTouchOrder="0" encryptAssets="0">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -51,14 +51,20 @@
   <file source="images/fadeoutOverlay.png"/>
   <file source="images/game-button-down.png"/>
   <file source="images/game-button.png"/>
+  <file source="images/help-button-down.png"/>
+  <file source="images/help-button-up.png"/>
   <file source="images/joinGameText.png"/>
   <file source="images/loginButtonDown.png"/>
   <file source="images/loginButtonUp.png"/>
   <file source="images/mute-button-down.png"/>
   <file source="images/mute-button-up.png"/>
   <file source="images/resource-box.png"/>
+  <file source="images/save-button-down.png"/>
+  <file source="images/save-button-up.png"/>
   <file source="images/script-down-button-down.png"/>
   <file source="images/script-down-button-up.png"/>
+  <file source="images/script-submit-buttom-up.png"/>
+  <file source="images/script-submit-button-down.png"/>
   <file source="images/script-up-button-down.png"/>
   <file source="images/script-up-button-up.png"/>
   <file source="images/settings-button-down.png"/>
@@ -96,6 +102,7 @@
  <file source="button.lua"/>
  <file source="collectible.lua"/>
  <file source="command.lua"/>
+ <file source="commandFactory.lua"/>
  <file source="controlstatements.lua"/>
  <file source="customButton.lua"/>
  <file source="easing.lua"/>
@@ -135,18 +142,19 @@
  <dependency to="scenemanager.lua" from="button.lua"/>
  <dependency to="controlstatements.lua" from="command.lua"/>
  <dependency to="movement.lua" from="command.lua"/>
+ <dependency to="scriptObject.lua" from="commandFactory.lua"/>
  <dependency to="inputobj.lua" from="controlstatements.lua"/>
  <dependency to="RCRBaseScreen.lua" from="createAccount.lua"/>
  <dependency to="button.lua" from="customButton.lua"/>
  <dependency to="collectible.lua" from="game.lua"/>
  <dependency to="command.lua" from="game.lua"/>
  <dependency to="grid.lua" from="game.lua"/>
+ <dependency to="inputbutton.lua" from="game.lua"/>
  <dependency to="inputengine.lua" from="game.lua"/>
  <dependency to="player.lua" from="game.lua"/>
- <dependency to="inputbutton.lua" from="game.lua"/>
  <dependency to="customButton.lua" from="gameButton.lua"/>
- <dependency to="game.lua" from="gameScreen.lua"/>
  <dependency to="customButton.lua" from="gameScreen.lua"/>
+ <dependency to="game.lua" from="gameScreen.lua"/>
  <dependency to="util.lua" from="gameScreen.lua"/>
  <dependency to="RCRBaseScreen.lua" from="gameScreen.lua"/>
  <dependency to="RCRBaseScreen.lua" from="gameWait.lua"/>

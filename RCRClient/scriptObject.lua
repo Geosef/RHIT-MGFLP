@@ -263,9 +263,3 @@ function DoubleScriptObject:getData()
 	
 end
 
-MoveCommand = function(gameScreen)
-	return DoubleScriptObject.new(gameScreen, "Move", {"N", "E", "S", "W"}, {1, 2, 3, 4})
-end
-
-
-
