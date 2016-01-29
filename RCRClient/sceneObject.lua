@@ -20,7 +20,6 @@ local function dispatchEvent(dispatcher, name)
 end
 
 function SceneObject:dispatchEventToChildren(event)
-	
 	for i = self:getNumChildren(), 1, -1 do
 		local sprite = self:getChildAt(i)
 		dispatchEvent(sprite, event)

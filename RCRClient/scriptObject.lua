@@ -194,7 +194,7 @@ function DoubleScriptObject:onMouseMove(event)
 	elseif self.focus == "M" then
 		if not self:hitTestPoint(event.x, event.y) then	
 			event:stopPropagation()
-			self.moveLocation = self.parent:moveCommand(event.y)
+			self.moveLocation = self.parent:moveCommand(self, event.y)
 		end
 	end
 end
@@ -263,9 +263,9 @@ function DoubleScriptObject:getData()
 	
 end
 
-
-
-
+MoveCommand = function(gameScreen)
+	return DoubleScriptObject.new(gameScreen, "Move", {"N", "E", "S", "W"}, {1, 2, 3, 4})
+end
 
 
 
