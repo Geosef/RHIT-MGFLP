@@ -14,8 +14,8 @@ function hSlider:init(bevelimage,barimage)
 
 	self.barlength = self.bar:getWidth()			
 	self.barwidth = self.bar:getHeight()
-	self.x= 0		--position of controls within aSlider  (also position of the bevel)					
-	self.y= 0		--position of controls within aSlider 
+	self.x= 0	--position of controls within aSlider  (also position of the bevel)					
+	self.y= 0	--position of controls within aSlider 
 
 	self.bevelwidth = self.bevel:getWidth()		--button width
 	self.bevelheight = self.bevel:getHeight()	--button height
@@ -25,13 +25,12 @@ function hSlider:init(bevelimage,barimage)
 	self:addChild(self.bar)
 	self.bar:setPosition (self.barx,self.bary)
 	self:addChild(self.bevel)
-	self.bevel:setPosition (self.x,self.y)
+	self.bevel:setPosition (VOLUME * self.barlength,self.y)
 	
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown,self)
 	self:addEventListener(Event.MOUSE_MOVE, self.onMouseMove,self)
 	self:addEventListener(Event.MOUSE_UP, self.onMouseUp,self)
-	
-	
+		
 end
 
 
@@ -56,6 +55,10 @@ function hSlider:SetPositionFromBar(x)
 	self.bevel:setPosition (barpixel-self.x,self.y)	--set bevel position
 	--bevel:setPosition (barpixel-self.bevelwidth/2,self.y)	--set bevel position
 	--setTimeLabel()												--updateTime
+	VOLUME = self.percent
+	if not MUSIC.muted then
+		MUSIC:setVolume(VOLUME)
+	end
 end
 
 
@@ -90,8 +93,6 @@ end
 function hSlider:onMouseUp(event)
 	if self.bevel.isFocus then
 		self.bevel.isFocus = false
-		VOLUME = self.percent
-		MUSIC:setVolume(VOLUME)
 		event:stopPropagation()
 	end
 end
