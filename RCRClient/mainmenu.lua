@@ -113,34 +113,19 @@ mainMenu = Core.class(BaseScreen)
 function mainMenu:init(params)	
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
-	--[[
-	-- Old code for testing. To be removed.
-	if params ~= nill then
-		self.email = params.email
-		self.password = params.password
-		local emailText = TextField.new(font, self.email)
-		emailText:setPosition(0, 50)
-		self:addChild(emailText)
-		local passwordText = TextField.new(font, self.password)
-		passwordText:setPosition(0, 100)
-		self:addChild(passwordText)
-	else
-		self.fail = "failed"
-		local failedText = TextField.new(font, self.fail)
-		self:addChild(failedText)
-	end
-	]]
 	local gameSelectBox = gameSelect.new()
 	gameSelectBox:setPosition((WINDOW_WIDTH / 2) - (gameSelectBox:getWidth() / 2), (WINDOW_HEIGHT / 2) - (gameSelectBox:getHeight() / 2))
 	self:addChild(gameSelectBox)
 	local helpText = TextField.new(font, "Select your top 3 games and hit submit.")
 	helpText:setPosition((WINDOW_WIDTH / 2) - (helpText:getWidth() / 2), gameSelectBox:getPosition() - helpText:getHeight() - 20)
 	self:addChild(helpText)
+	
+	-- Add submit button
 	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	submitFunc = function() 
-		mainMenu:sendSelected(gameSelectBox.checkedButtons)
-		--sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack) 
+		--mainMenu:sendSelected(gameSelectBox.checkedButtons)
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack) 
 	end
 	local submitButton = CustomButton.new(submitButtonUp, submitButtonDown, submitFunc)
 	submitButton:setPosition((WINDOW_WIDTH / 2) - (submitButton:getWidth() / 2) , WINDOW_HEIGHT - submitButton:getHeight() - 70)
