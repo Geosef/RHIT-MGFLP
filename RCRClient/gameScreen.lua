@@ -138,13 +138,27 @@ function ScriptArea:replaceCommand(toMove, moveRegion)
 	self:drawScript()
 end
 
+local ResourceBox = Core.class(SceneObject)
+
+function ResourceBox:init(parent)
+	self.parent = parent
+	self.boxImage = Bitmap.new(Texture.new("images/resource-box.png"))
+	self:addChild(self.boxImage)
+	self.resources = {1,2,3,4}
+end
+
+function ResourceBox:getResources()
+	return self.resources
+end
+
 local StatementBox = Core.class(SceneObject)
 
-function StatementBox:init()
+function StatementBox:init(parent)
+	self.parent = parent
 	self.headerBottom = 51
 	self.boxImage = Bitmap.new(Texture.new("images/statement-box.png"))
 	self:addChild(self.boxImage)
-	self.resourceBox = Bitmap.new(Texture.new("images/resource-box.png"))
+	self.resourceBox = ResourceBox.new(self)
 	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + padding)
 	self:addChild(self.resourceBox)
 	self:initScript()
@@ -202,9 +216,9 @@ end
 
 local CommandBox = Core.class(SceneObject)
 
-function CommandBox:init(parentScreen)
+function CommandBox:init(parent)
 	self.headerBottom = 49
-	self.parentScreen = parentScreen
+	self.parent = parent
 	self.boxImage = Bitmap.new(Texture.new("images/command-box.png"))
 	self:addChild(self.boxImage)
 	-- eventually, this will query the game for the buttons to add
@@ -212,20 +226,19 @@ function CommandBox:init(parentScreen)
 end
 
 function CommandBox:initButtons()
-	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parentScreen.sceneName)
+	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parent.sceneName)
 	local yLoc = self.headerBottom + padding
-	local buttonUp = Bitmap.new(Texture.new("images/game-button.png"))
-	local buttonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
+	local gameButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
+	local gameButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 	for i,v in pairs(commandSet) do
 		local addButton = function(name)
-			self.parentScreen.statementBox:addCommand(v())
+			self.parent.statementBox:addCommand(v(self.parent))
 			--self.parentScreen.statementBox:scriptCountCheck(false)
 		end
-		local gameButton = GameButton.new(moveButtonUp, moveButtonDown, addButton, i)
+		local gameButton = GameButton.new(gameButtonUp, gameButtonDown, addButton, i)
 		gameButton:setPosition((self:getWidth() / 2) - (gameButton:getWidth() / 2), yLoc)
 		self:addChild(gameButton)
 	end
-	
 end
 
 function gameScreen:init()
@@ -248,7 +261,7 @@ function gameScreen:init()
 	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
-	self.statementBox = StatementBox.new()
+	self.statementBox = StatementBox.new(self)
 	self.statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)

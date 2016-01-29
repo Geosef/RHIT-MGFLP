@@ -2,8 +2,8 @@ CommandFactory = Core.class()
 
 function CommandFactory:init()
 	self.masterLibrary = {}
-	self.masterLibrary["Move"] = function(params)
-		return DoubleScriptObject.new(params.gameScreen, "Move", {"N", "E", "S", "W"}, {1, 2, 3, 4})
+	self.masterLibrary["Move"] = function(gameScreen)
+		return DoubleScriptObject.new(gameScreen, "Move", {"N", "E", "S", "W"}, gameScreen.statementBox.resourceBox:getResources())
 	end
 	self.masterLibrary["Loop"] = function() end
 	self.masterLibrary["Dig"] = function() end
