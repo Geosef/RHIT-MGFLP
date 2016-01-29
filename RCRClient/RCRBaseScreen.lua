@@ -59,7 +59,13 @@ function BaseScreen:initTopBar()
 	-- Add mute button
 	local muteButtonUp = Bitmap.new(Texture.new("images/mute-button-up.png"))
 	local muteButtonDown = Bitmap.new(Texture.new("images/mute-button-down.png"))
-	local muteButton = RadioButton.new(muteButtonUp, muteButtonDown, function() end)
+	local muteButton = RadioButton.new(muteButtonUp, muteButtonDown, function()
+		if MUSIC.muted then
+			MUSIC:unmute()
+		else
+			MUSIC:mute()
+		end
+	end)
 	muteButton:setPosition(aboutButton:getX() + aboutButton:getWidth() + buttonPadding, self.topBarTextLine - muteButton:getHeight()/2)
 	self:addChild(muteButton)
 end
