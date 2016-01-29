@@ -90,6 +90,8 @@ end
 function hSlider:onMouseUp(event)
 	if self.bevel.isFocus then
 		self.bevel.isFocus = false
+		VOLUME = self.percent
+		MUSIC:setVolume(VOLUME)
 		event:stopPropagation()
 	end
 end
