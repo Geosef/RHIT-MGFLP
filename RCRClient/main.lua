@@ -3,12 +3,13 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-local multiplayerMode = true
+local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
 
 NET_ADAPTER = NetworkAdapter(multiplayerMode)
-NET_ADAPTER:connect()
+--NET_ADAPTER:connect()
+COMMAND_FACTORY = CommandFactory.new()
 --netAdapter:login()
 VOLUME = .5
 MUSIC = Music.new("music.mp3")
@@ -36,4 +37,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+
+

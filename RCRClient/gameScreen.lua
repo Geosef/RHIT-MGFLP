@@ -213,18 +213,19 @@ end
 
 function CommandBox:initButtons()
 	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parentScreen.sceneName)
+	local yLoc = self.headerBottom + padding
+	local buttonUp = Bitmap.new(Texture.new("images/game-button.png"))
+	local buttonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 	for i,v in pairs(commandSet) do
-		print(v)
+		local addButton = function(name)
+			self.parentScreen.statementBox:addCommand(v())
+			--self.parentScreen.statementBox:scriptCountCheck(false)
+		end
+		local gameButton = GameButton.new(moveButtonUp, moveButtonDown, addButton, i)
+		gameButton:setPosition((self:getWidth() / 2) - (gameButton:getWidth() / 2), yLoc)
+		self:addChild(gameButton)
 	end
-	local moveButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
-	local moveButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
-	local addButton = function(name)
-		self.parentScreen.statementBox:addCommand(name)
-		--self.parentScreen.statementBox:scriptCountCheck(false)
-	end
-	local moveButton = GameButton.new(moveButtonUp, moveButtonDown, addButton, "Move")
-	moveButton:setPosition((self:getWidth() / 2) - (moveButton:getWidth() / 2), self.headerBottom + padding)
-	self:addChild(moveButton)
+	
 end
 
 function gameScreen:init()
