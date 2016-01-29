@@ -154,10 +154,11 @@ class ClientThread(threading.Thread):
         # pprint(games)
 
     def playerJoined(self, packet):
-        if packet.get('accept'):
-            self.game.setup(True)
-        else:
-            self.game.refuse()
+        pass
+        # if packet.get('accept'):
+        #     self.game.setup(True)
+        # else:
+        #     self.game.refuse()
 
     def startGame(self, packet):
         self.game.startGame(self)

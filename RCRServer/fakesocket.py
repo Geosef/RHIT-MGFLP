@@ -141,7 +141,8 @@ class FakeSocket(object):
         if type == 'Game Setup':
             # pprint(data)
             self.gridsize = data.get('gridSize')
-            return self.startgame
+            return {}
+            # return self.startgame
         if type == 'Start Game':
             # print 'START GAME'
             return self.submitmove
