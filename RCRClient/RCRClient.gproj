@@ -1,5 +1,5 @@
 <project>
- <properties assetsOnly="0" version="1.0" packageName="com.yourdomain.yourapp" architecture="0" windowHeight="0" win_org="GiderosMobile" html5_host="" orientation="1" android_template="0" win_domain="giderosmobile.com" retinaDisplay="0" windowWidth="0" osx_org="GiderosMobile" winrt_org="GiderosMobile" touchToMouse="1" autorotation="0" encryptCode="0" version_code="1" scaleMode="5" winrt_package="com.yourdomain.yourapp" osx_bundle="com.yourdomain." fps="60" iosDevice="0" logicalHeight="1024" mouseToTouch="1" logicalWidth="768" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." mouseTouchOrder="0" encryptAssets="0">
+ <properties osx_bundle="com.yourdomain." winrt_package="com.yourdomain.yourapp" mouseToTouch="1" encryptAssets="0" win_org="GiderosMobile" version_code="1" orientation="1" iosDevice="0" assetsOnly="0" osx_domain="giderosmobile.com" winrt_org="GiderosMobile" html5_host="" windowWidth="0" win_domain="giderosmobile.com" version="1.0" logicalWidth="768" touchToMouse="1" encryptCode="0" android_template="0" windowHeight="0" logicalHeight="1024" architecture="0" retinaDisplay="0" fps="60" osx_org="GiderosMobile" autorotation="0" ios_bundle="com.yourdomain." mouseTouchOrder="0" scaleMode="5" packageName="com.yourdomain.yourapp">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -79,6 +79,9 @@
   <file source="images/waitingForOppText.png"/>
  </folder>
  <folder name="scenes">
+  <folder name="partials">
+   <file source="gameboard.lua"/>
+  </folder>
   <file source="joiningGame.lua"/>
   <file source="acctSettings.lua"/>
   <file source="RCRBaseScreen.lua"/>
@@ -133,10 +136,10 @@
  <dependency to="sceneObject.lua" from="RCRBasePopup.lua"/>
  <dependency to="scenemanager.lua" from="RCRBasePopup.lua"/>
  <dependency to="RCRBaseScreen.lua" from="RCRBasePopup.lua"/>
- <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
  <dependency to="sceneObject.lua" from="RCRBaseScreen.lua"/>
  <dependency to="textbox.lua" from="RCRBaseScreen.lua"/>
  <dependency to="util.lua" from="RCRBaseScreen.lua"/>
+ <dependency to="customButton.lua" from="RCRBaseScreen.lua"/>
  <dependency to="RCRBasePopup.lua" from="acctSettings.lua"/>
  <dependency to="sceneObject.lua" from="button.lua"/>
  <dependency to="scenemanager.lua" from="button.lua"/>
@@ -146,16 +149,16 @@
  <dependency to="inputobj.lua" from="controlstatements.lua"/>
  <dependency to="RCRBaseScreen.lua" from="createAccount.lua"/>
  <dependency to="button.lua" from="customButton.lua"/>
+ <dependency to="player.lua" from="game.lua"/>
  <dependency to="collectible.lua" from="game.lua"/>
  <dependency to="command.lua" from="game.lua"/>
  <dependency to="grid.lua" from="game.lua"/>
  <dependency to="inputbutton.lua" from="game.lua"/>
  <dependency to="inputengine.lua" from="game.lua"/>
- <dependency to="player.lua" from="game.lua"/>
  <dependency to="customButton.lua" from="gameButton.lua"/>
+ <dependency to="util.lua" from="gameScreen.lua"/>
  <dependency to="customButton.lua" from="gameScreen.lua"/>
  <dependency to="game.lua" from="gameScreen.lua"/>
- <dependency to="util.lua" from="gameScreen.lua"/>
  <dependency to="RCRBaseScreen.lua" from="gameScreen.lua"/>
  <dependency to="RCRBaseScreen.lua" from="gameWait.lua"/>
  <dependency to="collectible.lua" from="grid.lua"/>
@@ -168,11 +171,11 @@
  <dependency to="radiobutton.lua" from="mainmenu.lua"/>
  <dependency to="RCRBaseScreen.lua" from="mainmenu.lua"/>
  <dependency to="inputobj.lua" from="movement.lua"/>
- <dependency to="JSON.lua" from="networkadapter.lua"/>
  <dependency to="util.lua" from="networkadapter.lua"/>
  <dependency to="http/socket.lua" from="networkadapter.lua"/>
  <dependency to="http/mime.lua" from="networkadapter.lua"/>
  <dependency to="http/ltn12.lua" from="networkadapter.lua"/>
+ <dependency to="JSON.lua" from="networkadapter.lua"/>
  <dependency to="http/socket/http.lua" from="networkadapter.lua"/>
  <dependency to="http/socket/smtp.lua" from="networkadapter.lua"/>
  <dependency to="http/socket/tp.lua" from="networkadapter.lua"/>

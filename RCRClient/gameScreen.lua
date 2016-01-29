@@ -242,22 +242,20 @@ function CommandBox:initButtons()
 end
 
 function gameScreen:init()
-	local gameBoard = Bitmap.new(Texture.new("images/8x8-board.png"))
-	gameBoard:setScale(480/gameBoard:getWidth(), 480/gameBoard:getHeight())
-	gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - gameBoard:getHeight())
+	local gameBoard = GameBoard.new(Texture.new("images/8x8-board.png"))
 	self:addChild(gameBoard)
-	
 	-- Add sprite images
+	
 	local player1 = Bitmap.new(Texture.new("images/board-cat-icon.png"))
 	player1:setScale(60/player1:getWidth(), 60/player1:getHeight())
-	player1:setPosition(gameBoard:getX() + spritePadding, gameBoard:getY() + spritePadding)
-	self:addChild(player1)
+	player1:setPosition(spritePadding, spritePadding)
+	gameBoard:addChild(player1)
 	
 	local player2 = Bitmap.new(Texture.new("images/board-rat-icon.png"))
 		player2:setScale(60/player2:getWidth(), 60/player2:getHeight())
-	player2:setPosition(gameBoard:getX() + gameBoard:getWidth() - player2:getWidth() - spritePadding,
-		gameBoard:getY() + gameBoard:getHeight() - player2:getHeight() - spritePadding)
-	self:addChild(player2)
+	player2:setPosition(gameBoard:getWidth() - spritePadding - player2:getWidth(),
+		gameBoard:getHeight() - spritePadding - player2:getHeight())
+	gameBoard:addChild(player2)
 	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
@@ -289,8 +287,15 @@ function gameScreen:init()
 	self:addChild(self.submitButton)
 	self.helpButton:setPosition(self.commandBox:getX(), self.saveButton:getY())
 	self:addChild(self.helpButton)
-	
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
+function gameScreen:onEnterEnd()
 
+end
 
+function gameScreen:onExitBegin()
+	self:removeEventListener("enterEnd", self.onEnterEnd)
+	self:removeEventListener("exitBegin", self.onExitBegin)
+end
