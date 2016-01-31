@@ -242,7 +242,7 @@ function CommandBox:initButtons()
 end
 
 function gameScreen:init()
-	local gameBoard = GameBoard.new(Texture.new("images/8x8-board.png"))
+	local gameBoard = Grid.new(Texture.new("images/8x8-board.png"))
 	self:addChild(gameBoard)
 	-- Add sprite images
 	
