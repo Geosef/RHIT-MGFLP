@@ -57,9 +57,8 @@ function ScriptArea:scrollDown()
 	self:drawScript()
 end
 
-function ScriptArea:addCommand(name)
-	local newCommand = DoubleScriptObject.new(self, name, {"N", "E", "S", "W"}, {1, 2, 3, 4})
-	table.insert(self.script, newCommand)
+function ScriptArea:addCommand(command)
+	table.insert(self.script, command)
 	--print(table.getn(self.script))
 	if table.getn(self.script) >= 4 then
 		self.scrollCount = table.getn(self.script) - 4
@@ -192,8 +191,8 @@ function StatementBox:initScript()
 	
 end
 
-function StatementBox:addCommand(name)
-	self.scriptArea:addCommand(name)
+function StatementBox:addCommand(command)
+	self.scriptArea:addCommand(command)
 end
 
 function StatementBox:scrollCheck()

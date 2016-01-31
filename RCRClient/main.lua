@@ -13,7 +13,7 @@ COMMAND_FACTORY = CommandFactory.new()
 --netAdapter:login()
 VOLUME = .5
 MUSIC = Music.new("music.mp3")
-MUSIC:on()
+--MUSIC:on()
 
 sceneManager = SceneManager.new({ 
 	["splash"] = splash,
