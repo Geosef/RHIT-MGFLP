@@ -22,8 +22,17 @@ end
 
 local registeredCallbacks = {}
 
-function NetworkAdapter:registerCallback(key, callback)
-	registeredCallbacks[key] = callback
+function NetworkAdapter:registerCallback(key, callback, data)
+	if not data then
+		registeredCallbacks[key] = callback
+	else
+		local timer = Timer.new(1000)
+		timer:addEventListener(Event.TIMER, function()
+			timer:stop()
+			callback(data)
+		end)
+		timer:start()
+	end
 end
 
 function NetworkAdapter:unregisterCallback(key)
