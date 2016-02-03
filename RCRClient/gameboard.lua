@@ -2,12 +2,24 @@ local padding = 12
 
 Cell = Core.class(Sprite)
 
-function Cell:init()
-	
+function Cell:init(x, y)
+	self.x = x
+	self.y = y
 end
 
 function Cell:addImage(imagePath)
-
+	if self.image == nil then
+		local image = Bitmap.new(Texture.new(imagePath))
+		scaleX = imageScale / image:getWidth() / 1.33
+		scaleY = imageScale / image:getHeight() / 1.33
+		
+		image:setScale(scaleX, scaleY)
+		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 4
+		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
+		image:setPosition(xPos, yPos)
+		self.image = image
+	end
+	return
 end
 
 function Cell:removeImage()
@@ -49,8 +61,9 @@ function Grid:init(img)
 		local row = {}
 		table.insert(self.cells, row)
 		for j=1, gridSize do
-			local cell = Cell.new()	
+			local cell = Cell.new(i, j, cellImage)	
 			table.insert(row, cell)
+			--print("Cell X: " .. cell.x .. " Cell Y: " .. cell.y)
 		end
 	end
 end
@@ -83,22 +96,22 @@ function CollectGrid:init(imagePath, gameType, gameState)
 	self.setMapItems(gameState.cellData, true)
 end
 
-function setGoldAt(goldLocations, initial)
+function CollectGrid:setGoldAt(goldLocations, initial)
 
 end
 
-function setGemsAt(gemLocations, initial)
+function CollectGrid:setGemsAt(gemLocations, initial)
 
 end
 
-function setMapItems(locations, initial)
+function CollectGrid:setMapItems(locations, initial)
 
 end
 
-function show()
+function CollectGrid:show()
 
 end
 
-function destroy()
+function CollectGrid:destroy()
 
 end

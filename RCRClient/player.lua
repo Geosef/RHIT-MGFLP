@@ -1,21 +1,7 @@
 -- program is being exported under the TSU exception
 
-local M = {}
-
-notifyModule = Core.class(notifier)
-
-local Character = {}
-Character.__index = Character
-
-setmetatable(Character, {
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:_init(...)
-    return self
-  end,
-})
-
-function Character:__init()
+Character = Core.class(Character)
+function Character:init()
 end
 
 function Character:moveRight(param)
@@ -107,21 +93,11 @@ function Character:destroy()
 end
 
 
-local Player = {}
-Player.__index = Player
-
-setmetatable(Player, {
-  __index = Character,
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:_init(...)
-    return self
-  end,
-})
+Player = Core.class(Player)
 
 EVENT_DURATION = 16
 
-function Player:_init(grid, playerNum, imagePath, maxMoves)
+function Player:init(grid, playerNum, imagePath, maxMoves)
 	self:initPlayerAttributes(grid, playerNum, maxMoves)
 	self:initMoveBuffer()
 	self:enterGrid(grid, imagePath)
@@ -196,7 +172,7 @@ function Player:destroy()
 	print("Player destroy not implemented!")
 end
 
-
+CollectPlayer = Core.class(CollectPlayer)
 function CollectPlayer(grid, isPlayer1, maxMoves)
 	local self = Player(grid, isPlayer1, "images/astronaut.png", maxMoves)
 	
@@ -298,8 +274,6 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 			if didCollect then
 				collectible = cell:removeCollectible()
 			end
-			local notifier = notifyModule.Notifier()
-			notifier:notify("Collected!")
 		end
 		
 	end
@@ -376,17 +350,8 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 	}
 end
 
-local ComputerControlled = {}
-ComputerControlled.__index = ComputerControlled
-setmetatable(ComputerControlled, {
-  __index = Character,
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:_init(...)
-    return self
-  end,
-})
-function ComputerControlled:_init(grid, maxMoves, imagePath, name, init)
+ComputerControlled = Core.class(ComputerControlled)
+function ComputerControlled:init(grid, maxMoves, imagePath, name, init)
 	self:initComputerAttributes(grid, name, init, maxMoves)
 	self:initMoveBuffer()
 	self:enterGrid(grid, imagePath)
@@ -428,7 +393,3 @@ end
 function ComputerControlled:update()
 	print("Computer update not implemented!")
 end
-
-M.CollectPlayer = CollectPlayer
-
-return M
