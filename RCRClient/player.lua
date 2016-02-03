@@ -1,11 +1,12 @@
 -- program is being exported under the TSU exception
 
-Character = Core.class(Character)
+Character = Core.class(Bitmap)
 function Character:init()
+	
 end
 
 function Character:moveRight(param)
-	if self.x >= self.grid.numRows then
+	if self.x >= self.grid.gridSize then
 		return
 	end
 	self.x = self.x + 1
@@ -14,7 +15,7 @@ function Character:moveRight(param)
 	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
-		return x >= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
+		return x >= ((self.x - 1) / self.grid.gridSize) * WINDOW_WIDTH
 	end
 end
 
@@ -28,7 +29,7 @@ function Character:moveLeft(param)
 	self.xSpeed = self.velocity
 	self.ySpeed = 0
 	self.cellCheck = function(x, y)
-		return x <= ((self.x - 1) / self.grid.numRows) * WINDOW_WIDTH
+		return x <= ((self.x - 1) / self.grid.gridSize) * WINDOW_WIDTH
 	end
 end
 
@@ -42,12 +43,12 @@ function Character:moveUp(param)
 	self.xSpeed = 0
 	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
-		return y <= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
+		return y <= ((self.y - 1) / self.grid.gridSize) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
 	end
 end
 
 function Character:moveDown(param)
-	if self.y >= self.grid.numRows then
+	if self.y >= self.grid.gridSize then
 		return
 	end
 	self.y = self.y + 1
@@ -56,7 +57,7 @@ function Character:moveDown(param)
 	self.xSpeed = 0
 	self.ySpeed = self.velocity
 	self.cellCheck = function(x, y)
-		return y >= ((self.y - 1) / self.grid.numRows) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
+		return y >= ((self.y - 1) / self.grid.gridSize) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
 	end
 end
 
@@ -67,41 +68,27 @@ function Character:initMoveBuffer()
 	self.action = false
 end
 
-function Character:enterGrid(grid, imagePath)
-	self.x = self.initX
-	self.y = self.initY
+function Character:enterGrid(grid, initX, initY)
+	self.x = initX
+	self.y = initY
 	self.grid = grid
-	local imageScale = WINDOW_WIDTH / self.grid.numRows
-	local inc = 1 / self.grid.numRows
-	local startY = WINDOW_HEIGHT / 4
-	local playerImage = Bitmap.new(Texture.new(imagePath))
-	local scaleX = imageScale / playerImage:getWidth()
-	local scaleY = imageScale / playerImage:getHeight()
-	playerImage:setScale(scaleX, scaleY)
-	self.xPosStart = (inc * (self.x-1)) * WINDOW_WIDTH
-	self.yPosStart = (inc * (self.y-1)) * WINDOW_WIDTH + startY
-	playerImage:setPosition(self.xPosStart, self.yPosStart)
-	self.playerImage = playerImage
+	local imageScale = self.grid:getWidth() / self.grid.gridSize
+	local inc = 1 / self.grid.gridSize
+	local scaleX = imageScale / self:getWidth()
+	local scaleY = imageScale / self:getHeight()
+	self:setScale(scaleX, scaleY)
+	local xPosStart = (inc * (self.x-1)) * self.grid:getWidth()
+	local yPosStart = (inc * (self.y-1)) * self.grid:getHeight()
+	self:setPosition(xPosStart, yPosStart)
 end
 
-function Character:show()
-	stage:addChild(self.playerImage)
-end
-
-function Character:destroy()
-	stage:removeChild(self.playerImage)
-end
-
-
-Player = Core.class(Player)
+Player = Core.class(Character)
 
 EVENT_DURATION = 16
 
-function Player:init(grid, playerNum, imagePath, maxMoves)
-	self:initPlayerAttributes(grid, playerNum, maxMoves)
+function Player:init()
 	self:initMoveBuffer()
-	self:enterGrid(grid, imagePath)
-	self:setScoreField(playerNum)
+	--self:setScoreField(playerNum)
 end
 
 function Player:initPlayerAttributes(grid, playerNum, maxMoves)
@@ -111,10 +98,11 @@ function Player:initPlayerAttributes(grid, playerNum, maxMoves)
 		self.initY = 1
 	elseif playerNum == 2 then
 		self.name = "Player 2"
-		self.initX = grid.numRows
-		self.initY = grid.numRows
+		self.initX = grid.gridSize
+		self.initY = grid.gridSize
 	end
-	self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
+	self:enterGrid(grid, self.initX, self.initY)
+	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
 	self.xDirection = 0
 	self.yDirection = 0
 	self.xSpeed = 0
@@ -172,9 +160,9 @@ function Player:destroy()
 	print("Player destroy not implemented!")
 end
 
-CollectPlayer = Core.class(CollectPlayer)
-function CollectPlayer(grid, isPlayer1, maxMoves)
-	local self = Player(grid, isPlayer1, "images/astronaut.png", maxMoves)
+CollectPlayer = Core.class(Player)
+function CollectPlayer:init(grid, isPlayer1, imgPath, maxMoves)
+	local self = Player(grid, isPlayer1, imgPath, maxMoves)
 	
 	local moveRight = function(param)
 		self:moveRight(param)
@@ -350,7 +338,7 @@ function CollectPlayer(grid, isPlayer1, maxMoves)
 	}
 end
 
-ComputerControlled = Core.class(ComputerControlled)
+ComputerControlled = Core.class(Player)
 function ComputerControlled:init(grid, maxMoves, imagePath, name, init)
 	self:initComputerAttributes(grid, name, init, maxMoves)
 	self:initMoveBuffer()
@@ -362,7 +350,7 @@ function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
 	self.initY = init.y
 	self.name = name
 	self.maxMoves = maxMoves
-	self.velocity = (WINDOW_WIDTH / grid.numRows) / EVENT_DURATION
+	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
 	self.xDirection = 0
 	self.yDirection = 0
 	self.xSpeed = 0

@@ -246,7 +246,15 @@ function gameScreen:init()
 	self:addChild(gameBoard)
 	-- Add sprite images
 	
-	local player1 = Bitmap.new(Texture.new("images/board-cat-icon.png"))
+	local player1 = Player.new(Texture.new("images/board-cat-icon.png"))
+	player1:initPlayerAttributes(gameBoard, 1, 5)
+	gameBoard:addChild(player1)
+	
+	local player2 = Player.new(Texture.new("images/board-rat-icon.png"))
+	player2:initPlayerAttributes(gameBoard, 2, 5)
+	gameBoard:addChild(player2)
+	
+	--[[local player1 = Bitmap.new(Texture.new("images/board-cat-icon.png"))
 	player1:setScale(60/player1:getWidth(), 60/player1:getHeight())
 	player1:setPosition(spritePadding, spritePadding)
 	gameBoard:addChild(player1)
@@ -256,6 +264,7 @@ function gameScreen:init()
 	player2:setPosition(gameBoard:getWidth() - spritePadding - player2:getWidth(),
 		gameBoard:getHeight() - spritePadding - player2:getHeight())
 	gameBoard:addChild(player2)
+	]]--
 	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
