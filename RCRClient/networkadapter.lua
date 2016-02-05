@@ -22,8 +22,19 @@ end
 
 local registeredCallbacks = {}
 
-function NetworkAdapter:registerCallback(key, callback)
-	registeredCallbacks[key] = callback
+function NetworkAdapter:registerCallback(key, callback, data)
+	if self.on then
+		registeredCallbacks[key] = callback
+	elseif data then
+		local timer = Timer.new(1000)
+		timer:addEventListener(Event.TIMER, function()
+			timer:stop()
+			callback(data)
+		end)
+		timer:start()
+	else
+		print('error, network not connected and dev did not supply mock data')
+	end
 end
 
 function NetworkAdapter:unregisterCallback(key)

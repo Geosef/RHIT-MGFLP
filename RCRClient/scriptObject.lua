@@ -2,7 +2,9 @@ ScriptObject = Core.class(SceneObject)
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 local scriptButtonHeight = 25
 
-function ScriptObject:init()
+function ScriptObject:init(parent, name)
+	self.parent = parent
+	self.name = name
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
@@ -92,14 +94,177 @@ end
 function ScriptObject:onTouchesCancel(event)
 end
 
+ZeroScriptObject = Core.class(ScriptObject)
+
+function ZeroScriptObject:init(parent, name)
+	self.image = Bitmap.new(Texture.new("images/ZeroScriptObject.png"))
+	self:addChild(self.image)
+	self:setUpScriptButtons()
+end
+
+function ZeroScriptObject:setUpScriptButtons()
+	self.removeButton = self:makeHitArea(25, 25, 0, 0)
+	self.moveButton = self:makeHitArea(25, 25, 245, 0)
+	self:addChild(self.removeButton)
+	self:addChild(self.moveButton)
+end
+
+function ZeroScriptObject:onMouseDown(event)
+	if self.removeButton:hitTestPoint(event.x, event.y) then
+		self.focus = "R"
+		event:stopPropagation()
+	elseif self.moveButton:hitTestPoint(event.x, event.y) then
+		self.focus = "M"
+		event:stopPropagation()
+	end
+end
+
+function ZeroScriptObject:onMouseMove(event)
+	if self.focus == "R" then
+		if not self.removeButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			event:stopPropagation()
+		end
+	elseif self.focus == "M" then
+		if not self:hitTestPoint(event.x, event.y) then	
+			event:stopPropagation()
+			self.moveLocation = self.parent:moveCommand(self, event.y)
+		end
+	end
+end
+
+function ZeroScriptObject:onMouseUp(event)
+	if self.focus == "R" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self.parent:removeCommand(self)
+	elseif self.focus == "M" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self.parent:replaceCommand(self, self.moveLocation)
+	end
+end
+
+SingleScriptObject = Core.class(ScriptObject)
+local singleScriptButtonWidth = 135
+
+function SingleScriptObject:init(parent, name, data)
+	self.image = Bitmap.new(Texture.new("images/SingleScriptObject.png"))
+	self:addChild(self.image)
+	self.dataSet = data
+	self.dIndex = 1
+	self:setUpScriptButtons()
+end
+
+function SingleScriptObject:setUpScriptButtons()
+	self.dataSetIncrementButton = self:makeHitArea(singleScriptButtonWidth, scriptButtonHeight, 135, 25)
+	self.dataSetDecrementButton = self:makeHitArea(singleScriptButtonWidth, scriptButtonHeight, 135, 50)
+	self.removeButton = self:makeHitArea(25, 25, 0, 0)
+	self.moveButton = self:makeHitArea(25, 25, 245, 0)
+	self:addChild(self.dataSetIncrementButton)
+	self:addChild(self.dataSetDecrementButton)
+	self:addChild(self.removeButton)
+	self:addChild(self.moveButton)
+	self:setTextBox()
+end
+
+function SingleScriptObject:setTextBox()
+	if self.dText then
+		self:removeChild(self.dText)
+	end
+	local textBoxMiddleX = 67.5
+	local textBoxMiddleY = 50
+	local dItem = self.dataSet[self.dIndex]
+	self.dText = TextField.new(font, dItem)
+	self.dText:setPosition(textBoxMiddleX - (self.dText:getWidth() / 2), textBoxMiddleY + (self.dText:getHeight() / 2))
+	self:addChild(self.dText)
+end
+
+function SingleScriptObject:onMouseDown(event)
+	if self.dataSetIncrementButton:hitTestPoint(event.x, event.y) then
+		self.focus = "I"
+		event:stopPropagation()
+	elseif self.dataSetDecrementButton:hitTestPoint(event.x, event.y) then
+		self.focus = "D"
+		event:stopPropagation()
+	elseif self.removeButton:hitTestPoint(event.x, event.y) then
+		self.focus = "R"
+		event:stopPropagation()
+	elseif self.moveButton:hitTestPoint(event.x, event.y) then
+		self.focus = "M"
+		event:stopPropagation()
+	end
+end
+
+function SingleScriptObject:onMouseMove(event)
+	if self.focus == "I" then
+		if not self.dataSetIncrementButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			event:stopPropagation()
+		end
+	elseif self.focus == "D" then
+		if not self.dataSetDecrementButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			event:stopPropagation()
+		end
+	elseif self.focus == "R" then
+		if not self.removeButton:hitTestPoint(event.x, event.y) then	
+			self.focus = false
+			event:stopPropagation()
+		end
+	elseif self.focus == "M" then
+		if not self:hitTestPoint(event.x, event.y) then	
+			event:stopPropagation()
+			self.moveLocation = self.parent:moveCommand(self, event.y)
+		end
+	end
+end
+
+function SingleScriptObject:onMouseUp(event)
+	if self.focus == "I" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self:incrementDataset()
+	elseif self.focus == "D" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self:decrementDataset()
+	elseif self.focus == "R" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self.parent:removeCommand(self)
+	elseif self.focus == "M" then
+		self.focus = false
+		self:dispatchEvent(Event.new("click"))	-- button is clicked, dispatch "click" event
+		event:stopPropagation()
+		self.parent:replaceCommand(self, self.moveLocation)
+	end
+end
+
+function SingleScriptObject:incrementDataset()
+	self.dIndex = (self.dIndex % table.getn(self.dataSet)) + 1
+	self:setTextBox()
+end
+
+function SingleScriptObject:decrementDataset()
+	self.dIndex = self.dIndex - 1
+	if self.dIndex == 0 then
+		self.dIndex = table.getn(self.dataSet)
+	end
+	self:setTextBox()
+end
+
 DoubleScriptObject = Core.class(ScriptObject)
 local doubleScriptButtonWidth = 67.5
 
 function DoubleScriptObject:init(parent, name, data1, data2)
-	self.parent = parent
 	self.image = Bitmap.new(Texture.new("images/ScriptObject.png"))
 	self:addChild(self.image)
-	self.name = name
 	self.dataSet1 = data1
 	self.dataSet2 = data2
 	self.d1Index = 1
