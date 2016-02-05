@@ -241,19 +241,15 @@ function CommandBox:initButtons()
 end
 
 function gameScreen:init()
-	local gameBoard = GameBoard.new(Texture.new("images/8x8-board.png"))
+	local gameBoard = Grid.new(Texture.new("images/board-blank.png"))
 	self:addChild(gameBoard)
-	-- Add sprite images
 	
-	local player1 = Bitmap.new(Texture.new("images/board-cat-icon.png"))
-	player1:setScale(60/player1:getWidth(), 60/player1:getHeight())
-	player1:setPosition(spritePadding, spritePadding)
+	local player1 = Player.new(Texture.new("images/board-cat-icon.png"))
+	player1:initPlayerAttributes(gameBoard, 1, 5)
 	gameBoard:addChild(player1)
 	
-	local player2 = Bitmap.new(Texture.new("images/board-rat-icon.png"))
-		player2:setScale(60/player2:getWidth(), 60/player2:getHeight())
-	player2:setPosition(gameBoard:getWidth() - spritePadding - player2:getWidth(),
-		gameBoard:getHeight() - spritePadding - player2:getHeight())
+	local player2 = Player.new(Texture.new("images/board-rat-icon.png"))
+	player2:initPlayerAttributes(gameBoard, 2, 5)
 	gameBoard:addChild(player2)
 	
 	-- Eventually sceneName will be set by the type of game
@@ -272,7 +268,7 @@ function gameScreen:init()
 	local submitButtonUp = Bitmap.new(Texture.new("images/script-submit-buttom-up.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/script-submit-button-down.png"))
 	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function()
-		
+		gameBoard:runScript()
 	end)
 	local helpButtonUp = Bitmap.new(Texture.new("images/help-button-up.png"))
 	local helpButtonDown = Bitmap.new(Texture.new("images/help-button-down.png"))
