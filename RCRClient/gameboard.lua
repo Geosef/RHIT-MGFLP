@@ -2,23 +2,21 @@ local padding = 12
 
 Cell = Core.class(Sprite)
 
-function Cell:init(x, y)
+function Cell:init(x, y, cellImage)
 	self.x = x
 	self.y = y
+
+	--cellImage:setPosition(100, 100)
+	
+	--self:addChild(cellImage)
 end
 
 function Cell:addImage(imagePath)
-	if self.image == nil then
-		local image = Bitmap.new(Texture.new(imagePath))
-		scaleX = imageScale / image:getWidth() / 1.33
-		scaleY = imageScale / image:getHeight() / 1.33
-		
-		image:setScale(scaleX, scaleY)
+	--[[if self.image == nil then
 		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 4
 		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
 		image:setPosition(xPos, yPos)
-		self.image = image
-	end
+	end]]--
 	return
 end
 
@@ -61,7 +59,13 @@ function Grid:init(img)
 		local row = {}
 		table.insert(self.cells, row)
 		for j=1, gridSize do
-			local cell = Cell.new(i, j, cellImage)	
+			local cellWidth = self:getWidth()/gridSize
+			local scale = cellWidth/120
+			local cellImage = Bitmap.new(Texture.new("images/board-cell-120.png"))
+			cellImage:setScale(scale, scale)
+			cellImage:setPosition((i-1)*cellWidth, (j-1)*cellWidth)
+			local cell = Cell.new(i, j, cellImage)
+			self:addChild(cellImage)
 			table.insert(row, cell)
 			--print("Cell X: " .. cell.x .. " Cell Y: " .. cell.y)
 		end
