@@ -1,12 +1,12 @@
 __author__ = 'kochelmj'
 
-import fakesocket
-import gamefactory
-import clienthandler
-from pprint import pprint
 import time
 import unittest
-import testutility
+
+from game import gamefactory
+from tests import fakesocket, testutility
+from user import clienthandler
+
 
 # assertDictEqual(d1, d2):
 

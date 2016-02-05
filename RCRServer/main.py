@@ -1,16 +1,13 @@
 __author__ = 'kochelmj'
 
+import logging
+import signal
+import socket
+import sys
 
-import socket, threading
-import pprint
-import json
-import clienthandler
 import gamefactory
 import fakesocket
-import logging
-
-import signal
-import sys
+import clienthandler
 
 
 def main():
@@ -18,7 +15,7 @@ def main():
     gameFactory = gamefactory.GameFactory()
 
     # host = 'localhost'
-    host = '137.112.226.24'
+    host = '137.112.226.201'
     # host = '192.168.5.107'
     # host = '54.201.206.189'
     # host = '0.0.0.0'
