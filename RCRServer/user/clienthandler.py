@@ -58,7 +58,7 @@ class ClientThread(threading.Thread):
                 if self.loggedIn:
                     method(data)
                 else:
-                    if methodType == 'Login':
+                    if methodType in ['Login', 'Create Account']:
                         method(data)
             else:
                 pprint(data)

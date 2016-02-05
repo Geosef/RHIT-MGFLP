@@ -56,7 +56,6 @@ function createAccount:init()
 			if data.success then
 				sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 			end
-			print_r(data)
 		end,
 		{type='Create Account', success=true})
 		
