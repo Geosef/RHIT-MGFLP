@@ -50,8 +50,21 @@ function createAccount:init()
 	local createButtonDown = Bitmap.new(Texture.new("images/createAccountButtonDown.png"))
 	
 	-- Create "create account" button
-	local createClick = Button.new(createButtonUp, createButtonDown, function() 
-		sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack) 
+	local createClick = CustomButton.new(createButtonUp, createButtonDown, function()
+		NET_ADAPTER:registerCallback('Create Account', function(data)
+			
+			if data.success then
+				sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+			end
+			print_r(data)
+		end,
+		{type='Create Account', success=true})
+		
+		local toSend = {type='Create Account'}
+		toSend.email = emailTB:getText()
+		toSend.password = passwordTB:getText()
+		NET_ADAPTER:sendData(toSend)
+		print_r(toSend)
 	end)
 	createClick:setPosition(525, 600)
 	self:addChild(createClick)

@@ -76,7 +76,7 @@ function loginScreen:login()
 		
 		local loginPacket = {}
 		loginPacket.type = 'Login'
-		loginPacket.username = self.emailTB:getText()
+		loginPacket.email = self.emailTB:getText()
 		loginPacket.password = self.passwordTB:getText()
 		
 		NET_ADAPTER:sendData(loginPacket)
