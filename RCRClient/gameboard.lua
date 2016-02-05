@@ -72,6 +72,10 @@ function Grid:init(img)
 	end
 end
 
+function Grid:runScript()
+	
+end
+
 function Grid:initializeMapItems(gameState)
 
 end

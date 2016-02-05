@@ -61,6 +61,50 @@ function Character:moveDown(param)
 	end
 end
 
+function Character:update(nextMoveFlag)
+	--[[if not self.action then return end
+	
+	if (self.xSpeed == 0 and self.ySpeed == 0) then
+		if # self.loadedMoves ~= 0 then
+			move = self.loadedMoves[1]
+			table.remove(self.loadedMoves, 1)
+			self.activeMove = move
+			move:execute()
+		else
+			self.action = false
+		end
+		return
+	end
+	
+	local x,y = self.playerImage:getPosition()
+	if self.activeMove:isFinished() then
+		self.finishMove()
+		if # self.loadedMoves == 0 then
+			self.xSpeed = 0
+			self.ySpeed = 0
+			self.action = false
+			self.activeMove = nil
+		else
+			move = self.loadedMoves[1]
+			table.remove(self.loadedMoves, 1)
+			self.activeMove = move
+			move:execute()
+		end
+		return
+	end
+	self.activeMove:tick()
+ 
+	x = x + (self.xSpeed * self.xDirection)
+	y = y + (self.ySpeed * self.yDirection)
+ 
+	self.playerImage:setPosition(x, y)
+		
+	end]]--
+end
+
+function Character:nextEvent()
+end
+
 function Character:initMoveBuffer()
 	self.loadedMoves = {}
 	self.maxMoves = maxMoves
@@ -158,184 +202,6 @@ end
 -- implemented by subclass
 function Player:destroy()
 	print("Player destroy not implemented!")
-end
-
-CollectPlayer = Core.class(Player)
-function CollectPlayer:init(grid, isPlayer1, imgPath, maxMoves)
-	local self = Player(grid, isPlayer1, imgPath, maxMoves)
-	
-	local moveRight = function(param)
-		self:moveRight(param)
-	end
-	
-	local moveLeft = function(param)
-		self:moveLeft(param)
-	end
-	
-	local moveUp = function(param)
-		self:moveUp(param)
-	end
-	
-	local moveDown = function(param)
-		self:moveDown(param)
-	end
-	
-	local incrementScore = function(points)
-		self:changeScore(points)
-	end
-
-	local reset = function()
-		self.score = 0
-		self.scoreField:setText("Score: " .. self.score)
-		self.playerImage:setPosition(self.x, self.y)
-		self.action = true
-		self.collectible = nil
-	end
-	
-	local update = function()
-		if not self.action then return end
-		
-		if (self.xSpeed == 0 and self.ySpeed == 0) then
-			if # self.loadedMoves ~= 0 then
-				move = self.loadedMoves[1]
-				table.remove(self.loadedMoves, 1)
-				self.activeMove = move
-				move:execute()
-			else
-				self.action = false
-			end
-			return
-		end
-		
-		local x,y = self.playerImage:getPosition()
-		if self.activeMove:isFinished() then
-			self.finishMove()
-			if # self.loadedMoves == 0 then
-				self.xSpeed = 0
-				self.ySpeed = 0
-				self.action = false
-				self.activeMove = nil
-			else
-				move = self.loadedMoves[1]
-				table.remove(self.loadedMoves, 1)
-				self.activeMove = move
-				move:execute()
-			end
-			return
-		end
-		self.activeMove:tick()
-	 
-		x = x + (self.xSpeed * self.xDirection)
-		y = y + (self.ySpeed * self.yDirection)
-	 
-		self.playerImage:setPosition(x, y)
-	end
-	
-	self.lastCell = nil
-	local finishMove = function()
-		local cell = self.grid.rows[self.y][self.x]
-		if self.lastCell ~= nil then
-			self.grid.rows[self.lastCell.y][self.lastCell.x].currentChar = nil
-		end
-		if self.grid.rows[self.y][self.x].currentChar ~= nil then
-			if self.grid.rows[self.y][self.x].currentChar.name == "Alien" then
-				print(self.name .. " ran into an alien! Lost some coins!")
-				self.incrementScore(-7)
-			else 
-				print(self.name .. " ran into " .. cell.currentChar.name .. "! Stole some coins!")
-				self.grid.rows[self.y][self.x].currentChar.incrementScore(-3)
-				self.incrementScore(3)
-			end
-		end
-		self.grid.rows[self.y][self.x].currentChar = self
-		self.lastCell = self.grid.rows[self.y][self.x]
-		self.xDirection = 0
-		self.yDirection = 0
-		self.xSpeed = 0
-		self.ySpeed = 0
-		if cell.hasEnemy then
-			
-		end
-		if cell.collectible ~= nil then
-			print(self.name .. " passed over " .. cell.collectible.name)
-			didCollect = cell.collectible.doFunc(self)
-			if didCollect then
-				collectible = cell:removeCollectible()
-			end
-		end
-		
-	end
-	
-	local setAction = function(newActionSetting)
-		self.action = newActionSetting
-	end
-	
-	local getAction = function()
-		return self.action
-	end
-	
-	local getX = function()
-		return self.x
-	end
-	
-	local getY = function()
-		return self.y
-	end
-	
-	local getXSpeed = function()
-		return self.xSpeed
-	end
-	
-	local getYSpeed = function()
-		return self.ySpeed
-	end
-	
-	local getXDirection = function()
-		return self.xDirection
-	end
-	
-	local getYDirection = function()
-		return self.yDirection
-	end
-	
-	local getScore = function()
-		return self.score
-	end
-	
-	local show = function()
-		stage:addChild(self.playerImage)
-		stage:addChild(self.scoreField)
-	end
-	
-	local destroy = function()
-		stage:removeChild(self.playerImage)
-		stage:removeChild(self.scoreField)
-	end
-	
-	self.finishMove = finishMove
-	self.incrementScore = incrementScore
-	return { 
-		loadedMoves = self.loadedMoves,
-		moveRight = moveRight,
-		moveLeft = moveLeft,
-		moveUp = moveUp,
-		moveDown = moveDown,
-		endTurn = endTurn,
-		reset = reset,
-		update = update,
-		destroy = destroy,
-		setAction = setAction,
-		getAction = getAction,
-		getX = getX,
-		getY = getY,
-		getXSpeed = getXSpeed,
-		getYSpeed = getYSpeed,
-		getXDirection = getXDirection,
-		getYDirection = getYDirection,
-		getScore = getScore,
-		incrementScore = incrementScore,
-		show = show
-	}
 end
 
 ComputerControlled = Core.class(Player)
