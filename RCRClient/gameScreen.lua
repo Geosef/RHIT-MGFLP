@@ -22,10 +22,22 @@ function ScriptArea:init(parent)
 	self.movementLine:lineTo(0, 1)
 	self.movementLine:lineTo(0, 0)
 	self.movementLine:endPath()
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
+end
+
+function ScriptArea:onEnterEnd()
+	
+end
+
+function ScriptArea:onExitBegin()
+	self:removeEventListener("enterEnd", self.onEnterEnd)
+	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
 function ScriptArea:drawScript()
 	self:removeScript()
+	self:setCommandSizes()
 	local location = 0
 	for i = 1,4 do
 		local v = self.script[self.scrollCount+i]
@@ -33,11 +45,31 @@ function ScriptArea:drawScript()
 			break
 		end
 		self.visibleScript[i] = v
-		v:setPosition(0, location + scriptPadding)
+		v:setPosition(v:getX(), location + scriptPadding)
 		self:addChild(v)
 		location = v:getY() + v:getHeight()
 	end
 	self.parent:scrollCheck(true)
+end
+
+function ScriptArea:setCommandSizes()
+	local loopCounter = 0
+	for i=1,table.getn(self.script) do
+		local command = self.script[i]
+		if command.name == "Loop End" then
+			loopCounter = loopCounter - 1
+		end
+		if loopCounter > 0 then
+			command:setScale(math.pow(0.90, loopCounter), 1)
+			command:setPosition(self:getWidth() / 2 - command:getWidth() / 2, command:getY())
+		else
+			command:setScale(1, 1)
+			command:setPosition(0, command:getY())
+		end
+		if command.name == "Loop" then
+			loopCounter = loopCounter + 1
+		end
+	end
 end
 
 function ScriptArea:removeScript()
@@ -47,33 +79,60 @@ function ScriptArea:removeScript()
 	end
 end
 
-function ScriptArea:scrollUp()
-	self.scrollCount = self.scrollCount - 1
-	self:drawScript()
+function ScriptArea:scroll(doDraw, scrollDist)
+	self.scrollCount = self.scrollCount + scrollDist
+	if doDraw then
+		self:drawScript()
+	end
 end
 
-function ScriptArea:scrollDown()
-	self.scrollCount = self.scrollCount + 1
-	self:drawScript()
+function ScriptArea:scrollTo(doDraw, scrollTarget)
+	self.scrollCount = scrollTarget
+	if doDraw then
+		self:drawScript()
+	end
 end
 
 function ScriptArea:addCommand(command)
 	table.insert(self.script, command)
 	--print(table.getn(self.script))
 	if table.getn(self.script) >= 4 then
-		self.scrollCount = table.getn(self.script) - 4
+		self:scrollTo(true, (table.getn(self.script) - 4))
+		return
 	end
 	self:drawScript()
 end
 
 function ScriptArea:removeCommand(command)
 	local index = inTable(self.script, command)
+	local numRemoved = 0
 	if index then
 		removedCommand = table.remove(self.script, index)
-		if self.scrollCount > 0 then
-			self.scrollCount = self.scrollCount - 1
+		numRemoved = numRemoved + 1
+		if removedCommand.name == "Loop" then
+			while index < (table.getn(self.script) + 1) do
+				if self.script[index].name == "Loop End" then
+					table.remove(self.script, index)
+					numRemoved = numRemoved + 1
+					break
+				end
+				index = index + 1
+			end
+		elseif removedCommand.name == "Loop End" then
+			while index > 0 do
+				if self.script[index].name == "Loop" then
+					table.remove(self.script, index)
+					numRemoved = numRemoved + 1
+					break
+				end
+				index = index - 1
+			end
 		end
-		self:drawScript()
+		if self.scrollCount > 0 then
+			self:scroll(true, -numRemoved)
+		else 
+			self:drawScript()
+		end
 	end
 end
 
@@ -86,13 +145,13 @@ function ScriptArea:moveCommand(toMove, y)
 	local scrollDownY = myY + self:getHeight() + self.parent.scriptDownButton:getHeight()
 	if y < scrollUpY then
 		if self.scrollCount > 0 then
-			self.scrollCount = self.scrollCount - 1
+			self:scroll(true, -1)
 		end
 		self:drawScript()
 		return nil
 	elseif y > scrollDownY then
 		if self.scrollCount < table.getn(self.script) - 4 then
-			self.scrollCount = self.scrollCount + 1
+			self:scroll(true, 1)
 		end
 		self:drawScript()
 		return nil
@@ -120,21 +179,60 @@ function ScriptArea:replaceCommand(toMove, moveRegion)
 	if self:contains(self.movementLine) then
 		self:removeChild(self.movementLine)
 	end
+	local newState = self:copyScript()
 	local visibleIndex = inTable(self.visibleScript, toMove)
-	local removedCommand = table.remove(self.script, self.scrollCount + visibleIndex)
-	if moveRegion == visibleIndex or moveRegion == nil then
-		table.insert(self.script, self.scrollCount + visibleIndex, removedCommand)
+	local removedIndex = self.scrollCount + visibleIndex
+	local removedCommand = table.remove(newState, removedIndex)
+	local targetIndex = removedIndex
+	if moveRegion == nil then
+		-- Mouse is released above arrow keys
 		return
-	elseif moveRegion > table.getn(self.visibleScript) then
+	end
+	if moveRegion > table.getn(self.visibleScript) then
+		-- If want to move below all visible commands
 		if moveRegion > table.getn(self.script) then
-			table.insert(self.script, removedCommand)
+			targetIndex = table.getn(self.script) + 1
 		else
-			table.insert(self.script, self.scrollCount + (moveRegion - 1), removedCommand)
+			targetIndex = self.scrollCount + (moveRegion - 1)
 		end
 	else
-		table.insert(self.script, self.scrollCount + moveRegion, removedCommand)
+		targetIndex = self.scrollCount + moveRegion
 	end
+	table.insert(newState, targetIndex, removedCommand)
+	if targetIndex == removedIndex or not self:ruleCheck(newState, targetIndex) then
+		-- Command doesn't need to move
+		return
+	end
+	self.script = newState
 	self:drawScript()
+end
+
+function ScriptArea:ruleCheck(newState, targetIndex)
+	return self:loopCheck(newState)
+end
+
+function ScriptArea:loopCheck(newState)
+	local loopCounter = 0
+	for i=1,table.getn(newState),1 do
+		local command = newState[i]
+		if command.name == "Loop" then
+			loopCounter = loopCounter + 1
+		elseif command.name == "Loop End" then
+			loopCounter = loopCounter - 1
+		end
+		if loopCounter < 0 or loopCounter > 2 then
+			return false
+		end
+	end
+	return (loopCounter == 0)
+end
+
+function ScriptArea:copyScript()
+	local scriptCopy = {}
+	for i=1,table.getn(self.script),1 do
+		scriptCopy[i] = self.script[i]
+	end
+	return scriptCopy
 end
 
 local ResourceBox = Core.class(SceneObject)
@@ -162,6 +260,17 @@ function StatementBox:init(parent)
 	self:addChild(self.resourceBox)
 	self:initScript()
 	self.savedScript = nil
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
+end
+
+function StatementBox:onEnterEnd()
+
+end
+
+function StatementBox:onExitBegin()
+	self:removeEventListener("enterEnd", self.onEnterEnd)
+	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
 function StatementBox:initScript()
@@ -169,7 +278,7 @@ function StatementBox:initScript()
 	local scriptUpButtonDown = Bitmap.new(Texture.new("images/script-up-button-down.png"))
 	self.scriptUpButton = CustomButton.new(scriptUpButtonUp, scriptUpButtonDown, function() 
 		--self.scrollCount = self.scrollCount - 1
-		self.scriptArea:scrollUp()
+		self.scriptArea:scroll(true, -1)
 	end)
 	self.scriptUpButton:setPosition((self:getWidth() / 2) - (self.scriptUpButton:getWidth() / 2), self.resourceBox:getY() + self.resourceBox:getHeight() + padding)
 	self:addChild(self.scriptUpButton)
@@ -180,8 +289,7 @@ function StatementBox:initScript()
 	local scriptDownButtonDown = Bitmap.new(Texture.new("images/script-down-button-down.png"))
 	self.scriptDownButton = CustomButton.new(scriptDownButtonUp, scriptDownButtonDown, function() 
 		--self.scrollCount = self.scrollCount + 1
-		self.scriptArea:scrollDown()
-		--self:scriptCountCheck(true) 
+		self.scriptArea:scroll(true, 1)
 	end)
 	-- This is calculated assuming 4 script objects of height 75 px
 	local scriptDownHeight = self.scriptUpButton:getY() + self.scriptUpButton:getHeight() 
@@ -191,8 +299,10 @@ function StatementBox:initScript()
 	
 end
 
-function StatementBox:addCommand(command)
-	self.scriptArea:addCommand(command)
+function StatementBox:addCommand(commandList)
+	for i,v in ipairs(commandList) do
+		self.scriptArea:addCommand(v)
+	end
 end
 
 function StatementBox:scrollCheck()
@@ -227,16 +337,17 @@ end
 function CommandBox:initButtons()
 	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parent.sceneName)
 	local yLoc = self.headerBottom + padding
-	local gameButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
-	local gameButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 	for i,v in pairs(commandSet) do
+		local gameButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
+		local gameButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
 		local addButton = function(name)
-			self.parent.statementBox:addCommand(v(self.parent))
+			self.parent.statementBox:addCommand(v(self.parent.statementBox.scriptArea))
 			--self.parentScreen.statementBox:scriptCountCheck(false)
 		end
 		local gameButton = GameButton.new(gameButtonUp, gameButtonDown, addButton, i)
 		gameButton:setPosition((self:getWidth() / 2) - (gameButton:getWidth() / 2), yLoc)
 		self:addChild(gameButton)
+		yLoc = yLoc + gameButton:getHeight() + padding
 	end
 end
 
@@ -291,7 +402,7 @@ function gameScreen:init()
 end
 
 function gameScreen:onEnterEnd()
-
+	
 end
 
 function gameScreen:onExitBegin()

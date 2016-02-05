@@ -2,7 +2,9 @@ ScriptObject = Core.class(SceneObject)
 local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 local scriptButtonHeight = 25
 
-function ScriptObject:init()
+function ScriptObject:init(parent, name)
+	self.parent = parent
+	self.name = name
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
@@ -95,10 +97,8 @@ end
 ZeroScriptObject = Core.class(ScriptObject)
 
 function ZeroScriptObject:init(parent, name)
-	self.parent = parent
-	self.image = Bitmap.new(Texture.new("images/ScriptObject.png"))
+	self.image = Bitmap.new(Texture.new("images/ZeroScriptObject.png"))
 	self:addChild(self.image)
-	self.name = name
 	self:setUpScriptButtons()
 end
 
@@ -151,10 +151,8 @@ SingleScriptObject = Core.class(ScriptObject)
 local singleScriptButtonWidth = 135
 
 function SingleScriptObject:init(parent, name, data)
-	self.parent = parent
-	self.image = Bitmap.new(Texture.new("images/ScriptObject.png"))
+	self.image = Bitmap.new(Texture.new("images/SingleScriptObject.png"))
 	self:addChild(self.image)
-	self.name = name
 	self.dataSet = data
 	self.dIndex = 1
 	self:setUpScriptButtons()
@@ -265,10 +263,8 @@ DoubleScriptObject = Core.class(ScriptObject)
 local doubleScriptButtonWidth = 67.5
 
 function DoubleScriptObject:init(parent, name, data1, data2)
-	self.parent = parent
 	self.image = Bitmap.new(Texture.new("images/ScriptObject.png"))
 	self:addChild(self.image)
-	self.name = name
 	self.dataSet1 = data1
 	self.dataSet2 = data2
 	self.d1Index = 1
