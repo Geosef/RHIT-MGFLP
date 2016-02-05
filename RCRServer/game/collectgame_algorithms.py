@@ -1,7 +1,9 @@
 __author__ = 'kochelmj'
 
 import random
+
 import util
+
 
 def generateRandomItemLocations(locations):
     vals = locations.values()

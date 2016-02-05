@@ -1,0 +1,22 @@
+{
+    "chenoweth": {
+        "password": "CSSE498bro", 
+        "email": "chenoweth"
+    }, 
+    "user2": {
+        "password": "te", 
+        "email": "user2"
+    }, 
+    "user": {
+        "password": "password", 
+        "email": "user"
+    }, 
+    "user4": {
+        "password": "te", 
+        "email": "user4"
+    }, 
+    "user3": {
+        "password": "te", 
+        "email": "user3"
+    }
+}

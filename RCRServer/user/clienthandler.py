@@ -4,6 +4,8 @@ import json, threading
 from pprint import pprint
 import logging
 import time
+import login
+import createaccount
 
 class ClientThread(threading.Thread):
 
@@ -17,6 +19,7 @@ class ClientThread(threading.Thread):
         self.methodRoutes = \
         {
             'Login': self.login,
+            'Create Account': self.createAccount,
             'Create Game': self.createGame,
             'Join Game': self.joinGame,
             'Submit Move': self.submitMove,
@@ -55,7 +58,7 @@ class ClientThread(threading.Thread):
                 if self.loggedIn:
                     method(data)
                 else:
-                    if methodType == 'Login':
+                    if methodType in ['Login', 'Create Account']:
                         method(data)
             else:
                 pprint(data)
@@ -129,22 +132,43 @@ class ClientThread(threading.Thread):
         }
         self.sendData(data)
 
-    DEFAULT_USER = 'user'
-    DEFAULT_PASSWORD = 'password'
-    def login(self, packet):
-        playerID = 1
-        self.userInfo['username'] = packet.get('username')
-        self.userInfo['playerID'] = playerID
-        print 'Logging in user:', self.userInfo.get('username')
-        success = packet.get('username') == self.DEFAULT_USER and packet.get('password') == self.DEFAULT_PASSWORD
+
+    def login(self, packet, **kw):
+        #TODO: make user identified by email in JSON
+        email = packet.get('email')
+        password = packet.get('password')
+
+        success = login.validLogin(email, password)
+
+        if success:
+            playerID = 1
+            self.userInfo['playerID'] = playerID
+            self.userInfo['username'] = packet.get('email')
+
+
         data = \
         {
             'type': 'Login',
-            'success': success,
-            'playerID': playerID
+            'success': success
         }
-        self.loggedIn = True
-        self.sendData(data)
+        self.loggedIn = success
+
+        if not kw.get('no_data'):
+            self.sendData(data)
+
+    def createAccount(self, packet):
+        validParams = packet.get('email') and packet.get('password')
+        if validParams:
+            success = createaccount.createAccount(packet.get('email'), packet.get('password'))
+        toSend = {
+            'type': 'Create Account',
+            'success': success
+        }
+        if success:
+            self.login(packet, no_data=True)
+        self.sendData(toSend)
+
+
 
     def browseGames(self, packet):
         self.gameFactory.browseGames(self, packet)
