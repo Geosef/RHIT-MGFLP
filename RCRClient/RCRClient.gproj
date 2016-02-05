@@ -191,5 +191,6 @@
  <dependency to="RCRBasePopup.lua" from="settings.lua"/>
  <dependency to="RCRBaseScreen.lua" from="splash.lua"/>
  <dependency to="sceneObject.lua" from="splash.lua"/>
+ <dependency to="sceneObject.lua" from="textbox.lua"/>
  <dependency to="util.lua" from="main.lua"/>
 </project>
