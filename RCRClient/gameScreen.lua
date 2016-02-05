@@ -3,6 +3,7 @@ local padding = 12
 local scriptPadding = 10
 local spritePadding = 3
 local gameActionButtonHeight = 50
+local gameCommandButtonHeight = 65
 local ScriptArea = Core.class(SceneObject)
 
 function ScriptArea:init(parent)
@@ -81,6 +82,11 @@ end
 
 function ScriptArea:scroll(doDraw, scrollDist)
 	self.scrollCount = self.scrollCount + scrollDist
+	if self.scrollCount < 0 then
+		self.scrollCount = 0
+	elseif self.scrollCount > table.getn(self.script) - 4 then
+		self.scrollCount = table.getn(self.script) - 4
+	end
 	if doDraw then
 		self:drawScript()
 	end
@@ -88,6 +94,11 @@ end
 
 function ScriptArea:scrollTo(doDraw, scrollTarget)
 	self.scrollCount = scrollTarget
+	if self.scrollCount < 0 then
+		self.scrollCount = 0
+	elseif self.scrollCount > table.getn(self.script) - 4 then
+		self.scrollCount = table.getn(self.script) - 4
+	end
 	if doDraw then
 		self:drawScript()
 	end
@@ -95,7 +106,6 @@ end
 
 function ScriptArea:addCommand(command)
 	table.insert(self.script, command)
-	--print(table.getn(self.script))
 	if table.getn(self.script) >= 4 then
 		self:scrollTo(true, (table.getn(self.script) - 4))
 		return
@@ -119,13 +129,13 @@ function ScriptArea:removeCommand(command)
 				index = index + 1
 			end
 		elseif removedCommand.name == "Loop End" then
-			while index > 0 do
+			while index > 1 do
+				index = index - 1
 				if self.script[index].name == "Loop" then
 					table.remove(self.script, index)
 					numRemoved = numRemoved + 1
 					break
 				end
-				index = index - 1
 			end
 		end
 		if self.scrollCount > 0 then
@@ -336,7 +346,7 @@ end
 
 function CommandBox:initButtons()
 	local commandSet = COMMAND_FACTORY:getSubLibrary(self.parent.sceneName)
-	local yLoc = self.headerBottom + padding
+	self.commandTypes = {}
 	for i,v in pairs(commandSet) do
 		local gameButtonUp = Bitmap.new(Texture.new("images/game-button.png"))
 		local gameButtonDown = Bitmap.new(Texture.new("images/game-button-down.png"))
@@ -345,11 +355,24 @@ function CommandBox:initButtons()
 			--self.parentScreen.statementBox:scriptCountCheck(false)
 		end
 		local gameButton = GameButton.new(gameButtonUp, gameButtonDown, addButton, i)
-		gameButton:setPosition((self:getWidth() / 2) - (gameButton:getWidth() / 2), yLoc)
-		self:addChild(gameButton)
-		yLoc = yLoc + gameButton:getHeight() + padding
+		table.insert(self.commandTypes, gameButton)
+	end
+	local numCommands = # self.commandTypes
+	local buttonYPadding = self:calculateYPadding(numCommands)
+	local yLoc = self.headerBottom + buttonYPadding
+	for i,v in ipairs(self.commandTypes) do
+		v:setPosition((self:getWidth() / 2) - (v:getWidth() / 2), yLoc)
+		self:addChild(v)
+		yLoc = yLoc + v:getHeight() + buttonYPadding
 	end
 end
+
+function CommandBox:calculateYPadding(numCommands)
+	local boxHeight = self:getHeight() - self.headerBottom
+	local buttonYSpace = gameCommandButtonHeight * numCommands
+	local yPadding = (boxHeight - buttonYSpace) / (numCommands + 1)
+	return yPadding
+end	
 
 function gameScreen:init()
 	local gameBoard = GameBoard.new(Texture.new("images/8x8-board.png"))

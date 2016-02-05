@@ -64,7 +64,6 @@ function Button:onMouseDown(event)
 		self.focus = true
 		self:updateVisualState(true)
 		event:stopPropagation()
-		--print(self.name)
 	end
 end
 

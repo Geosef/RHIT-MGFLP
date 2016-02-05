@@ -19,7 +19,6 @@ function GameButton:onMouseDown(event)
 		self.buttonNameField:setTextColor("0xffffff")
 		self:addChild(self.buttonNameField)
 		event:stopPropagation()
-		--print(self.name)
 	end
 end
 

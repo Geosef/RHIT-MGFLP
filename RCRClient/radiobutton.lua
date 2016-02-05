@@ -10,7 +10,6 @@ function RadioButton:onMouseDown(event)
 		self.focus = true
 		self:toggle()
 		event:stopPropagation()
-		--print(self.name)
 	end
 end
 
