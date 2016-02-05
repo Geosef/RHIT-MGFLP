@@ -330,7 +330,36 @@ function StatementBox:scrollCheck()
 end
 
 function StatementBox:saveScript()
-	self.savedScript = deepcopy(self.scriptArea.script)
+	self.savedScript = self.scriptArea:copyScript()
+end
+
+function StatementBox:sendScript(timerAlert)
+	if NET_ADAPTER.on then
+		NET_ADAPTER:registerCallback('Submit Move', function(data)
+			if data.submitted then
+				print('Submitted')
+			else
+				print('Could not send moves.')
+			end
+		end)
+		
+		local scriptPacket = {}
+		scriptPacket.type = "Submit Move"
+		scriptPacket.moves = {}
+		local scriptToSend = nil
+		if timerAlert then
+			local scriptToSend = self.savedScript
+		else
+			local scriptToSend = self.scriptArea.script
+		end
+		for i=1,table.getn(scriptToSend),1 do
+			local command = scriptToSend[i]
+			local commandData = command:getData()
+			table.insert(scriptPacket.moves, commandData)
+		end
+		print_r(scriptPacket)
+		NET_ADAPTER:sendData(scriptPacket)
+	end
 end
 
 local CommandBox = Core.class(SceneObject)
@@ -402,7 +431,7 @@ function gameScreen:init()
 	local submitButtonUp = Bitmap.new(Texture.new("images/script-submit-buttom-up.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/script-submit-button-down.png"))
 	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function()
-		gameBoard:runScript()
+		self.statementBox:sendScript(false)
 	end)
 	local helpButtonUp = Bitmap.new(Texture.new("images/help-button-up.png"))
 	local helpButtonDown = Bitmap.new(Texture.new("images/help-button-down.png"))

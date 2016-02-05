@@ -147,6 +147,12 @@ function ZeroScriptObject:onMouseUp(event)
 	end
 end
 
+function ZeroScriptObject:getData()
+	local commandData = {}
+	commandData.name = self.name
+	return commandData
+end
+
 SingleScriptObject = Core.class(ScriptObject)
 local singleScriptButtonWidth = 135
 
@@ -257,6 +263,13 @@ function SingleScriptObject:decrementDataset()
 		self.dIndex = table.getn(self.dataSet)
 	end
 	self:setTextBox()
+end
+
+function SingleScriptObject:getData()
+	local commandData = {}
+	commandData.name = self.name
+	commandData.params.param1 = self.dataSet[self.dIndex]
+	return commandData
 end
 
 DoubleScriptObject = Core.class(ScriptObject)
@@ -425,6 +438,10 @@ function DoubleScriptObject:decrementDataset2()
 end
 
 function DoubleScriptObject:getData()
-	
+	local commandData = {}
+	commandData.name = self.name
+	commandData.params.param1 = self.dataSet1[self.d1Index]
+	commandData.params.param2 = self.dataSet2[self.d2Index]
+	return commandData
 end
 

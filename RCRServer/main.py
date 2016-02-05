@@ -18,7 +18,7 @@ def main():
     gameFactory = gamefactory.GameFactory()
 
     # host = 'localhost'
-    host = '137.112.226.24'
+    host = '137.112.224.88'
     # host = '192.168.5.107'
     # host = '54.201.206.189'
     # host = '0.0.0.0'
