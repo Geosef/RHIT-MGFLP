@@ -4,7 +4,7 @@ import threading
 import time
 from pprint import pprint
 
-from game import collectgame_algorithms, staticdata
+import collectgame_algorithms, staticdata
 
 
 class Game(object):

@@ -2,7 +2,7 @@ __author__ = 'kochelmj'
 
 import random
 
-from game import util
+import util
 
 
 def generateRandomItemLocations(locations):

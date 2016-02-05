@@ -4,8 +4,8 @@ import threading
 import weakref
 
 import game
-from tests import fakeclienthandler, fakesocket
-from user import clienthandler as ch
+import fakeclienthandler, fakesocket
+import clienthandler as ch
 
 
 class ClientWait(object):
