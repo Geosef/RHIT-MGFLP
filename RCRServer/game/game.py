@@ -1,11 +1,11 @@
 __author__ = 'kochelmj'
 
 import threading
-import util
-from pprint import pprint
-import staticdata
-import collectgame_algorithms
 import time
+from pprint import pprint
+
+from game import collectgame_algorithms, staticdata
+
 
 class Game(object):
 

@@ -1,13 +1,12 @@
 __author__ = 'kochelmj'
 
 import threading
-import game
-from pprint import pprint
-import fakeclienthandler
 import weakref
 
-import clienthandler as ch
-import fakesocket
+import game
+from tests import fakeclienthandler, fakesocket
+from user import clienthandler as ch
+
 
 class ClientWait(object):
 

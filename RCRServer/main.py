@@ -1,16 +1,13 @@
 __author__ = 'kochelmj'
 
-
-import socket, threading
-import pprint
-import json
-import clienthandler
-import gamefactory
-import fakesocket
 import logging
-
 import signal
+import socket
 import sys
+
+from game import gamefactory
+from tests import fakesocket
+from user import clienthandler
 
 
 def main():
