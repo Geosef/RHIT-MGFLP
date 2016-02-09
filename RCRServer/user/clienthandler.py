@@ -105,7 +105,7 @@ class ClientThread(threading.Thread):
         # pprint(packet)
 
     def submitMove(self, packet):
-        moves = packet.get('events')
+        moves = packet.get('moves')
         self.game.submitMove(moves, self)
         # pprint(packet)
 

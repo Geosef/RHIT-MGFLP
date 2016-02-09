@@ -40,7 +40,7 @@ class GameFactory(object):
         # ch = FakeClientHandler()
         fakech = ch.ClientThread(fakesocket.FakeSocket(False), self)
         fakech.start()
-        self.browseGames(fakech, {'choices': [{'game': 'Space Collectors', 'diff': 'Hard'}]})
+        # self.browseGames(fakech, {'choices': [{'game': 'Space Collectors', 'diff': 'Hard'}]})
 
     def removeWaiterHandler(self, clientHandler):
         #called from client handler so we need the thread lock
