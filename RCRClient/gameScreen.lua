@@ -334,32 +334,30 @@ function StatementBox:saveScript()
 end
 
 function StatementBox:sendScript(timerAlert)
-	if NET_ADAPTER.on then
-		NET_ADAPTER:registerCallback('Submit Move', function(data)
-			if data.submitted then
-				print('Submitted')
-			else
-				print('Could not send moves.')
-			end
-		end)
-		
-		local scriptPacket = {}
-		scriptPacket.type = "Submit Move"
-		scriptPacket.moves = {}
-		local scriptToSend = nil
-		if timerAlert then
-			local scriptToSend = self.savedScript
-		else
-			local scriptToSend = self.scriptArea.script
-		end
-		for i=1,table.getn(scriptToSend),1 do
-			local command = scriptToSend[i]
-			local commandData = command:getData()
-			table.insert(scriptPacket.moves, commandData)
-		end
-		print_r(scriptPacket)
-		NET_ADAPTER:sendData(scriptPacket)
+	local scriptPacket = {}
+	scriptPacket.type = "Submit Move"
+	scriptPacket.moves = {}
+	local scriptToSend = {}
+	if timerAlert then
+		local scriptToSend = self.savedScript
+	else
+		local scriptToSend = self.scriptArea.script
 	end
+	for i=1,table.getn(scriptToSend),1 do
+		local command = scriptToSend[i]
+		local commandData = command:getData()
+		table.insert(scriptPacket.moves, commandData)
+	end	
+	NET_ADAPTER:registerCallback('Submit Move', function(data)
+		if data.moves then
+			
+		else
+			print('Could not send moves.')
+		end
+	end,
+	scriptPacket)
+	print_r(scriptPacket)
+	NET_ADAPTER:sendData(scriptPacket)
 end
 
 local CommandBox = Core.class(SceneObject)
