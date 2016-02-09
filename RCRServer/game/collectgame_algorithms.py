@@ -32,7 +32,25 @@ def calculateItemLocations(locations):
 
 
 
-def calculateAlienMoves(gameObj, locations):
+def calculateAlienMoves(gameObj, locations, mock=True):
+    if mock:
+        return [
+            {
+                'name': 'Move',
+                'params': ['S', 1]
+            },
+            {
+                'name': 'Move',
+                'params': ['E', 1]
+            },
+            {
+                'name': 'Move',
+                'params': ['N', 1]
+            },
+        ]
+
+
+
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
     alienLoc = locations.get('alien')
