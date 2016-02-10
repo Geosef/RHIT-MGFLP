@@ -348,15 +348,20 @@ function StatementBox:sendScript(timerAlert)
 		local commandData = command:getData()
 		table.insert(scriptPacket.moves, commandData)
 	end	
-	NET_ADAPTER:registerCallback('Submit Move', function(data)
-		if data.moves then
-			print(data.moves[1])
+	NET_ADAPTER:registerCallback('Run Events', function(data)
+		if data.type == 'Run Events' then
+			self.parent.gameboard:performNextTurn(data.moves)
+			self.scriptArea:removeScript()
 		else
 			print('Could not send moves.')
 		end
 	end,
-	scriptPacket)
-	print_r(scriptPacket)
+	{
+		type = 'Run Events',
+		moves = {
+			p1 = scriptPacket.moves
+		}
+	})
 	NET_ADAPTER:sendData(scriptPacket)
 end
 
@@ -405,11 +410,10 @@ function gameScreen:init(gameInit)
 	self.gameBoard = CollectGameboard.new(gameInit.diff)
 	self.gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameBoard:getHeight())
 	self:addChild(self.gameBoard)
-	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
 	self.statementBox = StatementBox.new(self)
-	self.statementBox:setPosition(self.gameBoard:getX() + self.gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
+	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
 	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())

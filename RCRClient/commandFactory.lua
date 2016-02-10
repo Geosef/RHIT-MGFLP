@@ -7,7 +7,7 @@ end
 
 function CommandFactory:initMasterLib()
 	self.masterLibrary = {}
-	self.masterLibrary["Move"] = function(scriptArea)
+	self.masterGUILibrary["Move"] = function(scriptArea)
 		return {DoubleScriptObject.new(scriptArea, "Move", {"N", "E", "S", "W"}, scriptArea.parent.resourceBox:getResources())}
 	end
 	self.masterLibrary["Loop"] = function(scriptArea)

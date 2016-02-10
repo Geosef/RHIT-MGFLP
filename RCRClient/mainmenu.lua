@@ -176,10 +176,6 @@ function mainMenu:receiveBrowseResponse(response)
 		--switch to joining game screen while server processes game setup and removal from joinable games
 		--then show initial game screen
 		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
-
-
-
-
 	else	--put in waitlist on server,
 		--goToSearchingScreen()
 		--stay in searching for game, cancel if want to back out.

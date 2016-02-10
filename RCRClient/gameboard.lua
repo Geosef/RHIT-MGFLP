@@ -2,6 +2,17 @@ local padding = 12
 Gameboard = Core.class(SceneObject)
 
 function Gameboard:init(diff)
+	
+end
+
+function Gameboard:onEnterEnd()
+	self:addEventListener(Event.ENTER_FRAME, self.update, self)
+end
+
+function Gameboard:onExitBegin()
+	self:removeEventListener(Event.ENTER_FRAME, self.update)
+	self:removeEventListener("enterEnd", self.onEnterEnd)
+	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
 function Gameboard:postInit(diff)
@@ -12,6 +23,8 @@ function Gameboard:postInit(diff)
 	self.grid = Grid.new(self, gridSize, self.cellImagePath)
 	self:addChild(self.grid)
 	self:drawPlayers(gridSize)
+	self:addEventListener("enterEnd", self.onEnterEnd, self)
+	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
 function Gameboard:calculateGridSize(diff)
@@ -20,6 +33,14 @@ end
 
 function Gameboard:drawPlayers(gridSize)
 	print("drawPlayers() not implemented!")
+end
+
+function Gameboard:performNextTurn(moves)
+	print("performNextTurn() not implemented!")
+end
+
+function Gameboard:update()
+	print("update() not implemented!")
 end
 
 CollectGameboard = Core.class(Gameboard)
@@ -47,7 +68,41 @@ function CollectGameboard:drawPlayers(gridSize)
 	
 	self.player2 = Player.new(self, "images/board-rat-icon.png", gridSize, gridSize, 2)
 	self.grid:drawCharacter(self.player2)
-	print(self.player2:getX())
+	
+	self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", gridSize/2, gridSize/2)
+	self.grid:drawCharacter(self.enemy)
+end
+
+function CollectGameboard:performNextTurn(moves)
+	self.p1Moves = moves.p1
+	self.p2Moves = moves.p2
+	self.enemyMoves = moves.enemy
+	if not self.p1Moves then
+		print("p1 has no moves!")
+	end
+	if not self.p2Moves	then
+		print("p2 has no moves!")
+	end
+	if not self.enemyMoves then
+		print("enemy has no moves!")
+	end
+	
+	self.animating = true
+end
+
+local frameCounter = 0
+function CollectGameboard:update()
+	local keyFrame = false
+	if self.animating then
+		if frameCounter == 40 then
+			frameCounter = 0
+			keyFrame = true
+		end
+		self.player1:update(keyFrame)
+		self.player2:update(keyFrame)
+		self.enemy:update(keyFrame)
+		frameCounter = frameCounter + 1
+	end
 end
 
 --[[

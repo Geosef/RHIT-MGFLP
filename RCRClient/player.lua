@@ -6,6 +6,7 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self:addChild(self.playerImage)
 	self.x = startX
 	self.y = startY
+	self.animating = false
 end
 
 function Character:postInit()
@@ -20,6 +21,18 @@ function Character:getGridPosition()
 	return self.x, self.y
 end
 
+function Character:update(keyFrame)
+	if keyFrame then
+		if self.animating then
+			-- next event in turn
+		else
+			-- start list of events
+		end
+	else
+		-- continue running event
+	end
+end
+
 Player = Core.class(Character)
 
 function Player:init(parent, playerImagePath, startX, startY, playerNum)
@@ -31,12 +44,8 @@ end
 function Player:initAttributes(grid)
 	if self.playerNum == 1 then
 		self.name = "Player 1"
-		self.initX = 1
-		self.initY = 1
 	elseif self.playerNum == 2 then
 		self.name = "Player 2"
-		self.initX = grid.gridSize
-		self.initY = grid.gridSize
 	else
 		print("Invalid Player Number")
 		return
@@ -47,6 +56,28 @@ function Player:initAttributes(grid)
 	self.yDirection = 0
 	self.xSpeed = 0
 	self.ySpeed = 0
+end
+
+function Player:update()
+	
+end
+
+CollectEnemy = Core.class(Character)
+
+function CollectEnemy:init(parent, playerImagePath, startX, startY)
+	
+end
+
+function CollectEnemy:initAttributes(grid)
+	self.name = "Collect Enemy"
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
+end
+
+function CollectEnemy:update()
+	
 end
 
 --[[
