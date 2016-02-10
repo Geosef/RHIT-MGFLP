@@ -1,5 +1,5 @@
 <project>
- <properties fps="60" windowHeight="0" packageName="com.yourdomain.yourapp" orientation="1" win_domain="giderosmobile.com" architecture="0" windowWidth="0" encryptCode="0" logicalHeight="1024" scaleMode="5" touchToMouse="1" autorotation="0" encryptAssets="0" mouseTouchOrder="0" win_org="GiderosMobile" osx_domain="giderosmobile.com" iosDevice="0" assetsOnly="0" osx_org="GiderosMobile" logicalWidth="768" android_template="0" mouseToTouch="1" retinaDisplay="0">
+ <properties assetsOnly="0" architecture="0" packageName="com.yourdomain.yourapp" touchToMouse="1" html5_host="" orientation="1" fps="60" winrt_package="com.yourdomain.yourapp" win_domain="giderosmobile.com" winrt_org="GiderosMobile" windowWidth="0" autorotation="0" version_code="1" encryptCode="0" logicalHeight="1024" win_org="GiderosMobile" mouseTouchOrder="0" version="1.0" encryptAssets="0" scaleMode="5" iosDevice="0" osx_bundle="com.yourdomain." logicalWidth="768" mouseToTouch="1" osx_org="GiderosMobile" windowHeight="0" osx_domain="giderosmobile.com" ios_bundle="com.yourdomain." android_template="0" retinaDisplay="0">
   <imageScales/>
  </properties>
  <folder name="fonts">
@@ -44,6 +44,7 @@
   <file source="images/board-cat-icon.png"/>
   <file source="images/board-cell-120.png"/>
   <file source="images/board-rat-icon.png"/>
+  <file source="images/bulldog-icon.png"/>
   <file source="images/checked.png"/>
   <file source="images/closeSettingsButtonDown.png"/>
   <file source="images/closeSettingsButtonUp.png"/>
@@ -97,11 +98,11 @@
   <file source="splash.lua"/>
  </folder>
  <folder name="socket">
-  <file source="http/socket/http.lua" excludeFromExecution="1"/>
-  <file source="http/socket/smtp.lua" excludeFromExecution="1"/>
+  <file excludeFromExecution="1" source="http/socket/http.lua"/>
+  <file excludeFromExecution="1" source="http/socket/smtp.lua"/>
   <file source="http/socket/tp.lua"/>
   <file source="http/socket/url.lua"/>
-  <file source="http/socket/ftp.lua" excludeFromExecution="1"/>
+  <file excludeFromExecution="1" source="http/socket/ftp.lua"/>
  </folder>
  <file source="JSON.lua"/>
  <file source="RCRBasePopup.lua"/>
@@ -148,18 +149,18 @@
  <dependency from="acctSettings.lua" to="RCRBasePopup.lua"/>
  <dependency from="button.lua" to="sceneObject.lua"/>
  <dependency from="button.lua" to="scenemanager.lua"/>
- <dependency from="command.lua" to="controlstatements.lua"/>
  <dependency from="command.lua" to="movement.lua"/>
+ <dependency from="command.lua" to="controlstatements.lua"/>
  <dependency from="commandFactory.lua" to="scriptObject.lua"/>
  <dependency from="controlstatements.lua" to="inputobj.lua"/>
  <dependency from="createAccount.lua" to="RCRBaseScreen.lua"/>
  <dependency from="customButton.lua" to="button.lua"/>
- <dependency from="game.lua" to="collectible.lua"/>
- <dependency from="game.lua" to="command.lua"/>
- <dependency from="game.lua" to="grid.lua"/>
  <dependency from="game.lua" to="inputbutton.lua"/>
- <dependency from="game.lua" to="inputengine.lua"/>
+ <dependency from="game.lua" to="command.lua"/>
+ <dependency from="game.lua" to="collectible.lua"/>
  <dependency from="game.lua" to="player.lua"/>
+ <dependency from="game.lua" to="inputengine.lua"/>
+ <dependency from="game.lua" to="grid.lua"/>
  <dependency from="gameButton.lua" to="customButton.lua"/>
  <dependency from="gameScreen.lua" to="customButton.lua"/>
  <dependency from="gameScreen.lua" to="game.lua"/>
@@ -173,19 +174,19 @@
  <dependency from="inputobj.lua" to="list.lua"/>
  <dependency from="login.lua" to="customButton.lua"/>
  <dependency from="login.lua" to="RCRBaseScreen.lua"/>
- <dependency from="mainmenu.lua" to="radiobutton.lua"/>
  <dependency from="mainmenu.lua" to="RCRBaseScreen.lua"/>
+ <dependency from="mainmenu.lua" to="radiobutton.lua"/>
  <dependency from="movement.lua" to="inputobj.lua"/>
- <dependency from="networkadapter.lua" to="JSON.lua"/>
- <dependency from="networkadapter.lua" to="util.lua"/>
- <dependency from="networkadapter.lua" to="http/socket.lua"/>
- <dependency from="networkadapter.lua" to="http/mime.lua"/>
- <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/http.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/smtp.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/tp.lua"/>
  <dependency from="networkadapter.lua" to="http/socket/url.lua"/>
- <dependency from="networkadapter.lua" to="http/socket/ftp.lua"/>
+ <dependency from="networkadapter.lua" to="JSON.lua"/>
+ <dependency from="networkadapter.lua" to="http/mime.lua"/>
+ <dependency from="networkadapter.lua" to="http/ltn12.lua"/>
+ <dependency from="networkadapter.lua" to="util.lua"/>
+ <dependency from="networkadapter.lua" to="http/socket.lua"/>
  <dependency from="player.lua" to="notifier.lua"/>
  <dependency from="radiobutton.lua" to="customButton.lua"/>
  <dependency from="sceneObject.lua" to="scenemanager.lua"/>
