@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 Character = Core.class(SceneObject)
-function Character:init(parent, charImage, startX, startY)
+function Character:init(parent, playerImagePath, startX, startY)
 	self.parent = parent
 	self.playerImage = Bitmap.new(Texture.new(playerImagePath))
 	self:addChild(self.playerImage)
@@ -9,7 +9,7 @@ function Character:init(parent, charImage, startX, startY)
 end
 
 function Character:postInit()
-	self:initAttributes()
+	self:initAttributes(self.parent.grid)
 end
 
 function Character:initAttributes()
@@ -22,9 +22,8 @@ end
 
 Player = Core.class(Character)
 
-function Player:init(parent, playerImagePath, startX, startY, playerNum, maxMoves)
+function Player:init(parent, playerImagePath, startX, startY, playerNum)
 	self.playerNum = playerNum
-	self.maxMoves = maxMoves
 	--self:initMoveBuffer()
 	--self:setScoreField(playerNum)
 end
@@ -43,7 +42,7 @@ function Player:initAttributes(grid)
 		return
 	end
 	--self.parent.grid:drawPlayer(self.playerNum, self.x, self.y)
-	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
+	--self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
 	self.xDirection = 0
 	self.yDirection = 0
 	self.xSpeed = 0

@@ -8,16 +8,17 @@ function Gameboard:postInit(diff)
 	if not self.cellImage then
 		self.cellImagePath = "images/board-cell-120.png"
 	end
-	self.grid = Grid.new(self, self:calculateGridSize(diff), self.cellImagePath)
+	local gridSize = self:calculateGridSize(diff)
+	self.grid = Grid.new(self, gridSize, self.cellImagePath)
 	self:addChild(self.grid)
-	self:drawPlayers()
+	self:drawPlayers(gridSize)
 end
 
 function Gameboard:calculateGridSize(diff)
 	print("calculateGridSize() not implemented!")
 end
 
-function Gameboard:drawPlayers()
+function Gameboard:drawPlayers(gridSize)
 	print("drawPlayers() not implemented!")
 end
 
@@ -40,14 +41,13 @@ function CollectGameboard:calculateGridSize(diff)
 	end
 end
 
-function CollectGameboard:drawPlayers()
-	self.player1 = Player.new(Texture.new("images/board-cat-icon.png"))
-	--player1:initPlayerAttributes(gameBoard, 1, 5)
-	self.grid:drawCharacter(player1)
+function CollectGameboard:drawPlayers(gridSize)
+	self.player1 = Player.new(self, "images/board-cat-icon.png", 1, 1, 1)
+	self.grid:drawCharacter(self.player1)
 	
-	self.player2 = Player.new(Texture.new("images/board-rat-icon.png"))
-	--player2:initPlayerAttributes(gameBoard, 2, 5)
-	self.grid:drawCharacter(player2)
+	self.player2 = Player.new(self, "images/board-rat-icon.png", gridSize, gridSize, 2)
+	self.grid:drawCharacter(self.player2)
+	print(self.player2:getX())
 end
 
 --[[

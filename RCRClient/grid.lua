@@ -1,6 +1,9 @@
 -- program is being exported under the TSU exception
 local padding = 12
 local boardDimensions = 480
+local cellImageDimension = 120
+local playerImageDimension = 100
+
 Grid = Core.class(SceneObject)
 
 function Grid:init(parent, gridSize, cellImagePath)
@@ -16,7 +19,7 @@ function Grid:initGrid(cellImagePath)
 		local row = {}
 		for j=1, self.gridSize do
 			local cellWidth = boardDimensions/self.gridSize
-			local scale = cellWidth/120
+			local scale = cellWidth/cellImageDimension
 			local cell = Cell.new(i, j, cellImagePath)
 			cell:setScale(scale, scale)
 			cell:setPosition((i-1)*cellWidth, (j-1)*cellWidth)
@@ -44,7 +47,8 @@ end
 function Grid:drawAllCharacters()
 	for i, v in ipairs(self.characters) do
 		if self:contains(v) then
-			self:removeChild(v)
+			local charX, charY = v:getGridPosition()
+			self.cells[charY][charX]:removeCharacter()
 		end
 		self:drawCharacter(v)
 	end
@@ -52,9 +56,8 @@ end
 
 function Grid:drawCharacter(character)
 	local charX, charY = character:getGridPosition()
-	character:setPosition()
 	table.insert(self.characters, character)
-	self.cells:addCharacter(character)
+	self.cells[charY][charX]:addCharacter(character)
 end
 
 --[[
@@ -105,7 +108,9 @@ function Cell:addCharacter(character)
 		return false
 	end
 	self.character = character
-	self.character:setPosition((self:getWidth() / 2) - (self.character:getWidth() / 2), (self:getHeight() / 2) - (self.character:getHeight() / 2))
+	local scale = self:getWidth()/cellImageDimension
+	--self.character:setScale(scaleX, scaleY)
+	self.character:setPosition((self:getWidth() / 2) - (self.character:getWidth() / 2) * scale + 5, (self:getHeight() / 2) - (self.character:getHeight() / 2) * scale + 5)
 	self:addChild(self.character)
 end
 
