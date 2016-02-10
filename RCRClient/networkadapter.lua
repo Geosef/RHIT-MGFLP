@@ -33,7 +33,7 @@ function NetworkAdapter:registerCallback(key, callback, data)
 		end)
 		timer:start()
 	else
-		print('error, network not connected and dev did not supply mock data')
+		print('error, network not connected and dev did not supply mock data. Name: ' .. key)
 	end
 end
 
