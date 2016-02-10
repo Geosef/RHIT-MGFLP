@@ -401,8 +401,8 @@ function CommandBox:calculateYPadding(numCommands)
 	return yPadding
 end	
 
-function gameScreen:init()
-	self.gameBoard = CollectGameboard.new("Medium")
+function gameScreen:init(gameInit)
+	self.gameBoard = CollectGameboard.new(gameInit.diff)
 	self.gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameBoard:getHeight())
 	self:addChild(self.gameBoard)
 	

@@ -16,8 +16,9 @@ function joiningGame:onEnterEnd()
 		print('goto game')
 		NET_ADAPTER:unregisterCallback('Game Setup')
 		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
-		{userData=data})
-	end)
+		{userData=data.gameSetup})
+	end,
+	{type='Game Setup', gameSetup={game='Space Collectors', diff='Hard'}})
 end
 
 function joiningGame:onExitBegin()

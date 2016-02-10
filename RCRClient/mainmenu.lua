@@ -154,7 +154,8 @@ function mainMenu:sendSelected(checkedButtons)
 			print('here2')
 			sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 		end
-	end)
+	end,
+	{type='Browse Games', match=true})
 
 	NET_ADAPTER:registerCallback('Game Setup', function(data)
 		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
