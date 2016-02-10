@@ -2,6 +2,7 @@ __author__ = 'kochelmj'
 
 import threading
 import weakref
+import random
 
 import game
 import fakeclienthandler, fakesocket
@@ -73,11 +74,9 @@ class GameFactory(object):
         if gameWaitObj.preference is not None:
             preference = gameWaitObj.preference
         elif len(choices) > 0:
-            pass
-            # pick of the choices
+            preference = random.choice(foo)
         else:
-            pass
-            #pick random
+            preference = random.choice(self.allGameTypes)
 
         host = hostWaitObj.client_handler
         self.createGame(host, client, preference)
@@ -128,6 +127,18 @@ class GameFactory(object):
         with self.gameIDLock:
             self.currentGameID =  (self.currentGameID + 1) % self.MAXGAMES
             return self.currentGameID
+
+    allGameTypes = [
+        {'game': 'Space Collectors', 'diff': 'Easy'},
+        {'game': 'Space Collectors', 'diff': 'Medium'},
+        {'game': 'Space Collectors', 'diff': 'Hard'},
+        {'game': 'Zombie Survivors', 'diff': 'Easy'},
+        {'game': 'Zombie Survivors', 'diff': 'Medium'},
+        {'game': 'Zombie Survivors', 'diff': 'Hard'},
+        {'game': 'Game 3', 'diff': 'Easy'},
+        {'game': 'Game 3', 'diff': 'Medium'},
+        {'game': 'Game 3', 'diff': 'Hard'}
+    ]
 
 if __name__ == '__main__':
     ch1 = fakeclienthandler.FakeClientThread()
