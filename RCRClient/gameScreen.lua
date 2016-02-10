@@ -73,11 +73,20 @@ function ScriptArea:setCommandSizes()
 	end
 end
 
+-- This only clears the visible script
 function ScriptArea:removeScript()
 	for i=table.getn(self.visibleScript),1,-1 do
 		local v = table.remove(self.visibleScript)
 		self:removeChild(v)
 	end
+end
+
+--[[
+	This function clears the script from internal data and visible script
+]]
+function ScriptArea:clearScript()
+	self:removeScript()
+	clearArray(self.script)
 end
 
 function ScriptArea:scroll(doDraw, scrollDist)
@@ -351,7 +360,7 @@ function StatementBox:sendScript(timerAlert)
 	NET_ADAPTER:registerCallback('Run Events', function(data)
 		if data.type == 'Run Events' then
 			self.parent.gameboard:performNextTurn(data.moves)
-			self.scriptArea:removeScript()
+			self.scriptArea:clearScript()
 		else
 			print('Could not send moves.')
 		end
@@ -407,9 +416,9 @@ function CommandBox:calculateYPadding(numCommands)
 end	
 
 function gameScreen:init(gameInit)
-	self.gameBoard = CollectGameboard.new(gameInit.diff)
-	self.gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameBoard:getHeight())
-	self:addChild(self.gameBoard)
+	self.gameboard = CollectGameboard.new("Medium")
+	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
+	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
 	self.statementBox = StatementBox.new(self)

@@ -74,18 +74,18 @@ function CollectGameboard:drawPlayers(gridSize)
 end
 
 function CollectGameboard:performNextTurn(moves)
-	self.p1Moves = moves.p1
-	self.p2Moves = moves.p2
-	self.enemyMoves = moves.enemy
-	if not self.p1Moves then
+	if not moves.p1 then
 		print("p1 has no moves!")
 	end
-	if not self.p2Moves	then
+	if not moves.p2	then
 		print("p2 has no moves!")
 	end
-	if not self.enemyMoves then
+	if not moves.enemy then
 		print("enemy has no moves!")
 	end
+	self.player1:setEventQueue(moves.p1)
+	self.player2:setEventQueue(moves.p2)
+	self.enemy:setEventQueue(moves.enemy)
 	
 	self.animating = true
 end
@@ -97,12 +97,24 @@ function CollectGameboard:update()
 		if frameCounter == 40 then
 			frameCounter = 0
 			keyFrame = true
+			self.player1:nextMove()
+			self.player2:nextMove()
+			self.enemy:nextMove()
+			if not self.player1.animating and not self.player2.animating and not self.enemy.animating then
+				self.animating = false
+				self.player1:endTurn()
+				self.player2:endTurn()
+				self.enemy:endTurn()
+				self:endTurn()
+			end
 		end
-		self.player1:update(keyFrame)
-		self.player2:update(keyFrame)
-		self.enemy:update(keyFrame)
 		frameCounter = frameCounter + 1
+		print(self.player1.animating)
 	end
+end
+
+function CollectGameboard:endTurn()
+	self.grid:redraw()
 end
 
 --[[

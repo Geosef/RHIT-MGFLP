@@ -7,6 +7,7 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.x = startX
 	self.y = startY
 	self.animating = false
+	self.eventIndex = 1
 end
 
 function Character:postInit()
@@ -21,16 +22,69 @@ function Character:getGridPosition()
 	return self.x, self.y
 end
 
-function Character:update(keyFrame)
+function Character:nextMove()
+	print(self.name)
+	if self.eventQueue then
+		if self.animating then
+			self.eventIndex = self.eventIndex + 1
+		else
+			self.animating = true
+			self.eventIndex = 1
+		end
+		self:runEvent(self.eventQueue[self.eventIndex])
+		print("X: " .. self.x .. "Y: " .. self.y)
+	end
+	--[[
 	if keyFrame then
 		if self.animating then
 			-- next event in turn
+			self.eventIndex = self.eventIndex + 1
+			self:runEvent(self.eventQueue[self.eventIndex])
+			print("X: " .. self.x .. "Y: " .. self.y)
 		else
+			print("not animating")
 			-- start list of events
+			self.animating = true
+			self.eventIndex = 1
+			local event = nil
+			if self.eventQueue then
+				event = self.eventQueue[self.eventIndex]
+			else
+				return
+			end
+			self:runEvent(event)
+			print("X: " .. self.x .. "Y: " .. self.y)
 		end
 	else
 		-- continue running event
+		
 	end
+	]]
+end
+
+function Character:setEventQueue(queue)
+	self.eventQueue = queue
+end
+
+function Character:runEvent(event)
+	if not event then
+		self.animating = false
+		return
+	end
+	if event.params then
+		local nParams = table.getn(event.params)
+		if nParams == 1 then
+			CommandLib[event.name](self, event.params[1])
+		elseif nParams == 2 then
+			CommandLib[event.name](self, event.params[1], event.params[2])
+		end
+	else
+		CommandLib[event.name](self)
+	end
+end
+
+function Character:endTurn()
+	print("endTurn() not implemented!")
 end
 
 Player = Core.class(Character)
@@ -58,9 +112,10 @@ function Player:initAttributes(grid)
 	self.ySpeed = 0
 end
 
-function Player:update()
+function Player:endTurn()
 	
 end
+
 
 CollectEnemy = Core.class(Character)
 
@@ -74,10 +129,6 @@ function CollectEnemy:initAttributes(grid)
 	self.yDirection = 0
 	self.xSpeed = 0
 	self.ySpeed = 0
-end
-
-function CollectEnemy:update()
-	
 end
 
 --[[

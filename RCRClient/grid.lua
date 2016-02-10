@@ -44,6 +44,13 @@ function Grid:drawGrid()
 	end
 end
 
+function Grid:redraw()
+	for i,v in ipairs(self.characters) do
+		local charX, charY = v:getGridPosition()
+		self.cells[charX][charY]:addCharacter(v)
+	end
+end
+
 function Grid:drawAllCharacters()
 	for i, v in ipairs(self.characters) do
 		if self:contains(v) then
