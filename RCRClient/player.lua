@@ -1,6 +1,57 @@
 -- program is being exported under the TSU exception
+Character = Core.class(SceneObject)
+function Character:init(parent, charImage, startX, startY)
+	self.parent = parent
+	self.playerImage = Bitmap.new(Texture.new(playerImagePath))
+	self:addChild(self.playerImage)
+	self.x = startX
+	self.y = startY
+end
 
-Character = Core.class(Bitmap)
+function Character:postInit()
+	self:initAttributes()
+end
+
+function Character:initAttributes()
+	print("initAttributes() not implemented!")
+end
+
+function Character:getGridPosition()
+	return self.x, self.y
+end
+
+Player = Core.class(Character)
+
+function Player:init(parent, playerImagePath, startX, startY, playerNum, maxMoves)
+	self.playerNum = playerNum
+	self.maxMoves = maxMoves
+	--self:initMoveBuffer()
+	--self:setScoreField(playerNum)
+end
+
+function Player:initAttributes(grid)
+	if self.playerNum == 1 then
+		self.name = "Player 1"
+		self.initX = 1
+		self.initY = 1
+	elseif self.playerNum == 2 then
+		self.name = "Player 2"
+		self.initX = grid.gridSize
+		self.initY = grid.gridSize
+	else
+		print("Invalid Player Number")
+		return
+	end
+	--self.parent.grid:drawPlayer(self.playerNum, self.x, self.y)
+	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
+	self.xDirection = 0
+	self.yDirection = 0
+	self.xSpeed = 0
+	self.ySpeed = 0
+end
+
+--[[
+Character = Core.class(SceneObject)
 function Character:init()
 	
 end
@@ -62,7 +113,7 @@ function Character:moveDown(param)
 end
 
 function Character:update(nextMoveFlag)
-	--[[if not self.action then return end
+	if not self.action then return end
 	
 	if (self.xSpeed == 0 and self.ySpeed == 0) then
 		if # self.loadedMoves ~= 0 then
@@ -99,7 +150,7 @@ function Character:update(nextMoveFlag)
  
 	self.playerImage:setPosition(x, y)
 		
-	end]]--
+	end
 end
 
 function Character:nextEvent()
@@ -247,3 +298,4 @@ end
 function ComputerControlled:update()
 	print("Computer update not implemented!")
 end
+]]

@@ -339,9 +339,9 @@ function StatementBox:sendScript(timerAlert)
 	scriptPacket.moves = {}
 	local scriptToSend = {}
 	if timerAlert then
-		local scriptToSend = self.savedScript
+		scriptToSend = self.savedScript
 	else
-		local scriptToSend = self.scriptArea.script
+		scriptToSend = self.scriptArea.script
 	end
 	for i=1,table.getn(scriptToSend),1 do
 		local command = scriptToSend[i]
@@ -350,7 +350,7 @@ function StatementBox:sendScript(timerAlert)
 	end	
 	NET_ADAPTER:registerCallback('Submit Move', function(data)
 		if data.moves then
-			
+			print(data.moves[1])
 		else
 			print('Could not send moves.')
 		end
@@ -402,21 +402,14 @@ function CommandBox:calculateYPadding(numCommands)
 end	
 
 function gameScreen:init()
-	local gameBoard = Grid.new(Texture.new("images/board-blank.png"))
-	self:addChild(gameBoard)
-	
-	local player1 = Player.new(Texture.new("images/board-cat-icon.png"))
-	player1:initPlayerAttributes(gameBoard, 1, 5)
-	gameBoard:addChild(player1)
-	
-	local player2 = Player.new(Texture.new("images/board-rat-icon.png"))
-	player2:initPlayerAttributes(gameBoard, 2, 5)
-	gameBoard:addChild(player2)
+	self.gameBoard = CollectGameboard.new("Medium")
+	self.gameBoard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameBoard:getHeight())
+	self:addChild(self.gameBoard)
 	
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
 	self.statementBox = StatementBox.new(self)
-	self.statementBox:setPosition(gameBoard:getX() + gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
+	self.statementBox:setPosition(self.gameBoard:getX() + self.gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
 	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())

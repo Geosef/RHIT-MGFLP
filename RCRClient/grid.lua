@@ -1,5 +1,158 @@
 -- program is being exported under the TSU exception
+local padding = 12
+local boardDimensions = 480
+Grid = Core.class(SceneObject)
 
+function Grid:init(parent, gridSize, cellImagePath)
+	self.cells = {}
+	self.characters = {}
+	self.gridSize = gridSize
+	self.parent = parent
+	self:initGrid(cellImagePath)
+end
+
+function Grid:initGrid(cellImagePath)
+	for i=1, self.gridSize do
+		local row = {}
+		for j=1, self.gridSize do
+			local cellWidth = boardDimensions/self.gridSize
+			local scale = cellWidth/120
+			local cell = Cell.new(i, j, cellImagePath)
+			cell:setScale(scale, scale)
+			cell:setPosition((i-1)*cellWidth, (j-1)*cellWidth)
+			table.insert(row, cell)
+			--print("Cell X: " .. cell.x .. " Cell Y: " .. cell.y)
+		end
+		table.insert(self.cells, row)
+	end
+	self:drawGrid()
+end
+
+function Grid:drawGrid()
+	for i, row in ipairs(self.cells) do
+		for j, cell in ipairs(row) do
+			if self:contains(cell) then
+				self:removeChild(cell)
+			end
+			-- need to redraw characters here
+			self:drawAllCharacters()
+			self:addChild(cell)
+		end
+	end
+end
+
+function Grid:drawAllCharacters()
+	for i, v in ipairs(self.characters) do
+		if self:contains(v) then
+			self:removeChild(v)
+		end
+		self:drawCharacter(v)
+	end
+end
+
+function Grid:drawCharacter(character)
+	local charX, charY = character:getGridPosition()
+	character:setPosition()
+	table.insert(self.characters, character)
+	self.cells:addCharacter(character)
+end
+
+--[[
+	For this function, gameState should be formatted as follows:
+	gameState {
+		[
+			{ 
+				x = *some num*,
+				y = *some num*,
+				object = *some SceneObject*
+			},
+			...
+		]
+	}
+]]
+function Grid:initializeMapItems(gameState)
+	for i, v in ipairs(gameState) do
+		self:addCollectible(v.x, v.y, v.object)
+	end
+end
+
+function Grid:addCollectible(x, y, collectible)
+	self.cells[y][x]:addCollectible(collectible)
+	self:drawGrid()
+end
+
+function Grid:reset()
+	for i, row in ipairs(self.cells) do
+		for j, cell in ipairs(row) do
+			cell:reset()
+		end
+	end
+end
+
+Cell = Core.class(SceneObject)
+
+function Cell:init(x, y, cellImagePath)
+	self.x = x
+	self.y = y
+	self.cellImage = Bitmap.new(Texture.new(cellImagePath))
+	--cellImage:setPosition(100, 100)
+	
+	self:addChild(self.cellImage)
+end
+
+function Cell:addCharacter(character)
+	if self.character then
+		return false
+	end
+	self.character = character
+	self.character:setPosition((self:getWidth() / 2) - (self.character:getWidth() / 2), (self:getHeight() / 2) - (self.character:getHeight() / 2))
+	self:addChild(self.character)
+end
+
+function Cell:removeCharacter()
+	if self.character == nil then
+		return false
+	end
+	local temp = self.character
+	self.character = nil
+	return temp
+end
+
+function Cell:addCollectible(collectible)
+	if self.collectible ~= nil then
+		return false
+	end
+	self.collectible = collectible
+	local imageScale = WINDOW_WIDTH / self.numRows
+	local scaleX = imageScale / self.collectible:getWidth() / 1.25
+	local scaleY = imageScale / self.collectible:getHeight()/ 1.25
+	
+	self.collectible:setScale(scaleX, scaleY)
+	self.collectible:setPosition((self:getWidth() / 2) - (self.collectible:getWidth() / 2), (self:getHeight() / 2) - (self.collectible:getHeight() / 2))
+	self:addChild(self.collectible)
+	return true
+end
+
+function Cell:removeCollectible()
+	if self.collectible == nil then
+		return nil
+	end
+	stage:removeChild(self.collectible)
+	temp = self.collectible
+	self.collectible = nil
+	return temp
+end
+
+function Cell:reset()
+	if self.collectible then
+		self:removeCollectible()
+	end
+	if self.character then
+		self:removeCharacter()
+	end
+end
+
+--[[
 local M = {}
 local listMod = Core.class(list)
 local collectibleMod = Core.class(collectible)
@@ -149,6 +302,7 @@ function Grid:_init(imagePath, gameType, numRows)
 	self.rows = rows
 	print("Grid Size " .. self.numRows)
 	
+	
 end
 
 function Grid:initializeMapItems(gameState)
@@ -243,3 +397,4 @@ M.Cell = Cell
 M.CollectGrid = CollectGrid
 
 return M
+]]

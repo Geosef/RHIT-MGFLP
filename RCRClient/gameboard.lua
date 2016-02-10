@@ -1,5 +1,56 @@
 local padding = 12
+Gameboard = Core.class(SceneObject)
 
+function Gameboard:init(diff)
+end
+
+function Gameboard:postInit(diff)
+	if not self.cellImage then
+		self.cellImagePath = "images/board-cell-120.png"
+	end
+	self.grid = Grid.new(self, self:calculateGridSize(diff), self.cellImagePath)
+	self:addChild(self.grid)
+	self:drawPlayers()
+end
+
+function Gameboard:calculateGridSize(diff)
+	print("calculateGridSize() not implemented!")
+end
+
+function Gameboard:drawPlayers()
+	print("drawPlayers() not implemented!")
+end
+
+CollectGameboard = Core.class(Gameboard)
+
+function CollectGameboard:init(diff)
+	self.cellImagePath = "images/board-cell-120.png"
+end
+
+function CollectGameboard:calculateGridSize(diff)
+	print("Diff " .. diff)
+	if diff == "Easy" then
+		return 6
+	elseif diff == "Medium" then
+		return 8
+	elseif diff == "Hard" then
+		return 10
+	else
+		return 8
+	end
+end
+
+function CollectGameboard:drawPlayers()
+	self.player1 = Player.new(Texture.new("images/board-cat-icon.png"))
+	--player1:initPlayerAttributes(gameBoard, 1, 5)
+	self.grid:drawCharacter(player1)
+	
+	self.player2 = Player.new(Texture.new("images/board-rat-icon.png"))
+	--player2:initPlayerAttributes(gameBoard, 2, 5)
+	self.grid:drawCharacter(player2)
+end
+
+--[[
 Cell = Core.class(Sprite)
 
 function Cell:init(x, y, cellImage)
@@ -12,11 +63,11 @@ function Cell:init(x, y, cellImage)
 end
 
 function Cell:addImage(imagePath)
-	--[[if self.image == nil then
+	if self.image == nil then
 		xPos = (inc * (self.x-1)) * WINDOW_WIDTH + imageScale / 4 - 4
 		yPos = (inc * (self.y-1)) * WINDOW_WIDTH + startY + (imageScale / 4) - 4
 		image:setPosition(xPos, yPos)
-	end]]--
+	end
 	return
 end
 
@@ -123,3 +174,4 @@ end
 function CollectGrid:destroy()
 
 end
+]]
