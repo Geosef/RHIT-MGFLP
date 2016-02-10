@@ -41,10 +41,10 @@ function gameSelect:addGame(name)
 	local gametext = TextField.new(font, name)
 	local newRow = self.rowVals[self.numRows] + spacing + gametext:getHeight()
 	table.insert(self.rowVals, newRow)
-	self.numRows = self.numRows + 1
 	gametext:setPosition(self.firstCol - (gametext:getWidth() / 2), self.rowVals[self.numRows] - (gametext:getHeight()/2))
 	self:addChild(gametext)
 	self:addButtons(self.rowVals[self.numRows], name)
+	self.numRows = self.numRows + 1
 end
 
 function gameSelect:addButtons(rowVal, name)

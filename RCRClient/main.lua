@@ -37,6 +37,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 
 

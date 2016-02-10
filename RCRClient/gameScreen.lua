@@ -422,7 +422,7 @@ function gameScreen:init(gameInit)
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
 	self.statementBox = StatementBox.new(self)
-	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
+	self.statementBox:setPosition(self.gameBoard:getX() + self.gameBoard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
 	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())
