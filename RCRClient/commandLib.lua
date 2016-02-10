@@ -5,14 +5,18 @@ CommandLibrary = Core.class()
 function CommandLibrary:init()
 	self.masterLibrary = {}
 	self.masterLibrary["Move"] = function(player, direction, magnitude)
-		if direction == "N"
+		if direction == "N" then
 			player.y = player.y - magnitude
-		if direction == "S"
+		end
+		if direction == "S" then
 			player.y = player.y + magnitude
-		if direction == "E"
+		end
+		if direction == "E" then
 			player.x = player.x + magnitude
-		if direction == "W"
+		end
+		if direction == "W" then
 			player.x = player.x - magnitude
+		end
 		return player
 	end
 end
