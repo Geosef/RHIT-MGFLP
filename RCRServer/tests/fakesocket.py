@@ -86,7 +86,7 @@ class FakeSocket(object):
                 'x': 5,
                 'y': 5
             },
-            'alien':
+            'enemy':
             {
                 'x': 3,
                 'y': 3

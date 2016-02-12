@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-local serverIP = '137.112.226.24';
+local serverIP = '137.112.226.75';
 local port = 5005
 
 NetworkAdapter = {}
@@ -33,7 +33,7 @@ function NetworkAdapter:registerCallback(key, callback, data)
 		end)
 		timer:start()
 	else
-		print('error, network not connected and dev did not supply mock data')
+		print('error, network not connected and dev did not supply mock data. Name: ' .. key)
 	end
 end
 
