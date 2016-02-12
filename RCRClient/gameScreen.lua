@@ -416,8 +416,8 @@ function CommandBox:calculateYPadding(numCommands)
 end	
 
 function gameScreen:init(gameInit)
-	self.host = gameInit.host
-	self.gameboard = CollectGameboard.new("Medium", self.host)
+	--self.host = gameInit.host
+	self.gameboard = CollectGameboard.new("Medium")
 	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game

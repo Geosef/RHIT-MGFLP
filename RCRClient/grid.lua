@@ -45,10 +45,10 @@ end
 function Grid:drawCharacterAtGridPosition(character)
 	local charX, charY = character:getGridPosition()
 	local cell = self.cells[charX][charY]
-	local scale = cell:getWidth()/cellImageDimension
-	character:setScale(scale, scale)
-	--(self:getWidth() / 2) - (self.character:getWidth() / 2) * scale + 5, 
-	--(self:getHeight() / 2) - (self.character:getHeight() / 2) * scale + 5
+	if not self:contains(character) then
+		local scale = cell:getWidth()/cellImageDimension
+		character:setScale(scale, scale)
+	end
 	character:setPosition((cell:getX() + (cell:getWidth() / 2)) - (character:getWidth() / 2), (cell:getY() + (cell:getHeight() / 2)) - (character:getHeight() / 2))
 	self:addChild(character)
 end
@@ -73,7 +73,7 @@ function Grid:initializeMapItems(gameState)
 end
 
 function Grid:addCollectible(x, y, collectible)
-	self.cells[y][x]:addCollectible(collectible)
+	self.cells[x][y]:addCollectible(collectible)
 	self:drawGrid()
 end
 

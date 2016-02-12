@@ -47,7 +47,7 @@ end
 
 CollectGameboard = Core.class(Gameboard)
 
-function CollectGameboard:init(diff, host)
+function CollectGameboard:init(diff)
 	self.cellImagePath = "images/board-cell-120.png"
 	self.host = host
 end

@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-local serverIP = '137.112.226.75';
+local serverIP = '137.112.224.148';
 local port = 5005
 
 NetworkAdapter = {}

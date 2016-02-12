@@ -185,7 +185,6 @@ function mainMenu:receiveBrowseResponse(response)
 		--have lock on clienthandler for knowing whether you are joining a game or cancelling
 		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 	end
-
 end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)
