@@ -93,7 +93,7 @@ class FakeSocket(object):
             }
         },
         'scores':
-        [9, 9]
+        [2, 2]
     }
     startgame = \
     {

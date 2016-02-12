@@ -138,7 +138,8 @@ class ClientThread(threading.Thread):
         email = packet.get('email')
         password = packet.get('password')
 
-        success = login.validLogin(email, password)
+        #success = login.validLogin(email, password)
+        success = True
 
         if success:
             playerID = 1
@@ -152,7 +153,6 @@ class ClientThread(threading.Thread):
             'success': success
         }
         self.loggedIn = success
-
         if not kw.get('no_data'):
             self.sendData(data)
 
