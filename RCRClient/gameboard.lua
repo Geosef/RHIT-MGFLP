@@ -109,7 +109,6 @@ function CollectGameboard:update()
 			end
 		end
 		frameCounter = frameCounter + 1
-		print(self.player1.animating)
 	end
 end
 
