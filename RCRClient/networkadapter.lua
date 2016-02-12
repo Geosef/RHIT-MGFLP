@@ -42,6 +42,10 @@ function NetworkAdapter:unregisterCallback(key)
 end
 
 function NetworkAdapter:connect()
+	if not self.on then
+		return
+	end
+	
 	local timer = Timer.new(100)
 
 	local sock = socket.tcp()
