@@ -366,10 +366,13 @@ function StatementBox:sendScript(timerAlert)
 		end
 	end,
 	{
+		--MOCK DATA
 		type = 'Run Events',
 		moves = {
-			p1 = scriptPacket.moves
-		}
+			p1 = scriptPacket.moves,
+			p2 = {{name = 'Move', params = {"N", 1}}},
+			enemy = {{name = 'Move', params = {"S", 1}}}		
+        }
 	})
 	NET_ADAPTER:sendData(scriptPacket)
 end
@@ -416,8 +419,11 @@ function CommandBox:calculateYPadding(numCommands)
 end	
 
 function gameScreen:init(gameInit)
-	--self.host = gameInit.host
-	self.gameboard = CollectGameboard.new("Medium")
+	if not gameInit then gameInit = {type='Game Setup', game='Space Collectors', diff='Hard', host=false} end
+	
+	self.host = gameInit.host
+	self.gameboard = CollectGameboard.new("Medium", self.host)
+	
 	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game

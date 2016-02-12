@@ -96,7 +96,7 @@ end
 local frameCounter = 1
 function CollectGameboard:update()
 	if self.animating then
-		print(frameCounter)
+		--print(frameCounter)
 		self.player1:update(frameCounter)
 		self.player2:update(frameCounter)
 		self.enemy:update(frameCounter)
