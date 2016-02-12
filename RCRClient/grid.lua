@@ -8,7 +8,6 @@ Grid = Core.class(SceneObject)
 
 function Grid:init(parent, gridSize, cellImagePath)
 	self.cells = {}
-	self.characters = {}
 	self.gridSize = gridSize
 	self.parent = parent
 	self:initGrid(cellImagePath)
@@ -18,11 +17,11 @@ function Grid:initGrid(cellImagePath)
 	for i=1, self.gridSize do
 		local row = {}
 		for j=1, self.gridSize do
-			local cellWidth = boardDimensions/self.gridSize
-			local scale = cellWidth/cellImageDimension
+			self.cellWidth = boardDimensions/self.gridSize
+			local scale = self.cellWidth/cellImageDimension
 			local cell = Cell.new(i, j, cellImagePath)
 			cell:setScale(scale, scale)
-			cell:setPosition((i-1)*cellWidth, (j-1)*cellWidth)
+			cell:setPosition((i-1)*self.cellWidth, (j-1)*self.cellWidth)
 			table.insert(row, cell)
 			--print("Cell X: " .. cell.x .. " Cell Y: " .. cell.y)
 		end
@@ -38,33 +37,20 @@ function Grid:drawGrid()
 				self:removeChild(cell)
 			end
 			-- need to redraw characters here
-			self:drawAllCharacters()
 			self:addChild(cell)
 		end
 	end
 end
 
-function Grid:redraw()
-	for i,v in ipairs(self.characters) do
-		local charX, charY = v:getGridPosition()
-		self.cells[charX][charY]:addCharacter(v)
-	end
-end
-
-function Grid:drawAllCharacters()
-	for i, v in ipairs(self.characters) do
-		if self:contains(v) then
-			local charX, charY = v:getGridPosition()
-			self.cells[charY][charX]:removeCharacter()
-		end
-		self:drawCharacter(v)
-	end
-end
-
-function Grid:drawCharacter(character)
+function Grid:drawCharacterAtGridPosition(character)
 	local charX, charY = character:getGridPosition()
-	table.insert(self.characters, character)
-	self.cells[charY][charX]:addCharacter(character)
+	local cell = self.cells[charX][charY]
+	local scale = cell:getWidth()/cellImageDimension
+	character:setScale(scale, scale)
+	--(self:getWidth() / 2) - (self.character:getWidth() / 2) * scale + 5, 
+	--(self:getHeight() / 2) - (self.character:getHeight() / 2) * scale + 5
+	character:setPosition((cell:getX() + (cell:getWidth() / 2)) - (character:getWidth() / 2), (cell:getY() + (cell:getHeight() / 2)) - (character:getHeight() / 2))
+	self:addChild(character)
 end
 
 --[[
@@ -108,26 +94,6 @@ function Cell:init(x, y, cellImagePath)
 	--cellImage:setPosition(100, 100)
 	
 	self:addChild(self.cellImage)
-end
-
-function Cell:addCharacter(character)
-	if self.character then
-		return false
-	end
-	self.character = character
-	local scale = self:getWidth()/cellImageDimension
-	--self.character:setScale(scaleX, scaleY)
-	self.character:setPosition((self:getWidth() / 2) - (self.character:getWidth() / 2) * scale + 5, (self:getHeight() / 2) - (self.character:getHeight() / 2) * scale + 5)
-	self:addChild(self.character)
-end
-
-function Cell:removeCharacter()
-	if self.character == nil then
-		return false
-	end
-	local temp = self.character
-	self.character = nil
-	return temp
 end
 
 function Cell:addCollectible(collectible)
