@@ -51,8 +51,16 @@ class Game(object):
 
         time.sleep(4)
 
-        for client in self.threads:
-            client.sendData(gamesetup)
+        c1packet = {'type': 'Game Setup', 'host': True}
+        c1packet.update(gamesetup)
+        c2packet = {'type': 'Game Setup', 'host': False}
+        c2packet.update(gamesetup)
+
+
+
+        self.threads[0].sendData(c1packet)
+        self.threads[1].sendData(c2packet)
+
 
         locations = \
             {

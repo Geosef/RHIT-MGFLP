@@ -47,8 +47,9 @@ end
 
 CollectGameboard = Core.class(Gameboard)
 
-function CollectGameboard:init(diff)
+function CollectGameboard:init(diff, host)
 	self.cellImagePath = "images/board-cell-120.png"
+	self.host = host
 end
 
 function CollectGameboard:calculateGridSize(diff)
@@ -112,6 +113,17 @@ end
 
 function CollectGameboard:endTurn()
 	--self.grid:redraw()
+	if self.host then
+		local packet = {}
+		packet.type = 'Update Locations'
+		packet.locations = {
+			p1={x=self.player1.x, y=self.player1.y},
+			p2={x=self.player2.x, y=self.player2.y},
+			enemy={x=self.enemy.x, y=self.enemy.y}
+		}
+		packet.scores = {2, 2}
+		NET_ADAPTER:sendData(packet)
+	end
 end
 
 --[[

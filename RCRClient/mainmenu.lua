@@ -156,12 +156,14 @@ function mainMenu:sendSelected(checkedButtons)
 		end
 	end,
 	{type='Browse Games', match=true})
-
-	NET_ADAPTER:registerCallback('Game Setup', function(data)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
-		{userData=data})
-		NET_ADAPTER:unregisterCallback('Game Setup')
+	
+	NET_ADAPTER:registerCallback('Player Joined', function(data)
+		NET_ADAPTER:unregisterCallback('Player Joined')
+		print('Player Joined packet received')
+		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 	end)
+
+	
 
 	NET_ADAPTER:sendData(packet)
 	--[[NET_ADAPTER:browseGames(choices, function(res)

@@ -2,8 +2,8 @@ __author__ = 'kochelmj'
 
 gamesetup = \
 {
-    'type': 'Game Setup',
-    'gametype': 'Collect',
+    'game': 'Space Collectors',
+    'diff': 'Hard',
     'gridsize': 10,
     'celldata':
     {

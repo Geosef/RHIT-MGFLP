@@ -65,8 +65,8 @@ class FakeSocket(object):
             'name': 'Move',
 			'params':
 			[
-				"N",
-				2
+				"S",
+				1
 			]
         }]
     }
@@ -151,6 +151,7 @@ class FakeSocket(object):
         if type == 'Game Setup':
             # pprint(data)
             self.gridsize = data.get('gridSize')
+            self.host = data.get('host')
             return self.submitmove
             # return self.startgame
         if type == 'Start Game':
@@ -161,7 +162,8 @@ class FakeSocket(object):
             if self.host:
                 # print 'RETURNING UPDATELOCATIONS'
                 return self.updatelocations
-            return {}
+            else:
+                return self.submitmove
         if type == 'End Game':
             # pprint(data)
             return {}
