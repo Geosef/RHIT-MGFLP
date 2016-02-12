@@ -20,7 +20,7 @@ class Game(object):
         self.lock = threading.Lock()
         self.rematchLock = threading.Lock()
         self.currentTurn = 0
-        self.currentMoves = {0:None, 1:None, 'alien':None}
+        self.currentMoves = {0:None, 1:None, 'enemy':None}
         self.gridSize = 10
         self.maxMoves = 8
         self.full = False
@@ -58,12 +58,12 @@ class Game(object):
             {
                 'p1': {'x': 1, 'y': 1},
                 'p2': {'x': 10, 'y': 10},
-                'alien': {'x': 5, 'y': 5}
+                'enemy': {'x': 5, 'y': 5}
             }
-        alienMoves = collectgame_algorithms.calculateAlienMoves(self, locations)
+        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self, locations)
 
         with self.lock:
-            self.currentMoves['alien'] = alienMoves
+            self.currentMoves['enemy'] = enemyMoves
 
             if self.checkFinish():
                 self.finishTurn()
@@ -107,10 +107,10 @@ class Game(object):
         else:
             newItemLocations = {'goldLocations': [], 'gemLocations': [], 'treasureLocations': []}
 
-        alienMoves = collectgame_algorithms.calculateAlienMoves(self, locations)
+        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self, locations)
 
         with self.lock:
-            self.currentMoves['alien'] = alienMoves
+            self.currentMoves['enemy'] = enemyMoves
 
             if self.checkFinish():
                 self.finishTurn()
@@ -149,11 +149,11 @@ class Game(object):
         packet = \
             {
                 'type': 'Run Events',
-                'events': \
+                'moves': \
                     {
                         'p1': self.currentMoves[0],
                         'p2': self.currentMoves[1],
-                        'alien': self.currentMoves['alien']
+                        'enemy': self.currentMoves['enemy']
                     }
             }
 
