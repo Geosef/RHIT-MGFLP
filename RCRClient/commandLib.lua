@@ -16,5 +16,4 @@ CommandLib["Move"] = function(player, direction, magnitude)
 	if direction == "W" then
 		player:moveLeft(magnitude)
 	end
-	return player
 end

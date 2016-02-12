@@ -101,7 +101,7 @@ function Character:moveRight(magnitude)
 end
 
 function Character:moveLeft(magnitude)
-	if self.x < self.grid.gridSize then
+	if self.x > 1 then
 		self.xVelocity = -1
 		self.xDist = magnitude
 		self.frameAction = self.move
@@ -113,7 +113,7 @@ function Character:moveLeft(magnitude)
 end
 
 function Character:moveUp(magnitude)
-	if self.y < self.grid.gridSize then
+	if self.y > 1 then
 		self.yVelocity = -1
 		self.yDist = magnitude
 		self.frameAction = self.move
