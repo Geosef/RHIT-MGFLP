@@ -1,8 +1,9 @@
 local padding = 12
+
 Gameboard = Core.class(SceneObject)
 
 function Gameboard:init(diff)
-	
+	self.moveDuration = 20
 end
 
 function Gameboard:onEnterEnd()
@@ -22,6 +23,7 @@ function Gameboard:postInit(diff)
 	local gridSize = self:calculateGridSize(diff)
 	self.grid = Grid.new(self, gridSize, self.cellImagePath)
 	self:addChild(self.grid)
+	self.characterMoveDistance = self.grid.cellWidth
 	self:drawPlayers(gridSize)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
@@ -64,13 +66,13 @@ end
 
 function CollectGameboard:drawPlayers(gridSize)
 	self.player1 = Player.new(self, "images/board-cat-icon.png", 1, 1, 1)
-	self.grid:drawCharacter(self.player1)
+	self.grid:drawCharacterAtGridPosition(self.player1)
 	
 	self.player2 = Player.new(self, "images/board-rat-icon.png", gridSize, gridSize, 2)
-	self.grid:drawCharacter(self.player2)
+	self.grid:drawCharacterAtGridPosition(self.player2)
 	
 	self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", gridSize/2, gridSize/2)
-	self.grid:drawCharacter(self.enemy)
+	self.grid:drawCharacterAtGridPosition(self.enemy)
 end
 
 function CollectGameboard:performNextTurn(moves)
@@ -90,31 +92,26 @@ function CollectGameboard:performNextTurn(moves)
 	self.animating = true
 end
 
-local frameCounter = 0
+local frameCounter = 1
 function CollectGameboard:update()
-	local keyFrame = false
 	if self.animating then
-		if frameCounter == 40 then
+		print(frameCounter)
+		self.player1:update(frameCounter)
+		self.player2:update(frameCounter)
+		self.enemy:update(frameCounter)
+		if frameCounter == self.moveDuration then
 			frameCounter = 0
-			keyFrame = true
-			self.player1:nextMove()
-			self.player2:nextMove()
-			self.enemy:nextMove()
 			if not self.player1.animating and not self.player2.animating and not self.enemy.animating then
 				self.animating = false
-				self.player1:endTurn()
-				self.player2:endTurn()
-				self.enemy:endTurn()
 				self:endTurn()
 			end
 		end
 		frameCounter = frameCounter + 1
-		print(self.player1.animating)
 	end
 end
 
 function CollectGameboard:endTurn()
-	self.grid:redraw()
+	--self.grid:redraw()
 end
 
 --[[

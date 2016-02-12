@@ -2,16 +2,22 @@
 Character = Core.class(SceneObject)
 function Character:init(parent, playerImagePath, startX, startY)
 	self.parent = parent
+	self.grid = self.parent.grid
 	self.playerImage = Bitmap.new(Texture.new(playerImagePath))
 	self:addChild(self.playerImage)
 	self.x = startX
 	self.y = startY
 	self.animating = false
+	self.frameAction = nil
 	self.eventIndex = 1
+	self.xVelocity = 0
+	self.yVelocity = 0
+	self.xDist = 0
+	self.yDist = 0
 end
 
 function Character:postInit()
-	self:initAttributes(self.parent.grid)
+	self:initAttributes()
 end
 
 function Character:initAttributes()
@@ -22,44 +28,31 @@ function Character:getGridPosition()
 	return self.x, self.y
 end
 
-function Character:nextMove()
-	print(self.name)
-	if self.eventQueue then
-		if self.animating then
-			self.eventIndex = self.eventIndex + 1
-		else
-			self.animating = true
-			self.eventIndex = 1
-		end
-		self:runEvent(self.eventQueue[self.eventIndex])
-		print("X: " .. self.x .. "Y: " .. self.y)
-	end
-	--[[
-	if keyFrame then
-		if self.animating then
-			-- next event in turn
-			self.eventIndex = self.eventIndex + 1
-			self:runEvent(self.eventQueue[self.eventIndex])
-			print("X: " .. self.x .. "Y: " .. self.y)
-		else
-			print("not animating")
-			-- start list of events
-			self.animating = true
-			self.eventIndex = 1
-			local event = nil
-			if self.eventQueue then
-				event = self.eventQueue[self.eventIndex]
-			else
+function Character:update(frame)
+	if frame == self.parent.moveDuration then
+		local moveEnded = self:endMove()
+		-- keyFrame
+		if self.eventQueue then
+			if not moveEnded then
 				return
 			end
-			self:runEvent(event)
+			if self.animating then
+				self.eventIndex = self.eventIndex + 1
+			else
+				self.animating = true
+				self.eventIndex = 1
+			end
+			self:runEvent(self.eventQueue[self.eventIndex])
 			print("X: " .. self.x .. "Y: " .. self.y)
 		end
 	else
-		-- continue running event
-		
+		-- Just updating
+		if self.eventQueue then
+			if self.animating and self.frameAction then
+				self:frameAction()
+			end
+		end
 	end
-	]]
 end
 
 function Character:setEventQueue(queue)
@@ -69,6 +62,7 @@ end
 function Character:runEvent(event)
 	if not event then
 		self.animating = false
+		self:endTurn()
 		return
 	end
 	if event.params then
@@ -87,6 +81,79 @@ function Character:endTurn()
 	print("endTurn() not implemented!")
 end
 
+function Character:move()
+	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
+	print("X: " .. self:getX())
+	print("Y: " .. self:getY())
+end
+
+function Character:moveRight(magnitude)
+	if self.x < self.grid.gridSize then
+		self.xVelocity = 1
+		self.xDist = magnitude
+		self.frameAction = self.move
+	else 
+		self.xVelocity = 0
+		self.xDist = 0
+		self.frameAction = nil
+	end
+	
+end
+
+function Character:moveLeft(magnitude)
+	if self.x < self.grid.gridSize then
+		self.xVelocity = -1
+		self.xDist = magnitude
+		self.frameAction = self.move
+	else 
+		self.xVelocity = 0
+		self.xDist = 0
+		self.frameAction = nil
+	end
+end
+
+function Character:moveUp(magnitude)
+	if self.y < self.grid.gridSize then
+		self.yVelocity = -1
+		self.yDist = magnitude
+		self.frameAction = self.move
+	else 
+		self.yVelocity = 0
+		self.yDist = 0
+		self.frameAction = nil
+	end
+end
+
+function Character:moveDown(magnitude)
+	if self.y < self.grid.gridSize then
+		self.yVelocity = 1
+		self.yDist = magnitude
+		self.frameAction = self.move
+	else 
+		self.yVelocity = 0
+		self.yDist = 0
+		self.frameAction = nil
+	end
+end
+
+function Character:endMove()
+	self.x = self.x + self.xVelocity
+	self.y = self.y + self.yVelocity
+	self.grid:drawCharacterAtGridPosition(self)
+	if self.xDist > 0 then
+		self.xDist = self.xDist - 1
+	elseif self.yDist > 0 then
+		self.yDist = self.yDist - 1
+	end
+	if self.xDist == 0 and self.yDist == 0 then
+		self.xVelocity = 0
+		self.yVelocity = 0
+		self.frameAction = nil
+		return true
+	end
+	return false
+end
+
 Player = Core.class(Character)
 
 function Player:init(parent, playerImagePath, startX, startY, playerNum)
@@ -95,7 +162,7 @@ function Player:init(parent, playerImagePath, startX, startY, playerNum)
 	--self:setScoreField(playerNum)
 end
 
-function Player:initAttributes(grid)
+function Player:initAttributes()
 	if self.playerNum == 1 then
 		self.name = "Player 1"
 	elseif self.playerNum == 2 then
@@ -123,7 +190,7 @@ function CollectEnemy:init(parent, playerImagePath, startX, startY)
 	
 end
 
-function CollectEnemy:initAttributes(grid)
+function CollectEnemy:initAttributes()
 	self.name = "Collect Enemy"
 	self.xDirection = 0
 	self.yDirection = 0
