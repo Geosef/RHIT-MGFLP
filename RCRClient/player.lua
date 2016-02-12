@@ -32,18 +32,16 @@ function Character:update(frame)
 	if frame == self.parent.moveDuration then
 		local moveEnded = self:endMove()
 		-- keyFrame
-		if self.eventQueue then
+		if self.eventQueue and # self.eventQueue > 0 then
 			if not moveEnded then
 				return
 			end
 			if self.animating then
-				self.eventIndex = self.eventIndex + 1
 			else
 				self.animating = true
-				self.eventIndex = 1
 			end
-			self:runEvent(self.eventQueue[self.eventIndex])
-			print("X: " .. self.x .. "Y: " .. self.y)
+			self:runEvent(self.eventQueue)
+			--print("X: " .. self.x .. " Y: " .. self.y)
 		end
 	else
 		-- Just updating
@@ -56,10 +54,17 @@ function Character:update(frame)
 end
 
 function Character:setEventQueue(queue)
+	print_r(queue)
 	self.eventQueue = queue
 end
 
-function Character:runEvent(event)
+local function nextEvent(events)
+	if # events == 0 then return nil end
+	return table.remove(events, 1)
+end
+
+function Character:runEvent(queue)
+	local event = nextEvent(queue)
 	if not event then
 		self.animating = false
 		self:endTurn()
@@ -83,8 +88,8 @@ end
 
 function Character:move()
 	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
-	print("X: " .. self:getX())
-	print("Y: " .. self:getY())
+	--print("X: " .. self:getX())
+	--print("Y: " .. self:getY())
 end
 
 function Character:moveRight(magnitude)
