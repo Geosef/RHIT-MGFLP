@@ -163,8 +163,6 @@ function mainMenu:sendSelected(checkedButtons)
 		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 	end)
 
-	
-
 	NET_ADAPTER:sendData(packet)
 	--[[NET_ADAPTER:browseGames(choices, function(res)
 		self:receiveBrowseResponse(res)

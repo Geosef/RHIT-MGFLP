@@ -112,7 +112,6 @@ function CollectGameboard:update()
 end
 
 function CollectGameboard:endTurn()
-	--self.grid:redraw()
 	if self.host then
 		local packet = {}
 		packet.type = 'Update Locations'
