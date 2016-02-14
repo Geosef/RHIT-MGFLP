@@ -3,8 +3,8 @@ Character = Core.class(SceneObject)
 function Character:init(parent, playerImagePath, startX, startY)
 	self.parent = parent
 	self.grid = self.parent.grid
-	self.playerImage = Bitmap.new(Texture.new(playerImagePath))
-	self:addChild(self.playerImage)
+	self.playerImagePath = playerImagePath 
+	self:addChild(Bitmap.new(Texture.new(self.playerImagePath)))
 	self.x = startX
 	self.y = startY
 	self.animating = false
@@ -32,16 +32,18 @@ function Character:update(frame)
 	if frame == self.parent.moveDuration then
 		local moveEnded = self:endMove()
 		-- keyFrame
-		if self.eventQueue and # self.eventQueue > 0 then
+		if self.eventQueue then
 			if not moveEnded then
 				return
 			end
 			if self.animating then
+				self.eventIndex = self.eventIndex + 1
 			else
 				self.animating = true
+				self.eventIndex = 1
 			end
-			self:runEvent(self.eventQueue)
-			--print("X: " .. self.x .. " Y: " .. self.y)
+			self:runEvent(self.eventQueue[self.eventIndex])
+			print("X: " .. self.x .. "Y: " .. self.y)
 		end
 	else
 		-- Just updating
@@ -54,17 +56,10 @@ function Character:update(frame)
 end
 
 function Character:setEventQueue(queue)
-	print_r(queue)
 	self.eventQueue = queue
 end
 
-local function nextEvent(events)
-	if # events == 0 then return nil end
-	return table.remove(events, 1)
-end
-
-function Character:runEvent(queue)
-	local event = nextEvent(queue)
+function Character:runEvent(event)
 	if not event then
 		self.animating = false
 		self:endTurn()
@@ -88,8 +83,8 @@ end
 
 function Character:move()
 	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
-	--print("X: " .. self:getX())
-	--print("Y: " .. self:getY())
+	print("X: " .. self:getX())
+	print("Y: " .. self:getY())
 end
 
 function Character:moveRight(magnitude)

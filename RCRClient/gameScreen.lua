@@ -366,13 +366,10 @@ function StatementBox:sendScript(timerAlert)
 		end
 	end,
 	{
-		--MOCK DATA
 		type = 'Run Events',
 		moves = {
-			p1 = scriptPacket.moves,
-			p2 = {{name = 'Move', params = {"N", 1}}},
-			enemy = {{name = 'Move', params = {"S", 1}}}		
-        }
+			p1 = scriptPacket.moves
+		}
 	})
 	NET_ADAPTER:sendData(scriptPacket)
 end
@@ -419,11 +416,8 @@ function CommandBox:calculateYPadding(numCommands)
 end	
 
 function gameScreen:init(gameInit)
-	if not gameInit then gameInit = {type='Game Setup', game='Space Collectors', diff='Hard', host=false} end
-	
-	self.host = gameInit.host
-	self.gameboard = CollectGameboard.new("Medium", self.host)
-	
+	--self.host = gameInit.host
+	self.gameboard = CollectGameboard.new("Medium")
 	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game
@@ -434,6 +428,18 @@ function gameScreen:init(gameInit)
 	self.commandBox = CommandBox.new(self)
 	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())
 	self:addChild(self.commandBox)
+	-- Player names will be passed into gameInit
+	local playerObjects = {
+		{
+			name = "User 1",
+			level = 1
+		}, 
+		{
+			name = "User 2",
+			level = 1
+		}
+	}
+	self:addPlayerInfo(playerObjects)
 	local saveButtonUp = Bitmap.new(Texture.new("images/save-button-up.png"))
 	local saveButtonDown = Bitmap.new(Texture.new("images/save-button-down.png"))
 	self.saveButton = CustomButton.new(saveButtonUp, saveButtonDown, function()
@@ -458,6 +464,29 @@ function gameScreen:init(gameInit)
 	self:addChild(self.helpButton)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
+end
+
+function gameScreen:addPlayerInfo(playerObjects)
+	local infoFont = TTFont.new("fonts/arial-rounded.ttf", 20)
+	local infoImage1 = Bitmap.new(Texture.new("images/p1-character-info.png"))
+	local infoImage2 = Bitmap.new(Texture.new("images/p2-character-info.png"))
+	local playerImagePaths = self.gameboard:getPlayerImagePaths()
+	local p1Image = Bitmap.new(Texture.new(playerImagePaths[1]))
+	local p2Image = Bitmap.new(Texture.new(playerImagePaths[2]))
+	local p1NameText = TextField.new(infoFont, playerObjects[1].name)
+	local p2NameText = TextField.new(infoFont, playerObjects[2].name)
+	local p1LevelText = TextField.new(infoFont, playerObjects[1].level)
+	local p2LevelText = TextField.new(infoFont, playerObjects[2].level)
+	p1Image:setScale(50/p1Image:getWidth(),50/p1Image:getHeight())
+	p2Image:setScale(50/p2Image:getWidth(),50/p2Image:getHeight())
+	p1Image:setPosition(50 - (p1Image:getWidth() / 2), 75 - (p1Image:getHeight() / 2))
+	p2Image:setPosition(160 - (p2Image:getWidth() / 2), 75 - (p2Image:getHeight() / 2))
+	infoImage1:addChild(p1Image)
+	infoImage2:addChild(p2Image)
+	infoImage1:setPosition(padding, self.statementBox:getY())
+	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
+	self:addChild(infoImage1)
+	self:addChild(infoImage2)
 end
 
 function gameScreen:onEnterEnd()

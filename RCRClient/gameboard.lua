@@ -45,6 +45,19 @@ function Gameboard:update()
 	print("update() not implemented!")
 end
 
+function Gameboard:getPlayerImagePaths()
+	local pImages = {}
+	local pImagesIndex = 1
+	if self.player1 then
+		pImages[pImagesIndex] = self.player1.playerImagePath
+		pImagesIndex = pImagesIndex + 1
+	end
+	if self.player2 then
+		pImages[pImagesIndex] = self.player2.playerImagePath
+	end
+	return pImages
+end
+
 CollectGameboard = Core.class(Gameboard)
 
 function CollectGameboard:init(diff)
@@ -96,7 +109,7 @@ end
 local frameCounter = 1
 function CollectGameboard:update()
 	if self.animating then
-		--print(frameCounter)
+		print(frameCounter)
 		self.player1:update(frameCounter)
 		self.player2:update(frameCounter)
 		self.enemy:update(frameCounter)
