@@ -90,7 +90,7 @@ gamesetup = \
                 'y': 1
             },
         ],
-        'alienStart':
+        'enemyStart':
         {
             'x': 5,
             'y': 6

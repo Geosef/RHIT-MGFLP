@@ -18,7 +18,7 @@ function joiningGame:onEnterEnd()
 		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
 		{userData=data})
 	end,
-	{type='Game Setup', game='Space Collectors', diff='Hard', host=false})
+	SERVER_MOCKS['Game Setup'])
 end
 
 function joiningGame:onExitBegin()
