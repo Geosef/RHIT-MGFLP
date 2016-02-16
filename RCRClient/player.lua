@@ -50,7 +50,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				self:frameAction()
+				--self:frameAction()
 			end
 		end
 	end
@@ -83,7 +83,8 @@ function Character:endTurn()
 end
 
 function Character:move()
-	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
+	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), 
+	self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
 	--print("X: " .. self:getX())
 	--print("Y: " .. self:getY())
 end
@@ -94,8 +95,8 @@ function Character:moveRight(magnitude)
 		self.xDist = magnitude
 		self.frameAction = self.move
 	else 
-		self.xVelocity = 0
-		self.xDist = 0
+		self.xVelocity = 1
+		self.xDist = magnitude
 		self.frameAction = nil
 	end
 	
@@ -107,8 +108,8 @@ function Character:moveLeft(magnitude)
 		self.xDist = magnitude
 		self.frameAction = self.move
 	else 
-		self.xVelocity = 0
-		self.xDist = 0
+		self.xVelocity = -1
+		self.xDist = magnitude
 		self.frameAction = nil
 	end
 end
@@ -119,8 +120,8 @@ function Character:moveUp(magnitude)
 		self.yDist = magnitude
 		self.frameAction = self.move
 	else 
-		self.yVelocity = 0
-		self.yDist = 0
+		self.yVelocity = -1
+		self.yDist = magnitude
 		self.frameAction = nil
 	end
 end
@@ -131,16 +132,43 @@ function Character:moveDown(magnitude)
 		self.yDist = magnitude
 		self.frameAction = self.move
 	else 
-		self.yVelocity = 0
-		self.yDist = 0
+		self.yVelocity = 1
+		self.yDist = magnitude
 		self.frameAction = nil
 	end
 end
 
 function Character:endMove()
 	self.digging = false
+	
 	self.x = self.x + self.xVelocity
 	self.y = self.y + self.yVelocity
+	--[[if self.xVelocity ~= 0 then
+		local newX = (self.x + self.xVelocity) % self.grid.gridSize
+		if newX == 0 then
+			newX = self.grid.gridSize
+		end
+		self.x = newX
+		print(newX)
+	end
+	if self.yVelocity ~= 0 then
+		local newY = (self.y + self.yVelocity) % self.grid.gridSize
+		if newY == 0 then
+			newY = self.grid.gridSize
+		end
+		self.y = newY
+		print(newY)
+	end]]--
+	if self.x < 1 then
+		self.x = self.grid.gridSize
+	elseif self.x > self.grid.gridSize then
+		self.x = 1
+	end
+	if self.y < 1 then
+		self.y = self.grid.gridSize
+	elseif self.y > self.grid.gridSize then
+		self.y = 1
+	end
 	self.grid:drawCharacterAtGridPosition(self)
 	if self.xDist > 0 then
 		self.xDist = self.xDist - 1
