@@ -26,7 +26,7 @@ function NetworkAdapter:registerCallback(key, callback, data)
 	if self.on then
 		registeredCallbacks[key] = callback
 	elseif data then
-		local timer = Timer.new(1000)
+		local timer = Timer.new(10)
 		timer:addEventListener(Event.TIMER, function()
 			timer:stop()
 			callback(data)
