@@ -209,10 +209,11 @@ function ScriptArea:replaceCommand(toMove, moveRegion)
 		-- Mouse is released above arrow keys
 		return
 	end
+	local currentNumCommands = table.getn(newState)
 	if moveRegion > table.getn(self.visibleScript) then
 		-- If want to move below all visible commands
-		if moveRegion > table.getn(self.script) then
-			targetIndex = table.getn(self.script) + 1
+		if moveRegion > currentNumCommands then
+			targetIndex = currentNumCommands + 1
 		else
 			targetIndex = self.scrollCount + (moveRegion - 1)
 		end
