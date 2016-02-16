@@ -175,7 +175,7 @@ end
 
 
 function CollectGameboard:triggerCollects()
-	print('trigger collects')
+	--print('trigger collects')
 	local p1x, p1y = self.player1:getGridPosition()
 	local p2x, p2y = self.player2:getGridPosition()
 	local enemyX, enemyY = self.enemy:getGridPosition()
