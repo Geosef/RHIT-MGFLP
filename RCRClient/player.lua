@@ -66,15 +66,17 @@ function Character:runEvent(event)
 		self:endTurn()
 		return
 	end
+	local command = CommandLib[event.name]
+	if not command then print('no command found') end
 	if event.params then
 		local nParams = table.getn(event.params)
 		if nParams == 1 then
-			CommandLib[event.name](self, event.params[1])
+			command(self, event.params[1])
 		elseif nParams == 2 then
-			CommandLib[event.name](self, event.params[1], event.params[2])
+			command(self, event.params[1], event.params[2])
 		end
 	else
-		CommandLib[event.name](self)
+		command(self)
 	end
 end
 
@@ -137,6 +139,7 @@ function Character:moveDown(magnitude)
 	end
 end
 
+-- CALLS BETWEEN EVENTS
 function Character:endMove()
 	self.digging = false
 	self.x = self.x + self.xVelocity
