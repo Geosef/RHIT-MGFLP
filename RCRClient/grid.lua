@@ -120,8 +120,7 @@ function Cell:init(x, y, cellImagePath)
 	self:addChild(self.cellImage)
 	
 	--image setup for gold
-	self.goldImage = Bitmap.new(Texture.new('images/game-button-down.png'))
-	self.goldImage:setScale(1.2, 1.2)
+	self.goldImage = Bitmap.new(Texture.new('images/coin.png'))
 	self.goldImage:setPosition((self.cellImage:getWidth() - self.goldImage:getWidth()) / 2, (self.cellImage:getHeight() - self.goldImage:getHeight()) / 2)
 	
 	--image setup for wall
