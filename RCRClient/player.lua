@@ -50,7 +50,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				--self:frameAction()
+				self:frameAction()
 			end
 		end
 	end
