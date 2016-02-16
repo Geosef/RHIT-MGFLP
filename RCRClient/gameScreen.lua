@@ -416,10 +416,6 @@ function CommandBox:calculateYPadding(numCommands)
 	return yPadding
 end	
 
-function gameScreen:updateScore()
-	self.p1Score = TextField.new(scoreFont, self.gameboard.player1.score)
-	self.p2Score = TextField.new(scoreFont, self.gameboard.player2.score)
-end
 
 function gameScreen:init(gameInit)
 	if not gameInit then gameInit = SERVER_MOCKS['Game Setup'] end
@@ -474,36 +470,50 @@ function gameScreen:init(gameInit)
 end
 
 function gameScreen:addPlayerInfo(playerObjects)
+	local player1 = self.gameboard.player1
+	local player2 = self.gameboard.player2
 	local infoFont = TTFont.new("fonts/arial-rounded.ttf", 20)
-	local infoImage1 = Bitmap.new(Texture.new("images/p1-character-info.png"))
-	local infoImage2 = Bitmap.new(Texture.new("images/p2-character-info.png"))
+	
 	local playerImagePaths = self.gameboard:getPlayerImagePaths()
 	local p1Image = Bitmap.new(Texture.new(playerImagePaths[1]))
 	local p2Image = Bitmap.new(Texture.new(playerImagePaths[2]))
-	local p1NameText = TextField.new(infoFont, playerObjects[1].name)
-	local p2NameText = TextField.new(infoFont, playerObjects[2].name)
-	local p1LevelText = TextField.new(infoFont, playerObjects[1].level)
-	local p2LevelText = TextField.new(infoFont, playerObjects[2].level)
-	self.p1Score = TextField.new(scoreFont, self.gameboard.player1.score)
-	self.p2Score = TextField.new(scoreFont, self.gameboard.player2.score)
 	p1Image:setScale(50/p1Image:getWidth(),50/p1Image:getHeight())
 	p2Image:setScale(50/p2Image:getWidth(),50/p2Image:getHeight())
 	p1Image:setPosition(50 - (p1Image:getWidth() / 2), 75 - (p1Image:getHeight() / 2))
 	p2Image:setPosition(160 - (p2Image:getWidth() / 2), 75 - (p2Image:getHeight() / 2))
+	
+	local p1NameText = TextField.new(infoFont, playerObjects[1].name)
+	local p2NameText = TextField.new(infoFont, playerObjects[2].name)	
+	local infoImage1 = Bitmap.new(Texture.new("images/p1-character-info.png"))
+	local infoImage2 = Bitmap.new(Texture.new("images/p2-character-info.png"))
 	infoImage1:addChild(p1Image)
 	infoImage2:addChild(p2Image)
 	infoImage1:setPosition(padding, self.statementBox:getY())
 	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
-	p1NameText:setPosition(p1Image:getX() + p1Image:getWidth() + 25, infoImage1:getY() - p1Image:getHeight() + 5)
-	p2NameText:setPosition(p2Image:getX() - p2Image:getWidth() - p2NameText:getWidth() + 25, p1NameText:getY())
-	self.p1Score:setPosition(infoImage1:getX() + infoImage1:getWidth() - 35, infoImage1:getY() + 68)
-	self.p2Score:setPosition(infoImage2:getX() + 25, self.p1Score:getY())
 	infoImage1:addChild(p1NameText)
 	infoImage2:addChild(p2NameText)
+	p1NameText:setPosition(p1Image:getX() + p1Image:getWidth() + 25, infoImage1:getY() - p1Image:getHeight() + 5)
+	p2NameText:setPosition(p2Image:getX() - p2Image:getWidth() - p2NameText:getWidth() + 25, p1NameText:getY())
+	
+	
+	
+	local p1LevelText = TextField.new(infoFont, playerObjects[1].level)
+	local p2LevelText = TextField.new(infoFont, playerObjects[2].level)
+	
+	local p1scoreField = TextField.new(scoreFont, player1.score)
+	local p2scoreField = TextField.new(scoreFont, player2.score)
+	
+	p1scoreField:setPosition(infoImage1:getX() + infoImage1:getWidth() - 35, infoImage1:getY() + 68)
+	p2scoreField:setPosition(infoImage2:getX() + 25, p1scoreField:getY())	
+	player1.scoreField = p1scoreField
+	player2.scoreField = p2scoreField
+	
+	
+	
 	self:addChild(infoImage1)
 	self:addChild(infoImage2)
-	self:addChild(self.p1Score)
-	self:addChild(self.p2Score)
+	self:addChild(p1scoreField)
+	self:addChild(p2scoreField)
 end
 
 function gameScreen:onEnterEnd()
