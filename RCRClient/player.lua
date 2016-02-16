@@ -93,7 +93,6 @@ function Character:move(frame)
 end
 
 function Character:wrapAroundMove(frame)
-	print('Wrap around frame ' .. frame)
 	if frame ~= self.parent.moveDuration / 2 then
 		self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), 
 			self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))

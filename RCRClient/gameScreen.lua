@@ -88,6 +88,7 @@ end
 function ScriptArea:clearScript()
 	self:removeScript()
 	clearArray(self.script)
+	self.scrollCount = 0
 end
 
 function ScriptArea:scroll(doDraw, scrollDist)
