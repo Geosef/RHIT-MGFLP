@@ -106,6 +106,43 @@ function CollectGameboard:performNextTurn(moves)
 	self.animating = true
 end
 
+local treasureScoreAmount = 6
+function CollectGameboard:handleDigs()
+	if not (self.player1.digging or self.player2.digging) then
+		return
+	else
+		local p1x, p1y = self.player1:getGridPosition()
+		local p2x, p2y = self.player2:getGridPosition()
+		if self.player1.digging and self.player2.digging then
+			--need to divide reward in half
+			if p1x == p2x and p1y == p2y then
+				local cell = self.grid.cells[p1x][p1y]
+				if cell:getTreasure() then
+					self.player1:incrementScore(treasureScoreAmount / 2)
+					self.player2:incrementScore(treasureScoreAmount / 2)
+					cell:setTreasure(false)
+				end
+			end
+		else
+			if self.player1.digging then
+				local cell = self.grid.cells[p1x][p1y]
+				if cell:getTreasure() then
+					self.player1:incrementScore(treasureScoreAmount)
+					cell:setTreasure(false)
+				end
+			end
+			
+			if self.player2.digging then
+				local cell = self.grid.cells[p2x][p2y]
+				if cell:getTreasure() then
+					self.player2:incrementScore(treasureScoreAmount)
+					cell:setTreasure(false)
+				end
+			end
+		end
+	end
+end
+
 local frameCounter = 1
 function CollectGameboard:update()
 	if self.animating then
@@ -114,6 +151,7 @@ function CollectGameboard:update()
 		self.player2:update(frameCounter)
 		self.enemy:update(frameCounter)
 		if frameCounter == self.moveDuration then
+			self:handleDigs()
 			frameCounter = 0
 			self:triggerCollects()
 			if not self.player1.animating and not self.player2.animating and not self.enemy.animating then

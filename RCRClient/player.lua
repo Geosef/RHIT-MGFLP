@@ -14,6 +14,7 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.yVelocity = 0
 	self.xDist = 0
 	self.yDist = 0
+	self.digging = false
 end
 
 function Character:postInit()
@@ -137,6 +138,7 @@ function Character:moveDown(magnitude)
 end
 
 function Character:endMove()
+	self.digging = false
 	self.x = self.x + self.xVelocity
 	self.y = self.y + self.yVelocity
 	self.grid:drawCharacterAtGridPosition(self)
@@ -180,8 +182,14 @@ function Player:initAttributes()
 	self.ySpeed = 0
 end
 
+function Player:dig()
+	local x, y = self:getGridPosition()
+	print('player:dig()')
+	self.digging = true
+end
+
 function Player:endTurn()
-	
+	print('player:endTurn()')
 end
 
 function Player:incrementScore(amount)

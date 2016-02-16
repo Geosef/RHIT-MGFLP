@@ -138,6 +138,11 @@ function Cell:setGold(bool)
 	end
 end
 
+function Cell:getGold()
+	return self.gold
+end
+
+
 function Cell:setWall(bool)
 	self.wall = bool
 	if bool then
@@ -149,6 +154,10 @@ end
 
 function Cell:setTreasure(bool)
 	self.treasure = bool
+end
+
+function Cell:getTreasure()
+	return self.treasure
 end
 
 function Cell:addCollectible(collectible)

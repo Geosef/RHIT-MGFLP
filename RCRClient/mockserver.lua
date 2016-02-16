@@ -186,6 +186,7 @@ SERVER_MOCKS['Game Setup'] =
         },
         treasureLocations=
         {
+			{x=1, y=1},
             {
                 x= 1,
                 y= 10

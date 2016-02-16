@@ -17,3 +17,6 @@ CommandLib["Move"] = function(player, direction, magnitude)
 		player:moveLeft(magnitude)
 	end
 end
+CommandLib["Dig"] = function(player)
+	player:dig()
+end
