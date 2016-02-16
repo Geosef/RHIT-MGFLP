@@ -4,8 +4,8 @@ SERVER_MOCKS['Game Setup'] =
     type= 'Game Setup',
     game= 'Space Collectors',
     diff= 'Hard',
-    gridsize= 10,
-    celldata=
+    gridSize= 10,
+    cellData=
     {
         goldLocations=
         {

@@ -43,7 +43,7 @@ function Character:update(frame)
 				self.eventIndex = 1
 			end
 			self:runEvent(self.eventQueue[self.eventIndex])
-			print("X: " .. self.x .. "Y: " .. self.y)
+			--print("X: " .. self.x .. "Y: " .. self.y)
 		end
 	else
 		-- Just updating
@@ -83,8 +83,8 @@ end
 
 function Character:move()
 	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
-	print("X: " .. self:getX())
-	print("Y: " .. self:getY())
+	--print("X: " .. self:getX())
+	--print("Y: " .. self:getY())
 end
 
 function Character:moveRight(magnitude)
@@ -158,6 +158,7 @@ Player = Core.class(Character)
 
 function Player:init(parent, playerImagePath, startX, startY, playerNum)
 	self.playerNum = playerNum
+	self.score = 0
 	--self:initMoveBuffer()
 	--self:setScoreField(playerNum)
 end
@@ -183,6 +184,11 @@ function Player:endTurn()
 	
 end
 
+function Player:incrementScore(amount)
+	self.score = self.score + amount
+	print('Incrementing score ' .. self.score)
+	--update view of score
+end
 
 CollectEnemy = Core.class(Character)
 

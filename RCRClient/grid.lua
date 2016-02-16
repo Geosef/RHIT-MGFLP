@@ -6,14 +6,14 @@ local playerImageDimension = 100
 
 Grid = Core.class(SceneObject)
 
-function Grid:init(parent, gridSize, cellImagePath)
+function Grid:init(parent, gameInit, cellImagePath)
 	self.cells = {}
-	self.gridSize = gridSize
+	self.gridSize = gameInit.gridSize
 	self.parent = parent
-	self:initGrid(cellImagePath)
+	self:initGrid(gameInit, cellImagePath)
 end
 
-function Grid:initGrid(cellImagePath)
+function Grid:initGrid(gameInit, cellImagePath)
 	for i=1, self.gridSize do
 		local row = {}
 		for j=1, self.gridSize do
@@ -27,8 +27,26 @@ function Grid:initGrid(cellImagePath)
 		end
 		table.insert(self.cells, row)
 	end
+	self:setCellData(gameInit.cellData)
 	self:drawGrid()
 end
+
+function Grid:setCellData(cellData)
+	-- goldLocations, treasureLocations
+	for index,value in ipairs(cellData.goldLocations) do
+		local x = value.x
+		local y = value.y
+		local cell = self.cells[x][y]
+		cell:setGold(true)		
+	end
+	for index,value in ipairs(cellData.treasureLocations) do
+		local x = value.x
+		local y = value.y
+		local cell = self.cells[x][y]
+		cell:setTreasure(true)		
+	end	
+end
+
 
 function Grid:drawGrid()
 	for i, row in ipairs(self.cells) do
@@ -94,6 +112,22 @@ function Cell:init(x, y, cellImagePath)
 	--cellImage:setPosition(100, 100)
 	
 	self:addChild(self.cellImage)
+	self.goldImage = Bitmap.new(Texture.new('images/game-button-down.png'))
+	self.goldImage:setScale(1.2, 1.2)
+	self.goldImage:setPosition((self.cellImage:getWidth() - self.goldImage:getWidth()) / 2, (self.cellImage:getHeight() - self.goldImage:getHeight()) / 2)
+end
+
+function Cell:setGold(bool)
+	self.gold = bool
+	if bool then
+		self:addChild(self.goldImage)
+	else
+		self:removeChild(self.goldImage)
+	end
+end
+
+function Cell:setTreasure(bool)
+	self.treasure = bool
 end
 
 function Cell:addCollectible(collectible)

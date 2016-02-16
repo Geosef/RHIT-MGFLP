@@ -2,7 +2,7 @@ local padding = 12
 
 Gameboard = Core.class(SceneObject)
 
-function Gameboard:init(diff)
+function Gameboard:init(gameInit)
 	self.moveDuration = 20
 end
 
@@ -16,15 +16,15 @@ function Gameboard:onExitBegin()
 	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
-function Gameboard:postInit(diff)
+function Gameboard:postInit(gameInit)
 	if not self.cellImage then
 		self.cellImagePath = "images/board-cell-120.png"
 	end
-	local gridSize = self:calculateGridSize(diff)
-	self.grid = Grid.new(self, gridSize, self.cellImagePath)
+	local gridSize = self:calculateGridSize(gameInit.diff) --TODO: Evaluate whether this should be calculated by server, right now it is sent within Game Setup packet
+	self.grid = Grid.new(self, gameInit, self.cellImagePath)
 	self:addChild(self.grid)
 	self.characterMoveDistance = self.grid.cellWidth
-	self:drawPlayers(gridSize)
+	self:drawPlayers(gridSize, gameInit.cellData.enemyStart)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
@@ -78,14 +78,14 @@ function CollectGameboard:calculateGridSize(diff)
 	end
 end
 
-function CollectGameboard:drawPlayers(gridSize)
+function CollectGameboard:drawPlayers(gridSize, enemyStart)
 	self.player1 = Player.new(self, "images/board-cat-icon.png", 1, 1, 1)
 	self.grid:drawCharacterAtGridPosition(self.player1)
 	
 	self.player2 = Player.new(self, "images/board-rat-icon.png", gridSize, gridSize, 2)
 	self.grid:drawCharacterAtGridPosition(self.player2)
 	
-	self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", gridSize/2, gridSize/2)
+	self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", enemyStart.x, enemyStart.y)
 	self.grid:drawCharacterAtGridPosition(self.enemy)
 end
 
@@ -109,18 +109,49 @@ end
 local frameCounter = 1
 function CollectGameboard:update()
 	if self.animating then
-		print(frameCounter)
+		--print(frameCounter)
 		self.player1:update(frameCounter)
 		self.player2:update(frameCounter)
 		self.enemy:update(frameCounter)
 		if frameCounter == self.moveDuration then
 			frameCounter = 0
+			self:triggerCollects()
 			if not self.player1.animating and not self.player2.animating and not self.enemy.animating then
 				self.animating = false
 				self:endTurn()
 			end
 		end
 		frameCounter = frameCounter + 1
+	end
+end
+
+local goldScoreAmount = 4
+function CollectGameboard:processCellForCollect(player)
+	local px, py = player:getGridPosition()
+	local cell = self.grid.cells[px][py]
+	if cell.gold then
+		player:incrementScore(goldScoreAmount)
+		cell:setGold(false)
+	end
+end
+
+
+function CollectGameboard:triggerCollects()
+	print('trigger collects')
+	local p1x, p1y = self.player1:getGridPosition()
+	local p2x, p2y = self.player2:getGridPosition()
+	local enemyX, enemyY = self.enemy:getGridPosition()
+	
+	if p1x == p2x and p1y == p2y then
+		local cell = self.grid.cells[p1x][p1y]
+		if cell.gold then
+			self.player1:incrementScore(goldScoreAmount / 2)
+			self.player2:incrementScore(goldScoreAmount / 2)
+			cell:setGold(false)	
+		end
+	else
+		self:processCellForCollect(self.player1)
+		self:processCellForCollect(self.player2)
 	end
 end
 
