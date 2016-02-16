@@ -5,6 +5,7 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.grid = self.parent.grid
 	self.playerImagePath = playerImagePath 
 	self:addChild(Bitmap.new(Texture.new(self.playerImagePath)))
+	self.wrapAroundSprite = Bitmap.new(Texture.new(self.playerImagePath))
 	self.x = startX
 	self.y = startY
 	self.animating = false
@@ -50,7 +51,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				self:frameAction()
+				self:frameAction(frame)
 			end
 		end
 	end
@@ -84,11 +85,37 @@ function Character:endTurn()
 	print("endTurn() not implemented!")
 end
 
-function Character:move()
+function Character:move(frame)
 	self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), 
 	self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
 	--print("X: " .. self:getX())
 	--print("Y: " .. self:getY())
+end
+
+function Character:wrapAroundMove(frame)
+	print('Wrap around frame ' .. frame)
+	if frame ~= self.parent.moveDuration / 2 then
+		self:setPosition(self:getX() + ((self.xVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance), 
+			self:getY() + ((self.yVelocity / self.parent.moveDuration) * self.parent.characterMoveDistance))
+	else
+		local xCoord
+		local yCoord
+		if self.xVelocity == 1 then
+			xCoord = -(self.parent.characterMoveDistance / 2)
+			yCoord = self:getY()			
+		elseif self.xVelocity == -1 then
+			xCoord = (self.parent.grid.gridSize - 1/2) * self.parent.characterMoveDistance
+			yCoord = self:getY()	
+		elseif self.yVelocity == 1 then
+			xCoord = self:getX()
+			yCoord = -(self.parent.characterMoveDistance / 2)
+		elseif self.yVelocity == -1 then
+			xCoord = self:getX()
+			yCoord = (self.parent.grid.gridSize - 1/2) * self.parent.characterMoveDistance
+		end
+		self:setPosition(xCoord, yCoord)	
+	end
+	
 end
 
 function Character:moveRight(magnitude)
@@ -99,7 +126,7 @@ function Character:moveRight(magnitude)
 	else 
 		self.xVelocity = 1
 		self.xDist = magnitude
-		self.frameAction = nil
+		self.frameAction = self.wrapAroundMove
 	end
 	
 end
@@ -112,7 +139,7 @@ function Character:moveLeft(magnitude)
 	else 
 		self.xVelocity = -1
 		self.xDist = magnitude
-		self.frameAction = nil
+		self.frameAction = self.wrapAroundMove
 	end
 end
 
@@ -124,7 +151,7 @@ function Character:moveUp(magnitude)
 	else 
 		self.yVelocity = -1
 		self.yDist = magnitude
-		self.frameAction = nil
+		self.frameAction = self.wrapAroundMove
 	end
 end
 
@@ -136,7 +163,7 @@ function Character:moveDown(magnitude)
 	else 
 		self.yVelocity = 1
 		self.yDist = magnitude
-		self.frameAction = nil
+		self.frameAction = self.wrapAroundMove
 	end
 end
 
