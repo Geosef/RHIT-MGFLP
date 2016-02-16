@@ -4,6 +4,7 @@ local scriptPadding = 10
 local spritePadding = 3
 local gameActionButtonHeight = 50
 local gameCommandButtonHeight = 65
+local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 local ScriptArea = Core.class(SceneObject)
 
 function ScriptArea:init(parent)
@@ -415,6 +416,11 @@ function CommandBox:calculateYPadding(numCommands)
 	return yPadding
 end	
 
+function gameScreen:updateScore()
+	self.p1Score = TextField.new(scoreFont, self.gameboard.player1.score)
+	self.p2Score = TextField.new(scoreFont, self.gameboard.player2.score)
+end
+
 function gameScreen:init(gameInit)
 	if not gameInit then gameInit = SERVER_MOCKS['Game Setup'] end
 	--self.host = gameInit.host
@@ -478,6 +484,8 @@ function gameScreen:addPlayerInfo(playerObjects)
 	local p2NameText = TextField.new(infoFont, playerObjects[2].name)
 	local p1LevelText = TextField.new(infoFont, playerObjects[1].level)
 	local p2LevelText = TextField.new(infoFont, playerObjects[2].level)
+	self.p1Score = TextField.new(scoreFont, self.gameboard.player1.score)
+	self.p2Score = TextField.new(scoreFont, self.gameboard.player2.score)
 	p1Image:setScale(50/p1Image:getWidth(),50/p1Image:getHeight())
 	p2Image:setScale(50/p2Image:getWidth(),50/p2Image:getHeight())
 	p1Image:setPosition(50 - (p1Image:getWidth() / 2), 75 - (p1Image:getHeight() / 2))
@@ -486,8 +494,16 @@ function gameScreen:addPlayerInfo(playerObjects)
 	infoImage2:addChild(p2Image)
 	infoImage1:setPosition(padding, self.statementBox:getY())
 	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
+	p1NameText:setPosition(p1Image:getX() + p1Image:getWidth() + 25, infoImage1:getY() - p1Image:getHeight() + 5)
+	p2NameText:setPosition(p2Image:getX() - p2Image:getWidth() - p2NameText:getWidth() + 25, p1NameText:getY())
+	self.p1Score:setPosition(infoImage1:getX() + infoImage1:getWidth() - 35, infoImage1:getY() + 68)
+	self.p2Score:setPosition(infoImage2:getX() + 25, self.p1Score:getY())
+	infoImage1:addChild(p1NameText)
+	infoImage2:addChild(p2NameText)
 	self:addChild(infoImage1)
 	self:addChild(infoImage2)
+	self:addChild(self.p1Score)
+	self:addChild(self.p2Score)
 end
 
 function gameScreen:onEnterEnd()
