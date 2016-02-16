@@ -32,7 +32,13 @@ function Grid:initGrid(gameInit, cellImagePath)
 end
 
 function Grid:setCellData(cellData)
-	-- goldLocations, treasureLocations
+	-- walls, goldLocations, treasureLocations
+	--[[for index,value in ipairs(cellData.wallLocations) do
+		local x = value.x
+		local y = value.y
+		local cell = self.cells[x][y]
+		cell:setWall(true)		
+	end]]--
 	for index,value in ipairs(cellData.goldLocations) do
 		local x = value.x
 		local y = value.y
@@ -112,9 +118,15 @@ function Cell:init(x, y, cellImagePath)
 	--cellImage:setPosition(100, 100)
 	
 	self:addChild(self.cellImage)
+	
+	--image setup for gold
 	self.goldImage = Bitmap.new(Texture.new('images/game-button-down.png'))
 	self.goldImage:setScale(1.2, 1.2)
 	self.goldImage:setPosition((self.cellImage:getWidth() - self.goldImage:getWidth()) / 2, (self.cellImage:getHeight() - self.goldImage:getHeight()) / 2)
+	
+	--image setup for wall
+	self.wallImage = Bitmap.new(Texture.new('images/wall-cell.png'))
+	self.wallImage:setPosition((self.cellImage:getWidth() - self.wallImage:getWidth()) / 2, (self.cellImage:getHeight() - self.wallImage:getHeight()) / 2)
 end
 
 function Cell:setGold(bool)
@@ -123,6 +135,15 @@ function Cell:setGold(bool)
 		self:addChild(self.goldImage)
 	else
 		self:removeChild(self.goldImage)
+	end
+end
+
+function Cell:setWall(bool)
+	self.wall = bool
+	if bool then
+		self:addChild(self.wallImage)
+	else
+		self:removeChild(self.wallImage)
 	end
 end
 
