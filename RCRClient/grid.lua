@@ -33,12 +33,12 @@ end
 
 function Grid:setCellData(cellData)
 	-- walls, goldLocations, treasureLocations
-	--[[for index,value in ipairs(cellData.wallLocations) do
+	for index,value in ipairs(cellData.wallLocations) do
 		local x = value.x
 		local y = value.y
 		local cell = self.cells[x][y]
 		cell:setWall(true)		
-	end]]--
+	end
 	for index,value in ipairs(cellData.goldLocations) do
 		local x = value.x
 		local y = value.y
