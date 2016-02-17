@@ -4,6 +4,13 @@ Gameboard = Core.class(SceneObject)
 
 function Gameboard:init(gameInit)
 	self.moveDuration = 20
+	NET_ADAPTER:registerCallback('Game Over', function(data)
+		self:displayGameOver()
+	end)
+end
+
+function Gameboard:displayGameOver()
+	print('GAME OVER BRO')
 end
 
 function Gameboard:onEnterEnd()
@@ -102,8 +109,12 @@ function CollectGameboard:performNextTurn(moves)
 	self.player1:setEventQueue(moves.p1)
 	self.player2:setEventQueue(moves.p2)
 	self.enemy:setEventQueue(moves.enemy)
-	print_r(moves)
+	
 	self.animating = true
+end
+
+function CollectGameboard:updateLocations()
+	print('CollectGameboard:updateLocations()')
 end
 
 local treasureScoreAmount = 6

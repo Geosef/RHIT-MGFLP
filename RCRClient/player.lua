@@ -5,7 +5,6 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.grid = self.parent.grid
 	self.playerImagePath = playerImagePath 
 	self:addChild(Bitmap.new(Texture.new(self.playerImagePath)))
-	self.wrapAroundSprite = Bitmap.new(Texture.new(self.playerImagePath))
 	self.x = startX
 	self.y = startY
 	self.animating = false
@@ -56,7 +55,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				--self:frameAction(frame)
+				self:frameAction(frame)
 			end
 		end
 	end
