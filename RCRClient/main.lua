@@ -23,7 +23,8 @@ sceneManager = SceneManager.new({
 	["gameWait"] = gameWait,
 	["gameScreen"] = gameScreen,
 	["acctSettings"] = acctSettings,
-	["joinGame"] = joiningGame
+	["joinGame"] = joiningGame,
+	["gameOver"] = gameOver
 })
 
 BlankScene = Core.class(Sprite)
