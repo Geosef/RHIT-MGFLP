@@ -244,7 +244,7 @@ function Player:dig()
 end
 
 function Player:endTurn()
-	--clearArray(self.eventQueue)
+	clearArray(self.eventQueue)
 	self.eventIndex = 1
 	print('player:endTurn()')
 end
