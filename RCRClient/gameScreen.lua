@@ -490,8 +490,6 @@ function gameScreen:addPlayerInfo(playerObjects)
 	local infoImage2 = Bitmap.new(Texture.new("images/p2-character-info.png"))
 	infoImage1:addChild(p1Image)
 	infoImage2:addChild(p2Image)
-	infoImage1:setPosition(padding, self.statementBox:getY())
-	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
 	infoImage1:addChild(p1NameText)
 	infoImage2:addChild(p2NameText)
 	p1NameText:setPosition(p1Image:getX() + p1Image:getWidth() + 25, infoImage1:getY() - p1Image:getHeight() + 5)
@@ -510,8 +508,10 @@ function gameScreen:addPlayerInfo(playerObjects)
 	player1.scoreField = p1scoreField
 	player2.scoreField = p2scoreField
 	
-	
-	
+	infoImage1:setScale(0.5, 0.5)
+	infoImage2:setScale(0.5, 0.5)
+	infoImage1:setPosition(padding, self.statementBox:getY())
+	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
 	self:addChild(infoImage1)
 	self:addChild(infoImage2)
 	self:addChild(p1scoreField)
