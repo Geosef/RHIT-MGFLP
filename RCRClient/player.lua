@@ -5,7 +5,6 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.grid = self.parent.grid
 	self.playerImagePath = playerImagePath 
 	self:addChild(Bitmap.new(Texture.new(self.playerImagePath)))
-	self.wrapAroundSprite = Bitmap.new(Texture.new(self.playerImagePath))
 	self.x = startX
 	self.y = startY
 	self.animating = false
@@ -43,7 +42,6 @@ function Character:update(frame)
 				self.eventIndex = self.eventIndex + 1
 			else
 				self.animating = true
-				self.eventIndex = 1
 			end
 			local currEvent = self.eventQueue[self.eventIndex]
 			self:runEvent(currEvent)
@@ -317,6 +315,8 @@ function Player:dig()
 end
 
 function Player:endTurn()
+	clearArray(self.eventQueue)
+	self.eventIndex = 1
 	print('player:endTurn()')
 end
 

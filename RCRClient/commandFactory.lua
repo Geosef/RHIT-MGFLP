@@ -17,7 +17,7 @@ function CommandFactory:initMasterLib()
 		return {ZeroScriptObject.new(scriptArea, "Dig")}
 	end
 	self.masterLibrary["Jump"] = function(scriptArea)
-		return {ZeroScriptObject.new(scriptArea, "Jump")}
+		return {SingleScriptObject.new(scriptArea, "Jump", {"N", "E", "S", "W"})}
 	end
 end
 
