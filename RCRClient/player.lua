@@ -256,7 +256,7 @@ end
 
 function Player:incrementScore(amount)
 	self.score = self.score + amount
-	self.scoreField:setText(self.score)
+	self.scoreField:setText("Score: " .. self.score)
 	--print('Incrementing score ' .. self.score)
 	--update view of score
 end
