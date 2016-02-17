@@ -70,9 +70,9 @@ end
 
 CollectGameboard = Core.class(Gameboard)
 
-function CollectGameboard:init(diff)
+function CollectGameboard:init(gameInit)
 	self.cellImagePath = "images/board-cell-120.png"
-	self.host = host
+	self.host = gameInit.host
 end
 
 function CollectGameboard:calculateGridSize(diff)
