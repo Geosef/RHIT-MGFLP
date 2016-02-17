@@ -93,23 +93,26 @@ function CollectGameboard:drawPlayers(gridSize, enemyStart)
 	self.player2 = Player.new(self, "images/board-rat-icon.png", gridSize, gridSize, 2)
 	self.grid:drawCharacterAtGridPosition(self.player2)
 	
-	self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", enemyStart.x, enemyStart.y)
-	self.grid:drawCharacterAtGridPosition(self.enemy)
+	--self.enemy = CollectEnemy.new(self, "images/bulldog-icon.png", enemyStart.x, enemyStart.y)
+	--self.grid:drawCharacterAtGridPosition(self.enemy)
 end
 
 function CollectGameboard:performNextTurn(moves)
 	if not moves.p1 then
 		print("p1 has no moves!")
+	else
+		self.p1:setEventQueue(moves.p1)
 	end
 	if not moves.p2	then
 		print("p2 has no moves!")
+	else
+		self.p2:setEventQueue(moves.p2)
 	end
 	if not moves.enemy then
 		print("enemy has no moves!")
+	else
+		self.enemy:setEventQueue(moves.enemy)
 	end
-	self.player1:setEventQueue(moves.p1)
-	self.player2:setEventQueue(moves.p2)
-	self.enemy:setEventQueue(moves.enemy)
 	
 	self.animating = true
 end
@@ -214,7 +217,7 @@ function CollectGameboard:endTurn()
 			p2={x=self.player2.x, y=self.player2.y},
 			enemy={x=self.enemy.x, y=self.enemy.y}
 		}
-		packet.scores = {2, 2}
+		packet.scores = {p1.score, p2.score}
 		NET_ADAPTER:sendData(packet)
 	end
 end

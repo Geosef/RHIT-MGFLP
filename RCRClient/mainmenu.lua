@@ -32,8 +32,8 @@ function gameSelect:init(mainMenu)
 	self.checkedButtons = {}
 	--self:addButtons(self.rowVals[self.numRows])
 	self:addGame("Space Collectors")
-	self:addGame("Zombie Survivors")
-	self:addGame("Game 3")
+	--self:addGame("Zombie Survivors")
+	--self:addGame("Game 3")
 
 end
 

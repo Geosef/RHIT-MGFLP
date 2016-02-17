@@ -368,7 +368,6 @@ function StatementBox:sendScript(timerAlert)
 	end	
 	NET_ADAPTER:registerCallback('Run Events', function(data)
 		if data.type == 'Run Events' then
-			print_r(data)
 			self.parent.gameboard:performNextTurn(data.moves)
 			self.scriptArea:clearScript()
 		else
