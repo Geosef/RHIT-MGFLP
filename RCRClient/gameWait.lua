@@ -48,7 +48,7 @@ function gameWait:onEnterEnd()
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
 	NET_ADAPTER:registerCallback('Player Joined', function(data)
 		NET_ADAPTER:unregisterCallback('Player Joined')
-		--sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
 	end)
 	--[[NET_ADAPTER:startRecv(function(res)
 		if res.type == 'Player Joined' then
