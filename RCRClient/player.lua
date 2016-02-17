@@ -56,7 +56,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				--self:frameAction(frame)
+				self:frameAction(frame)
 			end
 		end
 	end
@@ -123,52 +123,129 @@ function Character:wrapAroundMove(frame)
 end
 
 function Character:moveRight(magnitude)
+	local moveType = nil
 	if self.x < self.grid.gridSize then
-		self.xVelocity = 1
-		self.xDist = magnitude
-		self.frameAction = self.move
-	else 
-		self.xVelocity = 1
-		self.xDist = magnitude
-		self.frameAction = self.wrapAroundMove
+		moveType = self.move
+	else
+		moveType = self.wrapAroundMove
 	end
 	
+	local nextX = self.x
+	local maxMag = magnitude
+	for i=1, magnitude do
+		nextX = nextX + 1
+		if not (nextX < self.grid.gridSize + 1) then
+			nextX = 1
+		end
+		local nextCell = self.grid:getCellAt(nextX, self.y)
+		if nextCell:getWall() then
+			maxMag = i - 1
+			break
+		end
+	end
+	if maxMag == 0 then
+		self:xMovePrep(0, maxMag, nil)
+	else
+		self:xMovePrep(1, maxMag, moveType)
+	end
 end
 
 function Character:moveLeft(magnitude)
+	local moveType = nil
 	if self.x > 1 then
-		self.xVelocity = -1
-		self.xDist = magnitude
-		self.frameAction = self.move
-	else 
-		self.xVelocity = -1
-		self.xDist = magnitude
-		self.frameAction = self.wrapAroundMove
+		moveType = self.move
+	else
+		moveType = self.wrapAroundMove
+	end
+	
+	local nextX = self.x
+	local maxMag = magnitude
+	for i=1, magnitude do
+		nextX = nextX - 1
+		if not (nextX > 0) then
+			nextX = self.grid.gridSize
+		end
+		local nextCell = self.grid:getCellAt(nextX, self.y)
+		if nextCell:getWall() then
+			maxMag = i - 1
+			break
+		end
+	end
+	if maxMag == 0 then
+		self:xMovePrep(0, maxMag, nil)
+	else
+		self:xMovePrep(-1, maxMag, moveType)
 	end
 end
 
-function Character:moveUp(magnitude)
+function Character:xMovePrep(velo, dist, action)
+	self.xVelocity = velo
+	self.xDist = dist
+	self.frameAction = action
+end
+
+function Character:moveUp(magnitude)	
+	local moveType = nil
 	if self.y > 1 then
-		self.yVelocity = -1
-		self.yDist = magnitude
-		self.frameAction = self.move
-	else 
-		self.yVelocity = -1
-		self.yDist = magnitude
-		self.frameAction = self.wrapAroundMove
+		moveType = self.move
+	else
+		moveType = self.wrapAroundMove
+	end
+	
+	local nextY = self.y
+	local maxMag = magnitude
+	for i=1, magnitude do
+		nextY = nextY - 1
+		if not (nextY > 0) then
+			nextY = self.grid.gridSize
+		end
+		local nextCell = self.grid:getCellAt(self.x, nextY)
+		print('Next cell x: ' .. nextCell.x)
+		print('Next cell y: ' .. nextCell.y)
+		if nextCell:getWall() then
+			maxMag = i - 1
+			break
+		end
+	end
+	if maxMag == 0 then
+		self:yMovePrep(0, maxMag, nil)
+	else
+		self:yMovePrep(-1, maxMag, moveType)
 	end
 end
 
 function Character:moveDown(magnitude)
+	local moveType = nil
 	if self.y < self.grid.gridSize then
-		self.yVelocity = 1
-		self.yDist = magnitude
-		self.frameAction = self.move
-	else 
-		self.yVelocity = 1
-		self.yDist = magnitude
-		self.frameAction = self.wrapAroundMove
+		moveType = self.move
+	else
+		moveType = self.wrapAroundMove
 	end
+	
+	local nextY = self.y
+	local maxMag = magnitude
+	for i=1, magnitude do
+		nextY = nextY + 1
+		if not (nextY < self.grid.gridSize + 1) then
+			nextY = 1
+		end
+		local nextCell = self.grid:getCellAt(self.x, nextY)
+		if nextCell:getWall() then
+			maxMag = i - 1
+			break
+		end
+	end
+	if maxMag == 0 then
+		self:yMovePrep(0, maxMag, nil)
+	else
+		self:yMovePrep(1, maxMag, moveType)
+	end
+end
+
+function Character:yMovePrep(velo, dist, action)
+	self.yVelocity = velo
+	self.yDist = dist
+	self.frameAction = action
 end
 
 -- CALLS BETWEEN EVENTS
@@ -188,21 +265,15 @@ function Character:endMove()
 		potentialY = 1
 	end
 	
-	local nextCell = self.grid:getCellAt(potentialX, potentialY)
-	if not nextCell:getWall() then
-		if self.xDist > 0 then
-			self.xDist = self.xDist - 1
-		elseif self.yDist > 0 then
-			self.yDist = self.yDist - 1
-		end
-		
-		self.x = potentialX
-		self.y = potentialY
-		self.grid:drawCharacterAtGridPosition(self)
-	else
-		self.xDist = 0
-		self.yDist = 0
+	if self.xDist > 0 then
+		self.xDist = self.xDist - 1
+	elseif self.yDist > 0 then
+		self.yDist = self.yDist - 1
 	end
+	
+	self.x = potentialX
+	self.y = potentialY
+	self.grid:drawCharacterAtGridPosition(self)
 	
 	if self.xDist == 0 and self.yDist == 0 then
 		self.xVelocity = 0
