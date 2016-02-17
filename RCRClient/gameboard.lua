@@ -102,7 +102,7 @@ function CollectGameboard:performNextTurn(moves)
 	self.player1:setEventQueue(moves.p1)
 	self.player2:setEventQueue(moves.p2)
 	self.enemy:setEventQueue(moves.enemy)
-	
+	print_r(moves)
 	self.animating = true
 end
 
