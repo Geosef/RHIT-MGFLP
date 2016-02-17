@@ -1,6 +1,7 @@
 SERVER_MOCKS = {}
 SERVER_MOCKS['Game Setup'] = 
 {
+	host= true,
     type= 'Game Setup',
     game= 'Space Collectors',
     diff= 'Hard',
@@ -203,3 +204,41 @@ SERVER_MOCKS['Game Setup'] =
         }
     }
 }
+SERVER_MOCKS['Run Events'] = function(data)
+return {
+	type='Run Events',
+	moves = {
+		p1=data,
+		p2={
+		{
+			name = 'Move',
+			params = {
+				"S",
+				1
+			}
+		}},
+		enemy = {
+		{
+			name = 'Move',
+			params = {
+				"S",
+				1
+			}
+		},
+		{
+			name = 'Move',
+			params = {
+				"E",
+				1
+			}
+		},
+		{
+			name = 'Move',
+			params = {
+				"N",
+				1
+			}
+		}}
+	}
+}
+end
