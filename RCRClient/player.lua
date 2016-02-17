@@ -16,6 +16,7 @@ function Character:init(parent, playerImagePath, startX, startY)
 	self.xDist = 0
 	self.yDist = 0
 	self.digging = false
+	self.loopStack = {}
 end
 
 function Character:postInit()
@@ -44,8 +45,12 @@ function Character:update(frame)
 				self.animating = true
 				self.eventIndex = 1
 			end
-			self:runEvent(self.eventQueue[self.eventIndex])
-			--print("X: " .. self.x .. "Y: " .. self.y)
+			local currEvent = self.eventQueue[self.eventIndex]
+			self:runEvent(currEvent)
+			local currLoop = self.loopStack[table.getn(self.loopStack)]
+			if currLoop and currEvent then
+				currLoop:addCommand(currEvent)
+			end
 		end
 	else
 		-- Just updating
@@ -246,7 +251,7 @@ end
 
 function Player:incrementScore(amount)
 	self.score = self.score + amount
-	self.scoreField:setText(self.score)
+	self.scoreField:setText("Score: " .. self.score)
 	--print('Incrementing score ' .. self.score)
 	--update view of score
 end
