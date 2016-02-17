@@ -220,7 +220,7 @@ function CollectGameboard:endTurn()
 			p2={x=self.player2.x, y=self.player2.y},
 			enemy={x=1, y=1}
 		}
-		packet.scores = {p1.score, p2.score}
+		packet.scores = {self.player1.score, self.player2.score}
 		NET_ADAPTER:sendData(packet)
 	end
 end
