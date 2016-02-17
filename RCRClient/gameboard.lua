@@ -5,12 +5,14 @@ Gameboard = Core.class(SceneObject)
 function Gameboard:init(gameInit)
 	self.moveDuration = 20
 	NET_ADAPTER:registerCallback('Game Over', function(data)
-		self:displayGameOver()
+		sceneManager:changeScene("gameOver", 1, SceneManager.crossfade, easing.outBack,
+		{userData=data})
 	end)
 	self.maxMoves = 6
 end
 
 function Gameboard:displayGameOver()
+	
 	print('GAME OVER BRO')
 end
 
@@ -101,18 +103,18 @@ function CollectGameboard:performNextTurn(moves)
 	if not moves.p1 then
 		print("p1 has no moves!")
 	else
-		self.p1:setEventQueue(moves.p1)
+		self.player1:setEventQueue(moves.p1)
 	end
 	if not moves.p2	then
 		print("p2 has no moves!")
 	else
-		self.p2:setEventQueue(moves.p2)
+		self.player2:setEventQueue(moves.p2)
 	end
-	if not moves.enemy then
+	--[[if not moves.enemy then
 		print("enemy has no moves!")
 	else
 		self.enemy:setEventQueue(moves.enemy)
-	end
+	end]]
 	
 	self.animating = true
 end
@@ -164,12 +166,13 @@ function CollectGameboard:update()
 		--print(frameCounter)
 		self.player1:update(frameCounter)
 		self.player2:update(frameCounter)
-		self.enemy:update(frameCounter)
+		--self.enemy:update(frameCounter)
 		if frameCounter == self.moveDuration then
 			self:handleDigs()
 			frameCounter = 0
 			self:triggerCollects()
-			if not self.player1.animating and not self.player2.animating and not self.enemy.animating then
+			if not self.player1.animating and not self.player2.animating-- and not self.enemy.animating
+			then
 				self.animating = false
 				self:endTurn()
 			end
@@ -193,7 +196,7 @@ function CollectGameboard:triggerCollects()
 	--print('trigger collects')
 	local p1x, p1y = self.player1:getGridPosition()
 	local p2x, p2y = self.player2:getGridPosition()
-	local enemyX, enemyY = self.enemy:getGridPosition()
+	--local enemyX, enemyY = self.enemy:getGridPosition()
 	
 	if p1x == p2x and p1y == p2y then
 		local cell = self.grid.cells[p1x][p1y]
@@ -215,7 +218,7 @@ function CollectGameboard:endTurn()
 		packet.locations = {
 			p1={x=self.player1.x, y=self.player1.y},
 			p2={x=self.player2.x, y=self.player2.y},
-			enemy={x=self.enemy.x, y=self.enemy.y}
+			enemy={x=1, y=1}
 		}
 		packet.scores = {p1.score, p2.score}
 		NET_ADAPTER:sendData(packet)

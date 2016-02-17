@@ -242,3 +242,7 @@ return {
 	}
 }
 end
+SERVER_MOCKS['Game Over'] = {
+	type='Game Over',
+	winner='User 1'
+}

@@ -39,8 +39,8 @@ class GameFactory(object):
 
         # ch = fakeclienthandler.FakeClientThread()
         # ch = FakeClientHandler()
-        fakech = ch.ClientThread(fakesocket.FakeSocket(False), self)
-        fakech.start()
+        # fakech = ch.ClientThread(fakesocket.FakeSocket(False), self)
+        # fakech.start()
         # self.browseGames(fakech, {'choices': [{'game': 'Space Collectors', 'diff': 'Hard'}]})
 
     def removeWaiterHandler(self, clientHandler):

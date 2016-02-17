@@ -10,7 +10,7 @@ import collectgame_algorithms, staticdata
 class Game(object):
 
     MAXTURNS = 10
-    MAXSCORE = 5
+    MAXSCORE = 30
 
     def __init__(self, p1Thread, p2Thread, gameID, gamePref):
         p1Thread.index = 0
@@ -182,6 +182,7 @@ class Game(object):
 
         for client in self.threads:
             client.sendData(packet)
+            client.removeGame()
 
 
 
