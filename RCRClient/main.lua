@@ -3,7 +3,7 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-local multiplayerMode = true
+local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
 
@@ -37,6 +37,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
 
 

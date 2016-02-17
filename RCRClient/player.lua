@@ -51,7 +51,7 @@ function Character:update(frame)
 		-- Just updating
 		if self.eventQueue then
 			if self.animating and self.frameAction then
-				self:frameAction(frame)
+				--self:frameAction(frame)
 			end
 		end
 	end
@@ -170,40 +170,35 @@ end
 function Character:endMove()
 	self.digging = false
 	
-	self.x = self.x + self.xVelocity
-	self.y = self.y + self.yVelocity
-	--[[if self.xVelocity ~= 0 then
-		local newX = (self.x + self.xVelocity) % self.grid.gridSize
-		if newX == 0 then
-			newX = self.grid.gridSize
+	local potentialX = self.x + self.xVelocity
+	local potentialY = self.y + self.yVelocity
+	if potentialX < 1 then
+		potentialX = self.grid.gridSize
+	elseif potentialX > self.grid.gridSize then
+		potentialX = 1
+	end
+	if potentialY < 1 then
+		potentialY = self.grid.gridSize
+	elseif potentialY > self.grid.gridSize then
+		potentialY = 1
+	end
+	
+	local nextCell = self.grid:getCellAt(potentialX, potentialY)
+	if not nextCell:getWall() then
+		if self.xDist > 0 then
+			self.xDist = self.xDist - 1
+		elseif self.yDist > 0 then
+			self.yDist = self.yDist - 1
 		end
-		self.x = newX
-		print(newX)
+		
+		self.x = potentialX
+		self.y = potentialY
+		self.grid:drawCharacterAtGridPosition(self)
+	else
+		self.xDist = 0
+		self.yDist = 0
 	end
-	if self.yVelocity ~= 0 then
-		local newY = (self.y + self.yVelocity) % self.grid.gridSize
-		if newY == 0 then
-			newY = self.grid.gridSize
-		end
-		self.y = newY
-		print(newY)
-	end]]--
-	if self.x < 1 then
-		self.x = self.grid.gridSize
-	elseif self.x > self.grid.gridSize then
-		self.x = 1
-	end
-	if self.y < 1 then
-		self.y = self.grid.gridSize
-	elseif self.y > self.grid.gridSize then
-		self.y = 1
-	end
-	self.grid:drawCharacterAtGridPosition(self)
-	if self.xDist > 0 then
-		self.xDist = self.xDist - 1
-	elseif self.yDist > 0 then
-		self.yDist = self.yDist - 1
-	end
+	
 	if self.xDist == 0 and self.yDist == 0 then
 		self.xVelocity = 0
 		self.yVelocity = 0
@@ -269,253 +264,3 @@ function CollectEnemy:initAttributes()
 	self.xSpeed = 0
 	self.ySpeed = 0
 end
-
---[[
-Character = Core.class(SceneObject)
-function Character:init()
-	
-end
-
-function Character:moveRight(param)
-	if self.x >= self.grid.gridSize then
-		return
-	end
-	self.x = self.x + 1
-	self.xDirection = 1
-	self.yDirection = 0
-	self.xSpeed = self.velocity
-	self.ySpeed = 0
-	self.cellCheck = function(x, y)
-		return x >= ((self.x - 1) / self.grid.gridSize) * WINDOW_WIDTH
-	end
-end
-
-function Character:moveLeft(param)
-	if self.x <= 1 then
-		return
-	end
-	self.x = self.x - 1
-	self.xDirection = -1
-	self.yDirection = 0
-	self.xSpeed = self.velocity
-	self.ySpeed = 0
-	self.cellCheck = function(x, y)
-		return x <= ((self.x - 1) / self.grid.gridSize) * WINDOW_WIDTH
-	end
-end
-
-function Character:moveUp(param)
-	if self.y <= 1 then
-		return
-	end
-	self.y = self.y - 1
-	self.xDirection = 0
-	self.yDirection = -1
-	self.xSpeed = 0
-	self.ySpeed = self.velocity
-	self.cellCheck = function(x, y)
-		return y <= ((self.y - 1) / self.grid.gridSize) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
-	end
-end
-
-function Character:moveDown(param)
-	if self.y >= self.grid.gridSize then
-		return
-	end
-	self.y = self.y + 1
-	self.xDirection = 0
-	self.yDirection = 1
-	self.xSpeed = 0
-	self.ySpeed = self.velocity
-	self.cellCheck = function(x, y)
-		return y >= ((self.y - 1) / self.grid.gridSize) * WINDOW_WIDTH + (WINDOW_HEIGHT / 4)
-	end
-end
-
-function Character:update(nextMoveFlag)
-	if not self.action then return end
-	
-	if (self.xSpeed == 0 and self.ySpeed == 0) then
-		if # self.loadedMoves ~= 0 then
-			move = self.loadedMoves[1]
-			table.remove(self.loadedMoves, 1)
-			self.activeMove = move
-			move:execute()
-		else
-			self.action = false
-		end
-		return
-	end
-	
-	local x,y = self.playerImage:getPosition()
-	if self.activeMove:isFinished() then
-		self.finishMove()
-		if # self.loadedMoves == 0 then
-			self.xSpeed = 0
-			self.ySpeed = 0
-			self.action = false
-			self.activeMove = nil
-		else
-			move = self.loadedMoves[1]
-			table.remove(self.loadedMoves, 1)
-			self.activeMove = move
-			move:execute()
-		end
-		return
-	end
-	self.activeMove:tick()
- 
-	x = x + (self.xSpeed * self.xDirection)
-	y = y + (self.ySpeed * self.yDirection)
- 
-	self.playerImage:setPosition(x, y)
-		
-	end
-end
-
-function Character:nextEvent()
-end
-
-function Character:initMoveBuffer()
-	self.loadedMoves = {}
-	self.maxMoves = maxMoves
-	self.activeMove = nil
-	self.action = false
-end
-
-function Character:enterGrid(grid, initX, initY)
-	self.x = initX
-	self.y = initY
-	self.grid = grid
-	local imageScale = self.grid:getWidth() / self.grid.gridSize
-	local inc = 1 / self.grid.gridSize
-	local scaleX = imageScale / self:getWidth()
-	local scaleY = imageScale / self:getHeight()
-	self:setScale(scaleX, scaleY)
-	local xPosStart = (inc * (self.x-1)) * self.grid:getWidth()
-	local yPosStart = (inc * (self.y-1)) * self.grid:getHeight()
-	self:setPosition(xPosStart, yPosStart)
-end
-
-Player = Core.class(Character)
-
-EVENT_DURATION = 16
-
-function Player:init()
-	self:initMoveBuffer()
-	--self:setScoreField(playerNum)
-end
-
-function Player:initPlayerAttributes(grid, playerNum, maxMoves)
-	if playerNum == 1 then
-		self.name = "Player 1"
-		self.initX = 1
-		self.initY = 1
-	elseif playerNum == 2 then
-		self.name = "Player 2"
-		self.initX = grid.gridSize
-		self.initY = grid.gridSize
-	end
-	self:enterGrid(grid, self.initX, self.initY)
-	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
-	self.xDirection = 0
-	self.yDirection = 0
-	self.xSpeed = 0
-	self.ySpeed = 0
-	self.maxMoves = maxMoves
-end
-
-function Player:setScoreField(playerNum)
-	self.score = 0
-	local playerName = ""
-	local textField = TextField.new(nil, self.name .. ": " .. self.score)
-	textField:setTextColor(0xff0000)
-	if playerNum == 1 then
-		textField:setX(10)
-		textField:setY(10)
-	elseif playerNum == 2 then
-		textField:setX(10)
-		textField:setY(20)
-	end
-	self.scoreField = textField
-end
-
-function Player:changeScore(points)
-	self.score = self.score + points
-	self.scoreField:setText(self.name .. ": " .. self.score)
-end
-
---implemented by subclass
-function Player:setupPlayerGameRules()
-	print("Player Game rules not implemented")
-end
-
---implemented by subclass
-function Player:reset()
-	print("Player reset not implemented")
-end
-
---implemented by subclass
-function Player:endTurn()
-	print("Player endTurn not implemented")
-end
-
--- implemented by subclass
-function Player:finishMove()
-	print("Player finishMove not implemented")
-end
-
---implemented by subclass
-function Player:update()
-	print("Player update not implemented!")
-end
-
--- implemented by subclass
-function Player:destroy()
-	print("Player destroy not implemented!")
-end
-
-ComputerControlled = Core.class(Player)
-function ComputerControlled:init(grid, maxMoves, imagePath, name, init)
-	self:initComputerAttributes(grid, name, init, maxMoves)
-	self:initMoveBuffer()
-	self:enterGrid(grid, imagePath)
-end
-
-function ComputerControlled:initComputerAttributes(grid, name, init, maxMoves)
-	self.initX = init.x
-	self.initY = init.y
-	self.name = name
-	self.maxMoves = maxMoves
-	self.velocity = (WINDOW_WIDTH / grid.gridSize) / EVENT_DURATION
-	self.xDirection = 0
-	self.yDirection = 0
-	self.xSpeed = 0
-	self.ySpeed = 0
-end
-
---implemented by subclass
-function ComputerControlled:setupPlayerGameRules()
-	print("Computer Game rules not implemented")
-end
-
---implemented by subclass
-function ComputerControlled:reset()
-	print("Computer reset not implemented")
-end
-
---implemented by subclass
-function ComputerControlled:endTurn()
-	print("Computer endTurn not implemented")
-end
-
--- implemented by subclass
-function ComputerControlled:finishMove()
-	print("Computer finishMove not implemented")
-end
-
---implemented by subclass
-function ComputerControlled:update()
-	print("Computer update not implemented!")
-end
-]]
