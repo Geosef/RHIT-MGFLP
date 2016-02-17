@@ -7,7 +7,7 @@ local gameCommandButtonHeight = 65
 local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 local ScriptArea = Core.class(SceneObject)
 
-function ScriptArea:init(parent)
+function ScriptArea:init(parent, maxMoves)
 	-- width is based on ScriptObject.png width, height is assuming 4 ScriptObject.png plus padding
 	self.parent = parent
 	local blankBox = Bitmap.new(Texture.new("images/blank-box.png"))
@@ -15,6 +15,7 @@ function ScriptArea:init(parent)
 	self.script = {}
 	self.visibleScript = {}
 	self.scrollCount = 0
+	self.maxMoves = maxMoves
 	self.movementLine = Shape.new()
 	self.movementLine:setFillStyle(Shape.SOLID, 0xff0000, 2)
 	self.movementLine:beginPath()
@@ -116,8 +117,13 @@ function ScriptArea:scrollTo(doDraw, scrollTarget)
 end
 
 function ScriptArea:addCommand(command)
+	local scriptSize = table.getn(self.script)
+	if scriptSize >= self.maxMoves then
+		print("Can't add anymore commands!")
+		return
+	end
 	table.insert(self.script, command)
-	if table.getn(self.script) >= 4 then
+	if scriptSize >= 4 then
 		self:scrollTo(true, (table.getn(self.script) - 4))
 		return
 	end
@@ -272,7 +278,7 @@ end
 
 local StatementBox = Core.class(SceneObject)
 
-function StatementBox:init(parent)
+function StatementBox:init(parent, maxMoves)
 	self.parent = parent
 	self.headerBottom = 51
 	self.boxImage = Bitmap.new(Texture.new("images/statement-box.png"))
@@ -280,7 +286,7 @@ function StatementBox:init(parent)
 	self.resourceBox = ResourceBox.new(self)
 	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + padding)
 	self:addChild(self.resourceBox)
-	self:initScript()
+	self:initScript(maxMoves)
 	self.savedScript = nil
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
@@ -295,7 +301,7 @@ function StatementBox:onExitBegin()
 	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
-function StatementBox:initScript()
+function StatementBox:initScript(maxMoves)
 	local scriptUpButtonUp = Bitmap.new(Texture.new("images/script-up-button-up.png"))
 	local scriptUpButtonDown = Bitmap.new(Texture.new("images/script-up-button-down.png"))
 	self.scriptUpButton = CustomButton.new(scriptUpButtonUp, scriptUpButtonDown, function() 
@@ -304,7 +310,7 @@ function StatementBox:initScript()
 	end)
 	self.scriptUpButton:setPosition((self:getWidth() / 2) - (self.scriptUpButton:getWidth() / 2), self.resourceBox:getY() + self.resourceBox:getHeight() + padding)
 	self:addChild(self.scriptUpButton)
-	self.scriptArea = ScriptArea.new(self)
+	self.scriptArea = ScriptArea.new(self, maxMoves)
 	self.scriptArea:setPosition((self:getWidth() / 2) - (self.scriptArea:getWidth() / 2), self.scriptUpButton:getY() + self.scriptUpButton:getHeight())
 	self:addChild(self.scriptArea)
 	local scriptDownButtonUp = Bitmap.new(Texture.new("images/script-down-button-up.png"))
@@ -427,7 +433,7 @@ function gameScreen:init(gameInit)
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = "Space Collectors"
-	self.statementBox = StatementBox.new(self)
+	self.statementBox = StatementBox.new(self, self.gameboard.maxMoves)
 	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)

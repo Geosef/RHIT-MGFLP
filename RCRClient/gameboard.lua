@@ -7,6 +7,7 @@ function Gameboard:init(gameInit)
 	NET_ADAPTER:registerCallback('Game Over', function(data)
 		self:displayGameOver()
 	end)
+	self.maxMoves = 6
 end
 
 function Gameboard:displayGameOver()
