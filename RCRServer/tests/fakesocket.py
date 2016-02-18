@@ -16,8 +16,8 @@ class FakeSocket(object):
     login = \
     {
         'type': 'Login',
-        'username': 'user',
-        'password': 'pass'
+        'email': 'user',
+        'password': 'password'
     }
 
     def __init__(self, host, numRematches = 2):
@@ -54,12 +54,21 @@ class FakeSocket(object):
                     toReturn = json.dumps(localpacket)
                     localpacket['source'] = 'recv'
                     self.log(localpacket)
+                    if localpacket.get('type') == 'Submit Move':
+                        time.sleep(3.0)
                     return toReturn
 
     submitmove = \
     {
         'type': 'Submit Move',
-        'events': ['UpMove', 'LeftMove', 'DownMove', 'RightMove']
+        'moves': [{
+            'name': 'Move',
+			'params':
+			[
+				"S",
+				1
+			]
+        }]
     }
 
     updatelocations = \
@@ -77,14 +86,14 @@ class FakeSocket(object):
                 'x': 5,
                 'y': 5
             },
-            'alien':
+            'enemy':
             {
                 'x': 3,
                 'y': 3
             }
         },
         'scores':
-        [10, 10]
+        [2, 2]
     }
     startgame = \
     {
@@ -99,8 +108,12 @@ class FakeSocket(object):
     browsegames = \
     {
         'type': 'Browse Games',
-        'gametype': 'Collect',
-        'difficulty': 'Easy'
+        'choices': [
+            {
+                'game': 'Space Collectors',
+                'diff': 'Hard'
+            }
+        ]
     }
 
     def preparerecv(self, data):
@@ -115,10 +128,7 @@ class FakeSocket(object):
             # print 'UPDATE LOC'
             return self.submitmove
         if type == 'Login':
-            if self.host:
-                return self.creategame
-            else:
-                pass
+            return self.browsegames
                 # return self.browsegames
         if type == 'Create Game':
             return {}
@@ -141,7 +151,8 @@ class FakeSocket(object):
         if type == 'Game Setup':
             # pprint(data)
             self.gridsize = data.get('gridSize')
-            return {}
+            self.host = data.get('host')
+            return self.submitmove
             # return self.startgame
         if type == 'Start Game':
             # print 'START GAME'
@@ -151,7 +162,8 @@ class FakeSocket(object):
             if self.host:
                 # print 'RETURNING UPDATELOCATIONS'
                 return self.updatelocations
-            return {}
+            else:
+                return self.submitmove
         if type == 'End Game':
             # pprint(data)
             return {}
@@ -163,6 +175,7 @@ class FakeSocket(object):
 
     def log(self, packet):
         toLog = {'type': packet['type'], 'source': packet['source']}
+        pprint(packet)
         self.events.append(toLog)
 
     def getEvents(self):

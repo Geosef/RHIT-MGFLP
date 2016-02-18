@@ -24,7 +24,7 @@ def generateRandomItemLocations(locations):
 def calculateItemLocations(locations):
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
-    alienLoc = locations.get('alien')
+    enemyLoc = locations.get('enemy')
 
     itemLocations = generateRandomItemLocations(locations)
 
@@ -32,15 +32,33 @@ def calculateItemLocations(locations):
 
 
 
-def calculateAlienMoves(gameObj, locations):
+def calculateEnemyMoves(gameObj, locations, mock=True):
+    if mock:
+        return [
+            {
+                'name': 'Move',
+                'params': ['S', 1]
+            },
+            {
+                'name': 'Move',
+                'params': ['E', 1]
+            },
+            {
+                'name': 'Move',
+                'params': ['N', 1]
+            },
+        ]
+
+
+
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
-    alienLoc = locations.get('alien')
+    enemyLoc = locations.get('enemy')
 
-    alienMoves = gameObj.maxMoves + 1
+    enemyMoves = gameObj.maxMoves + 1
     visitedStates = set()
     frontier = util.PriorityQueue()
-    currentState = (alienLoc.get('x'), alienLoc.get('y'))
+    currentState = (enemyLoc.get('x'), enemyLoc.get('y'))
     stateCost = 1
     hVal = collectEnemyHeuristic(p1Loc, p2Loc, currentState)
     p = hVal + stateCost
@@ -50,7 +68,7 @@ def calculateAlienMoves(gameObj, locations):
         if frontier.isEmpty():
             return []
         currentState, actions, stateCost, hVal = frontier.pop()
-        if len(actions) == alienMoves:
+        if len(actions) == enemyMoves:
             return actions
         if currentState not in visitedStates:
             visitedStates.add(currentState)

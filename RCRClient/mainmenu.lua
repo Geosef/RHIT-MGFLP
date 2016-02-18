@@ -32,8 +32,8 @@ function gameSelect:init(mainMenu)
 	self.checkedButtons = {}
 	--self:addButtons(self.rowVals[self.numRows])
 	self:addGame("Space Collectors")
-	self:addGame("Zombie Survivors")
-	self:addGame("Game 3")
+	--self:addGame("Zombie Survivors")
+	--self:addGame("Game 3")
 
 end
 
@@ -41,10 +41,10 @@ function gameSelect:addGame(name)
 	local gametext = TextField.new(font, name)
 	local newRow = self.rowVals[self.numRows] + spacing + gametext:getHeight()
 	table.insert(self.rowVals, newRow)
-	self.numRows = self.numRows + 1
 	gametext:setPosition(self.firstCol - (gametext:getWidth() / 2), self.rowVals[self.numRows] - (gametext:getHeight()/2))
 	self:addChild(gametext)
 	self:addButtons(self.rowVals[self.numRows], name)
+	self.numRows = self.numRows + 1
 end
 
 function gameSelect:addButtons(rowVal, name)
@@ -154,12 +154,13 @@ function mainMenu:sendSelected(checkedButtons)
 			print('here2')
 			sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 		end
-	end)
-
-	NET_ADAPTER:registerCallback('Game Setup', function(data)
-		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
-		{userData=data})
-		NET_ADAPTER:unregisterCallback('Game Setup')
+	end,
+	{type='Browse Games', match=true})
+	
+	NET_ADAPTER:registerCallback('Player Joined', function(data)
+		NET_ADAPTER:unregisterCallback('Player Joined')
+		print('Player Joined packet received')
+		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 	end)
 
 	NET_ADAPTER:sendData(packet)
@@ -175,10 +176,6 @@ function mainMenu:receiveBrowseResponse(response)
 		--switch to joining game screen while server processes game setup and removal from joinable games
 		--then show initial game screen
 		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
-
-
-
-
 	else	--put in waitlist on server,
 		--goToSearchingScreen()
 		--stay in searching for game, cancel if want to back out.
@@ -186,7 +183,6 @@ function mainMenu:receiveBrowseResponse(response)
 		--have lock on clienthandler for knowing whether you are joining a game or cancelling
 		sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
 	end
-
 end
 
 function mainMenu:getPreviousRow(rowVal, currentObj, newObj)

@@ -17,7 +17,8 @@ function joiningGame:onEnterEnd()
 		NET_ADAPTER:unregisterCallback('Game Setup')
 		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
 		{userData=data})
-	end)
+	end,
+	SERVER_MOCKS['Game Setup'])
 end
 
 function joiningGame:onExitBegin()

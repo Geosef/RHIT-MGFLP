@@ -3,7 +3,7 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-local multiplayerMode = false
+local multiplayerMode = true
 
 JSON = (loadfile "JSON.lua")()
 
@@ -23,7 +23,8 @@ sceneManager = SceneManager.new({
 	["gameWait"] = gameWait,
 	["gameScreen"] = gameScreen,
 	["acctSettings"] = acctSettings,
-	["joinGame"] = joiningGame
+	["joinGame"] = joiningGame,
+	["gameOver"] = gameOver
 })
 
 BlankScene = Core.class(Sprite)
@@ -37,6 +38,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
 
 

@@ -268,7 +268,7 @@ end
 function SingleScriptObject:getData()
 	local commandData = {}
 	commandData.name = self.name
-	commandData.params.param1 = self.dataSet[self.dIndex]
+	commandData.params = {self.dataSet[self.dIndex]}
 	return commandData
 end
 
@@ -440,8 +440,7 @@ end
 function DoubleScriptObject:getData()
 	local commandData = {}
 	commandData.name = self.name
-	commandData.params.param1 = self.dataSet1[self.d1Index]
-	commandData.params.param2 = self.dataSet2[self.d2Index]
+	commandData.params = {self.dataSet1[self.d1Index], self.dataSet2[self.d2Index]}
 	return commandData
 end
 

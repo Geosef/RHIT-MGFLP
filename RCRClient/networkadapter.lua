@@ -1,6 +1,6 @@
 -- program is being exported under the TSU exception
 
-local serverIP = '137.112.226.24';
+local serverIP = '137.112.224.49';
 local port = 5005
 
 NetworkAdapter = {}
@@ -26,14 +26,14 @@ function NetworkAdapter:registerCallback(key, callback, data)
 	if self.on then
 		registeredCallbacks[key] = callback
 	elseif data then
-		local timer = Timer.new(1000)
+		local timer = Timer.new(10)
 		timer:addEventListener(Event.TIMER, function()
 			timer:stop()
 			callback(data)
 		end)
 		timer:start()
 	else
-		print('error, network not connected and dev did not supply mock data')
+		print('error, network not connected and dev did not supply mock data. Name: ' .. key)
 	end
 end
 
@@ -42,6 +42,10 @@ function NetworkAdapter:unregisterCallback(key)
 end
 
 function NetworkAdapter:connect()
+	if not self.on then
+		return
+	end
+	
 	local timer = Timer.new(100)
 
 	local sock = socket.tcp()

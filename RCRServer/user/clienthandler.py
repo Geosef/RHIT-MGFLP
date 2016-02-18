@@ -101,11 +101,12 @@ class ClientThread(threading.Thread):
         # pprint(packet)
 
     def endGame(self, packet):
-        self.game.rematch(self, packet)
+        pass
+        # self.game.rematch(self, packet)
         # pprint(packet)
 
     def submitMove(self, packet):
-        moves = packet.get('events')
+        moves = packet.get('moves')
         self.game.submitMove(moves, self)
         # pprint(packet)
 
@@ -132,13 +133,16 @@ class ClientThread(threading.Thread):
         }
         self.sendData(data)
 
+    def removeGame(self):
+        self.setGame(None)
 
     def login(self, packet, **kw):
         #TODO: make user identified by email in JSON
         email = packet.get('email')
         password = packet.get('password')
 
-        success = login.validLogin(email, password)
+        # success = login.validLogin(email, password)
+        success = True
 
         if success:
             playerID = 1
@@ -152,7 +156,6 @@ class ClientThread(threading.Thread):
             'success': success
         }
         self.loggedIn = success
-
         if not kw.get('no_data'):
             self.sendData(data)
 

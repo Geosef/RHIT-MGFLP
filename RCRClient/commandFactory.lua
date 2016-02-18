@@ -17,7 +17,7 @@ function CommandFactory:initMasterLib()
 		return {ZeroScriptObject.new(scriptArea, "Dig")}
 	end
 	self.masterLibrary["Jump"] = function(scriptArea)
-		return {ZeroScriptObject.new(scriptArea, "Jump")}
+		return {SingleScriptObject.new(scriptArea, "Jump", {"N", "E", "S", "W"})}
 	end
 end
 
@@ -31,7 +31,7 @@ function CommandFactory:initSpaceCollectorsGameCommands()
 	sublib["Move"] = self.masterLibrary["Move"]
 	sublib["Loop"] = self.masterLibrary["Loop"]
 	sublib["Dig"] = self.masterLibrary["Dig"]
-	sublib["Jump"] = self.masterLibrary["Jump"]
+	--sublib["Jump"] = self.masterLibrary["Jump"]
 	return sublib
 end
 

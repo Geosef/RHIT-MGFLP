@@ -11,6 +11,13 @@ function inTable(tbl, item)
     return false
 end
 
+-- Clears all references in array
+function clearArray(array)
+	for i = 1, table.getn(array) do
+		table.remove(array)
+	end
+end
+
 --[[
 	Performs a deep copy of orig.
 ]]
