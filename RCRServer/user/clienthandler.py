@@ -194,11 +194,11 @@ class ClientThread(threading.Thread):
     def setGame(self, game):
         self.game = game
 
-    def cancelSearch(self):
+    def cancelSearch(self, packet):
         success = self.gameFactory.removeWaiterHandler(self)
         if success:
-            packet = {
+            toSend = {
                 'type': 'Cancel Search',
                 'success': True
             }
-            self.sendData(packet)
+            self.sendData(toSend)
