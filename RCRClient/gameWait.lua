@@ -21,7 +21,7 @@ function gameWait:init()
 	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
 	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
 	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function() 
-			NET_ADAPTER:registerCallback('Cancel Search', function(data)
+		NET_ADAPTER:registerCallback('Cancel Search', function(data)
 			sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 		end)
 		NET_ADAPTER:sendData({type='Cancel Search', cancel=true})
@@ -73,7 +73,9 @@ function gameWait:onEnterFrame()
 end
 
 function gameWait:animate()
-	self:removeChild(self.sprite)
+	if self.sprite and self:getChildAt(3) == self.sprite then
+		self:removeChild(self.sprite)
+		end
 	self.spriteCounter = (self.spriteCounter + 1) % table.getn(loadingSprites)
 	self.sprite = loadingSprites[self.spriteCounter]
 	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.submitButton:getY() - self.sprite:getHeight() - 70)
