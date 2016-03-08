@@ -5,8 +5,8 @@ import weakref
 import random
 
 import game
-import fakeclienthandler, fakesocket
-import clienthandler as ch
+from tests import fakeclienthandler, fakesocket
+from user import clienthandler as ch
 
 
 class ClientWait(object):

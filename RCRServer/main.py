@@ -4,9 +4,9 @@ __author__ = 'kochelmj'
 import socket, threading
 import pprint
 import json
-import clienthandler
-import gamefactory
-import fakesocket
+from user import clienthandler
+from game import gamefactory
+from tests import fakesocket
 import logging
 
 import signal

@@ -65,10 +65,10 @@ class ClientThread(threading.Thread):
                 print('Invalid Client Data')
                 continue
         try:
+            self.gameFactory.removeWaiterHandler(self)
             self.sock.close()
             logging.info('Client Disconnected')
             print 'Client Disconnected'
-            self.gameFactory.removeWaiterHandler(self)
         except Exception as e:
             pass
 
