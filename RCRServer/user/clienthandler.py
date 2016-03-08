@@ -28,7 +28,8 @@ class ClientThread(threading.Thread):
             'Quit': self.quit,
             'Browse Games': self.browseGames,
             'Player Joined': self.playerJoined,
-            'Start Game': self.startGame
+            'Start Game': self.startGame,
+            'Cancel Search': self.cancelSearch
         }
 
     def handle(self):
@@ -192,3 +193,12 @@ class ClientThread(threading.Thread):
 
     def setGame(self, game):
         self.game = game
+
+    def cancelSearch(self):
+        success = self.gameFactory.removeWaiterHandler(self)
+        if success:
+            packet = {
+                'type': 'Cancel Search',
+                'success': True
+            }
+            self.sendData(packet)

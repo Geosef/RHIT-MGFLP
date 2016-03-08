@@ -45,10 +45,13 @@ class GameFactory(object):
 
     def removeWaiterHandler(self, clientHandler):
         #called from client handler so we need the thread lock
+        waiterFound = False
         with self.gameWaitListLock:
             waiter = next((temp for temp in self.clientWaitList if clientHandler is temp.client_handler), None)
             if waiter:
                 self.removeWaiter(waiter)
+                waiterFound = True
+        return waiterFound
 
     def removeWaiter(self, clientWaitObj):
         #remove all things from both lists
