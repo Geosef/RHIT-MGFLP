@@ -141,8 +141,8 @@ class ClientThread(threading.Thread):
         email = packet.get('email')
         password = packet.get('password')
 
-        # success = login.validLogin(email, password)
-        success = True
+        success = login.validLogin(email, password)
+        # success = True
 
         if success:
             playerID = 1
