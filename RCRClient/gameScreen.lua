@@ -351,21 +351,81 @@ function StatementBox:saveScript()
 	self.savedScript = self.scriptArea:copyScript()
 end
 
+function StatementBox:growAndAddArray(dest, arr, iterations)
+	local i
+	local j
+	for i=1, iterations do
+		for j=1, #arr do
+			table.insert(dest, arr[j])
+		end
+	end
+end
+
+function StatementBox:expandLoops(script)
+	local result = {}
+	local dataStack = {}
+	local iterationsStack = {}
+	local currentLevel = 0
+	local i
+	for i=1, table.getn(script) do
+		local elem = script[i]
+		if elem.name == 'Loop' then
+			currentLevel = currentLevel + 1
+			table.insert(dataStack, {})
+			table.insert(iterationsStack, elem.params[1])
+		elseif elem.name == 'Loop End' then
+			if currentLevel > 0 then
+				currentLevel = currentLevel - 1
+				local dest
+				if currentLevel == 0 then
+					dest = result
+				else
+					dest = dataStack[currentLevel]
+				end
+				self:growAndAddArray(dest, table.remove(dataStack), table.remove(iterationsStack))
+			else
+				print('Error, loop end found but no loop start')
+			end			
+		else
+			if currentLevel == 0 then
+				table.insert(result, elem)
+			else
+				table.insert(dataStack[currentLevel], elem)
+			end
+		end
+	end
+	return result
+end
+
+function map(tbl, f)
+    local t = {}
+    for k,v in pairs(tbl) do
+        t[k] = f(v)
+    end
+    return t
+end
+
 function StatementBox:sendScript(timerAlert)
 	local scriptPacket = {}
 	scriptPacket.type = "Submit Move"
 	scriptPacket.moves = {}
-	local scriptToSend = {}
+	local sourceScript = {}
 	if timerAlert then
-		scriptToSend = self.savedScript
+		sourceScript = self.savedScript
 	else
-		scriptToSend = self.scriptArea.script
+		sourceScript = self.scriptArea.script
 	end
-	for i=1,table.getn(scriptToSend),1 do
+	
+	local scriptToSend = map(sourceScript, function(elem) return elem:getData() end)
+	scriptToSend = self:expandLoops(scriptToSend)
+	--[[for i=1,table.getn(scriptToSend),1 do
 		local command = scriptToSend[i]
 		local commandData = command:getData()
 		table.insert(scriptPacket.moves, commandData)
-	end	
+	end	]]
+	scriptPacket.moves = scriptToSend
+	
+	print_r(scriptPacket.moves)
 	NET_ADAPTER:registerCallback('Run Events', function(data)
 		if data.type == 'Run Events' then
 			self.parent.gameboard:performNextTurn(data.moves)
