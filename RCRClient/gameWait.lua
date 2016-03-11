@@ -18,16 +18,16 @@ function gameWait:init()
 	self.sceneName = "Waiting for Opponent..."
 	
 	-- Add cancel button
-	local submitButtonUp = Bitmap.new(Texture.new("images/submitButtonUp.png"))
-	local submitButtonDown = Bitmap.new(Texture.new("images/submitButtonDown.png"))
-	self.submitButton = CustomButton.new(submitButtonUp, submitButtonDown, function() 
+	local cancelButtonUp = Bitmap.new(Texture.new("images/cancelButtonUp.png"))
+	local cancelButtonDown = Bitmap.new(Texture.new("images/cancelButtonDown.png"))
+	self.cancelButton = CustomButton.new(cancelButtonUp, cancelButtonDown, function() 
 		NET_ADAPTER:registerCallback('Cancel Search', function(data)
 			sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
 		end)
 		NET_ADAPTER:sendData({type='Cancel Search', cancel=true})
 	end)
-	self.submitButton:setPosition((WINDOW_WIDTH / 2) - (self.submitButton:getWidth() / 2) , WINDOW_HEIGHT - self.submitButton:getHeight() - 70)
-	self:addChild(self.submitButton)
+	self.cancelButton:setPosition((WINDOW_WIDTH / 2) - (self.cancelButton:getWidth() / 2) , WINDOW_HEIGHT - self.cancelButton:getHeight() - 70)
+	self:addChild(self.cancelButton)
 	
 	-- Add waiting text
 	local logo = Bitmap.new(Texture.new("images/waitingForOppText.png"))
@@ -43,7 +43,7 @@ function gameWait:init()
 	self.spriteCounter = 0
 	self.sprite = loadingSprites[self.spriteCounter]
 	
-	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.submitButton:getY() - self.sprite:getHeight() - 70)
+	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.cancelButton:getY() - self.sprite:getHeight() - 70)
 	self:addChild(self.sprite)
 end
 
@@ -78,7 +78,7 @@ function gameWait:animate()
 		end
 	self.spriteCounter = (self.spriteCounter + 1) % table.getn(loadingSprites)
 	self.sprite = loadingSprites[self.spriteCounter]
-	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.submitButton:getY() - self.sprite:getHeight() - 70)
+	self.sprite:setPosition((WINDOW_WIDTH / 2) - (self.sprite:getWidth() / 2), self.cancelButton:getY() - self.sprite:getHeight() - 70)
 	self:addChild(self.sprite)
 end
 
