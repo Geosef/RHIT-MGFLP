@@ -12,9 +12,16 @@ class Game(object):
     MAXTURNS = 10
     MAXSCORE = 30
 
+    hardcodedConfig = {
+        'goldLocations': 8,
+        'treasureLocations': 8,
+        'wallLocations': 6,
+    }
+
     def __init__(self, p1Thread, p2Thread, gameID, gamePref):
         p1Thread.index = 0
         p2Thread.index = 1
+        self.configSettings = self.hardcodedConfig
         self.gameID = gameID
         self.threads = [p1Thread, p2Thread]
         self.lock = threading.Lock()
@@ -33,11 +40,15 @@ class Game(object):
 
 
 
+
     joinSuccess = \
         {
             'type': 'Join Game',
             'success': True
         }
+
+    def wasteTime(self):
+        time.sleep(1)
 
     def setup(self, initial):
         self.currentTurn = 0
@@ -47,34 +58,35 @@ class Game(object):
             # self.threads[1].sendData(self.joinSuccess)
 
 
-        gamesetup = staticdata.gamesetup
+        # gamesetup = staticdata.gamesetup
+        gamesetup = collectgame_algorithms.createNewSetup(self)
 
-        time.sleep(4)
+        self.wasteTime()
 
         c1packet = {'type': 'Game Setup', 'host': True}
         c1packet.update(gamesetup)
         c2packet = {'type': 'Game Setup', 'host': False}
         c2packet.update(gamesetup)
 
-
-
         self.threads[0].sendData(c1packet)
         self.threads[1].sendData(c2packet)
 
-
-        locations = \
-            {
-                'p1': {'x': 1, 'y': 1},
-                'p2': {'x': 10, 'y': 10},
-                'enemy': {'x': 5, 'y': 5}
-            }
-        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self, locations)
+        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self)
 
         with self.lock:
             self.currentMoves['enemy'] = enemyMoves
 
             if self.checkFinish():
                 self.finishTurn()
+
+    def getPlayerLocations(self):
+        locations = \
+            {
+                'p1': {'x': 1, 'y': 1},
+                'p2': {'x': 10, 'y': 10},
+                'enemy': {'x': 5, 'y': 5}
+            }
+        return locations
 
     def startGame(self, clientthread):
         with self.lock:
@@ -111,9 +123,9 @@ class Game(object):
     def updateLocations(self, locations, scores):
 
         if self.currentTurn % 2 == 0:
-            newItemLocations = collectgame_algorithms.calculateItemLocations(locations)
+            newItemLocations = collectgame_algorithms.calculateItemLocations(self, locations)
         else:
-            newItemLocations = {'goldLocations': [], 'gemLocations': [], 'treasureLocations': []}
+            newItemLocations = None
 
         enemyMoves = collectgame_algorithms.calculateEnemyMoves(self, locations)
 

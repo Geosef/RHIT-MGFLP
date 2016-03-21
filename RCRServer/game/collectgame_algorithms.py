@@ -5,34 +5,102 @@ import random
 import util
 
 
-def generateRandomItemLocations(locations):
+gamesetup = \
+{
+    'game': 'Space Collectors',
+    'diff': 'Hard',
+    'gridSize': 10,
+    'cellData':
+    {
+        'wallLocations':
+        [
+            {
+                'x': 1,
+                'y': 4
+            },
+        ],
+        'goldLocations':
+        [
+            {
+                'x': 2,
+                'y': 2
+            },
+        ],
+        # 'gemLocations':
+        # [
+        #     {
+        #         'x': 4,
+        #         'y': 4
+        #     },
+        # ],
+        'treasureLocations':
+        [
+            {
+                'x': 1,
+                'y': 10
+            },
+        ],
+        'enemyStart':
+        {
+            'x': 5,
+            'y': 6
+        }
+    }
+}
+
+
+
+def generateRandomItemLocations(locations, gridSize, itemDict):
     vals = locations.values()
     locs = []
-    for i in xrange(10):
-        loc = {'x': random.randrange(1, 11), 'y': random.randrange(1, 11)}
-        if loc not in locs and loc not in vals:
-            locs.append(loc)
+    result = {}
+    for k,v in itemDict.items():
+        for i in xrange(v):
+            loc = {'x': random.randrange(1, gridSize + 1), 'y': random.randrange(1, gridSize + 1)}
+            if loc not in locs and loc not in vals:
+                locs.append(loc)
+                if k not in result:
+                    result[k] = []
+                result[k].append(loc)
 
     length = len(locs)
 
-    return {
-        'goldLocations': locs[:length / 3],
-        'gemLocations': locs[(length /3) + 1 : 2 * length / 3],
-        'treasureLocations': locs[(2 * length / 3) + 1:]
+    return result
+
+    # return {
+    #     'goldLocations': locs[:length / 3],
+    #     'gemLocations': locs[(length /3) + 1 : 2 * length / 3],
+    #     'treasureLocations': locs[(2 * length / 3) + 1:]
+    # }
+
+def createNewSetup(gameObj):
+
+    items = generateRandomItemLocations(gameObj.getPlayerLocations(), gameObj.gridSize, gameObj.configSettings)
+    items.update({'enemyStart': {'x': 6, 'y': 5}})
+
+    result = {
+        'game': 'Space Collectors',
+        'diff': 'Hard',
+        'gridSize': 10,
+        'cellData': items
     }
 
-def calculateItemLocations(locations):
+    return result
+
+def calculateItemLocations(gameObj, locations):
     p1Loc = locations.get('p1')
     p2Loc = locations.get('p2')
     enemyLoc = locations.get('enemy')
 
-    itemLocations = generateRandomItemLocations(locations)
+    itemLocations = generateRandomItemLocations(locations, gameObj.gridSize, gameObj.configSettings)
+
 
     return itemLocations
 
 
 
-def calculateEnemyMoves(gameObj, locations, mock=True):
+def calculateEnemyMoves(gameObj, mock=True):
+    localtions = gameObj.getPlayerLocations()
     if mock:
         return [
             {
@@ -132,3 +200,20 @@ class Actions:
         dx, dy = Actions._directions[direction]
         return (dx, dy)
     directionToVector = staticmethod(directionToVector)
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+    locations = \
+    {
+        'p1': {'x': 1, 'y': 1},
+        'p2': {'x': 10, 'y': 10},
+        'enemy': {'x': 5, 'y': 5}
+    }
+
+    pprint(generateRandomItemLocations(locations, 10, {
+        'goldLocations': 8,
+        'treasureLocations': 8,
+        'wallLocations': 6,
+    }))
+

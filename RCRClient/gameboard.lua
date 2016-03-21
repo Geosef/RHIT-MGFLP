@@ -119,8 +119,22 @@ function CollectGameboard:performNextTurn(moves)
 	self.animating = true
 end
 
-function CollectGameboard:updateLocations()
+function CollectGameboard:updateLocations(locations)
 	print('CollectGameboard:updateLocations()')
+	if locations then
+		if self.animating then
+			print('here1 updateLocations')
+			self.nextGrid = locations
+		else
+			print('here2 updateLocations')
+			self.grid:updateGrid(locations)
+			self.nextGrid = nil
+		end
+	else
+		print('here3 updateLocations')
+		self.nextGrid = nil
+	end
+	
 end
 
 local treasureScoreAmount = 6
@@ -212,6 +226,10 @@ function CollectGameboard:triggerCollects()
 end
 
 function CollectGameboard:endTurn()
+	if self.nextGrid then
+		print('here endTurn()')
+		self.grid:updateGrid(self.nextGrid)
+	end
 	if self.host then
 		local packet = {}
 		packet.type = 'Update Locations'
@@ -334,7 +352,7 @@ function CollectGrid:setGoldAt(goldLocations, initial)
 
 end
 
-function CollectGrid:setGemsAt(gemLocations, initial)
+function CollectGrid:setGemsAt(gemgLocations, initial)
 
 end
 

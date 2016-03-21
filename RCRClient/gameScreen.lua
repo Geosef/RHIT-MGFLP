@@ -351,13 +351,39 @@ function StatementBox:saveScript()
 	self.savedScript = self.scriptArea:copyScript()
 end
 
+function StatementBox:expandAllPlayers(moves)
+	local t = {}
+    for k,v in pairs(moves) do
+        local expanded = self:expandLoops(v)
+		t[k] = expanded
+    end
+    return t
+end
+
 function StatementBox:growAndAddArray(dest, arr, iterations)
 	local i
 	local j
 	for i=1, iterations do
 		for j=1, #arr do
-			table.insert(dest, arr[j])
+			local item = arr[j]
+			if elem.name == 'Move' and elem.params[2] > 1 then
+				self:growAndAddMove(dest, elem)
+			else
+				table.insert(dest, elem)
+			end
+			
 		end
+	end
+end
+
+function StatementBox:growAndAddMove(dest, item)
+	if item.name == 'Move' and item.params[2] > 1 then
+		local iters = item.params[2]
+		item.params[2] = 1
+		for k=1, iters do
+			table.insert(dest, item)
+		end
+		--table.insert(dest, item)
 	end
 end
 
@@ -388,9 +414,17 @@ function StatementBox:expandLoops(script)
 			end			
 		else
 			if currentLevel == 0 then
-				table.insert(result, elem)
+				if elem.name == 'Move' and elem.params[2] > 1 then
+					self:growAndAddMove(result, elem)
+				else
+					table.insert(result, elem)
+				end
 			else
-				table.insert(dataStack[currentLevel], elem)
+				if elem.name == 'Move' and elem.params[2] > 1 then
+					self:growAndAddMove(dataStack[currentLevel], elem)
+				else
+					table.insert(dataStack[currentLevel], elem)
+				end
 			end
 		end
 	end
@@ -417,7 +451,8 @@ function StatementBox:sendScript(timerAlert)
 	end
 	
 	local scriptToSend = map(sourceScript, function(elem) return elem:getData() end)
-	scriptToSend = self:expandLoops(scriptToSend)
+	--scriptToSend = self:expandLoops(scriptToSend)
+	
 	--[[for i=1,table.getn(scriptToSend),1 do
 		local command = scriptToSend[i]
 		local commandData = command:getData()
@@ -428,7 +463,10 @@ function StatementBox:sendScript(timerAlert)
 	print_r(scriptPacket.moves)
 	NET_ADAPTER:registerCallback('Run Events', function(data)
 		if data.type == 'Run Events' then
-			self.parent.gameboard:performNextTurn(data.moves)
+			print('here56')
+			print_r(data.moves)
+			local moves = self:expandAllPlayers(data.moves)
+			self.parent.gameboard:performNextTurn(moves)
 			self.scriptArea:clearScript()
 		else
 			print('Could not send moves.')
@@ -436,7 +474,7 @@ function StatementBox:sendScript(timerAlert)
 	end,
 	SERVER_MOCKS['Run Events'](scriptPacket.moves))
 	NET_ADAPTER:registerCallback('Update Locations', function(data)
-		self.parent.gameboard:updateLocations()
+		self.parent.gameboard:updateLocations(data.locations)
 	end)
 	NET_ADAPTER:sendData(scriptPacket)
 end

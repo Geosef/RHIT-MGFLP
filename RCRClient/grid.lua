@@ -31,13 +31,31 @@ function Grid:initGrid(gameInit, cellImagePath)
 	self:drawGrid()
 end
 
+function Grid:removeCollectibles()
+	-- walls, goldLocations, treasureLocations
+	for i, row in ipairs(self.cells) do
+		for j, cell in ipairs(row) do
+			cell:setWall(false)
+			cell:setGold(false)
+			cell:setTreasure(false)
+		end
+	end
+end
+
+function Grid:updateGrid(locations)
+	--print_r(locations)
+	self:removeCollectibles()
+	self:setCellData(locations)
+	--self:drawGrid()
+end
+
 function Grid:setCellData(cellData)
 	-- walls, goldLocations, treasureLocations
 	for index,value in ipairs(cellData.wallLocations) do
 		local x = value.x
 		local y = value.y
 		local cell = self.cells[x][y]
-		cell:setWall(true)		
+		cell:setWall(true)
 	end
 	for index,value in ipairs(cellData.goldLocations) do
 		local x = value.x
@@ -134,11 +152,13 @@ end
 
 function Cell:setGold(bool)
 	self.gold = bool
+	pcall(function()
 	if bool then
 		self:addChild(self.goldImage)
 	else
 		self:removeChild(self.goldImage)
 	end
+	end)
 end
 
 function Cell:getGold()
@@ -148,11 +168,13 @@ end
 
 function Cell:setWall(bool)
 	self.wall = bool
+	pcall(function()
 	if bool then
 		self:addChild(self.wallImage)
 	else
 		self:removeChild(self.wallImage)
 	end
+	end)
 end
 
 function Cell:getWall()
