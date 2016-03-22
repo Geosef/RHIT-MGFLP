@@ -42,32 +42,48 @@ function Grid:removeCollectibles()
 	end
 end
 
-function Grid:updateGrid(locations)
+function Grid:updateGrid(grid, playerLocations)
 	--print_r(locations)
 	self:removeCollectibles()
-	self:setCellData(locations)
+	self:setCellData(grid, playerLocations)
 	--self:drawGrid()
 end
 
-function Grid:setCellData(cellData)
+local function isOnPlayerCell(x, y, playerLocations)
+	if not playerLocations then return false end
+	for i, v in ipairs(playerLocations) do
+		if v.x == x and v.y == y then
+			return true
+		end
+	end
+	return false
+end
+
+function Grid:setCellData(cellData, playerLocations)
 	-- walls, goldLocations, treasureLocations
 	for index,value in ipairs(cellData.wallLocations) do
 		local x = value.x
 		local y = value.y
-		local cell = self.cells[x][y]
-		cell:setWall(true)
+		if not isOnPlayerCell(x, y, playerLocations) then
+			local cell = self.cells[x][y]
+			cell:setWall(true)
+		end
 	end
 	for index,value in ipairs(cellData.goldLocations) do
 		local x = value.x
 		local y = value.y
-		local cell = self.cells[x][y]
-		cell:setGold(true)		
+		if not isOnPlayerCell(x, y, playerLocations) then
+			local cell = self.cells[x][y]
+			cell:setGold(true)		
+		end
 	end
 	for index,value in ipairs(cellData.treasureLocations) do
 		local x = value.x
 		local y = value.y
-		local cell = self.cells[x][y]
-		cell:setTreasure(true)		
+		if not isOnPlayerCell(x, y, playerLocations) then		
+			local cell = self.cells[x][y]
+			cell:setTreasure(true)		
+		end
 	end	
 end
 

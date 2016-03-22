@@ -119,15 +119,22 @@ function CollectGameboard:performNextTurn(moves)
 	self.animating = true
 end
 
-function CollectGameboard:updateLocations(locations)
+function CollectGameboard:updateLocations(newGrid)
 	print('CollectGameboard:updateLocations()')
-	if locations then
+	if newGrid then
 		if self.animating then
 			print('here1 updateLocations')
-			self.nextGrid = locations
+			self.nextGrid = newGrid
 		else
 			print('here2 updateLocations')
-			self.grid:updateGrid(locations)
+			local locations = {}
+			local x, y = self.player1:getGridPosition()
+			table.insert(locations, {x=x, y=y})
+			x, y = self.player2:getGridPosition()
+			table.insert(locations, {x=x, y=y})
+			--x, y = self.enemy:getGridPosition()
+			--table.insert(locations, {x=x, y=y})
+			self.grid:updateGrid(newGrid, locations)
 			self.nextGrid = nil
 		end
 	else
@@ -228,7 +235,16 @@ end
 function CollectGameboard:endTurn()
 	if self.nextGrid then
 		print('here endTurn()')
-		self.grid:updateGrid(self.nextGrid)
+		local nextGrid = self.nextGrid
+		self.nextGrid = nil
+		local locations = {}
+		local x, y = self.player1:getGridPosition()
+		table.insert(locations, {x=x, y=y})
+		x, y = self.player2:getGridPosition()
+		table.insert(locations, {x=x, y=y})
+		--x, y = self.enemy:getGridPosition()
+		--table.insert(locations, {x=x, y=y})
+		self.grid:updateGrid(nextGrid, locations)
 	end
 	if self.host then
 		local packet = {}
