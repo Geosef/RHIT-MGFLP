@@ -1,7 +1,14 @@
 -- program is being exported under the TSU exception
 
+--[[
+	The screen that pops up when a user has submitted their
+	choices for games and finds a match.
+]]
 joiningGame = Core.class(BaseScreen)
 
+--[[
+	Initializes the screen. Simple screen with centered text.
+]]
 function joiningGame:init()
 	self.sceneName = "Joining Game"
 	local logo = Bitmap.new(Texture.new("images/joinGameText.png"))
@@ -11,6 +18,9 @@ function joiningGame:init()
 	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
+--[[
+	
+]]
 function joiningGame:onEnterEnd()
 	NET_ADAPTER:registerCallback('Game Setup', function(data)
 		print('goto game')
@@ -21,6 +31,9 @@ function joiningGame:onEnterEnd()
 	SERVER_MOCKS['Game Setup'])
 end
 
+--[[
+	
+]]
 function joiningGame:onExitBegin()
 	self:removeEventListener("enterEnd", self.onEnterEnd)
 	self:removeEventListener("exitBegin", self.onExitBegin)

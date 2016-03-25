@@ -1,9 +1,20 @@
+-- program is being exported under the TSU exception
+
+--[[
+	The account settings screen. Used to change user settings
+	such as avater and password.
+]]
 acctSettings = Core.class(BaseScreen)
 
 local font = TTFont.new("fonts/arial-rounded.ttf", 40)
 local padding = 30
+
+--[[
+	Initializes the screen.
+	TODO: Add functionality and rearrange.
+]]
 function acctSettings:init()
-	-- need to change this probably
+
 	self.sceneName = "Account Settings"
 		
 	-- Add logo

@@ -1,5 +1,10 @@
 -- program is being exported under the TSU exception
 
+--[[
+	Extended from SceneObject
+	Scene where the user selects and submits the games which 
+	they would like to play.
+]]
 gameSelect = Core.class(SceneObject)
 
 local spacing = 50
@@ -37,6 +42,10 @@ function gameSelect:init(mainMenu)
 
 end
 
+--[[
+	Adds a game to the table; including the game title and
+	buttons for difficulty selection.
+]]
 function gameSelect:addGame(name)
 	local gametext = TextField.new(font, name)
 	local newRow = self.rowVals[self.numRows] + spacing + gametext:getHeight()
@@ -47,6 +56,9 @@ function gameSelect:addGame(name)
 	self.numRows = self.numRows + 1
 end
 
+--[[
+	Adds buttons for difficulty selection of each game.
+]]
 function gameSelect:addButtons(rowVal, name)
 	local uncheckedBox1 = Bitmap.new(Texture.new("images/unchecked.png"))
 	local uncheckedBox2 = Bitmap.new(Texture.new("images/unchecked.png"))
@@ -108,8 +120,16 @@ function gameSelect:enableButtons()
 	end
 end
 
+--[[
+	Main scene which encompasses all screen functionality including
+	game selection and submission.
+]]
 mainMenu = Core.class(BaseScreen)
 
+--[[
+	Initializes the menu. Calls for the initialization of game
+	selection box.
+]]
 function mainMenu:init(params)
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 	self.sceneName = "Main Menu - Select Game"
@@ -132,6 +152,9 @@ function mainMenu:init(params)
 	self:addChild(submitButton)
 end
 
+--[[
+	Uses NET_ADAPTER to send game choices to the server.
+]]
 function mainMenu:sendSelected(checkedButtons)
 	local choices = {}
 	for i,v in ipairs(checkedButtons) do
@@ -169,6 +192,11 @@ function mainMenu:sendSelected(checkedButtons)
 	end)]]
 end
 
+--[[
+	Receives a response from the server as to whether or not
+	a match was immediately found and send the user to the
+	appropriate screen.
+]]
 function mainMenu:receiveBrowseResponse(response)
 	print_r(response)
 	if response.match then --joining game

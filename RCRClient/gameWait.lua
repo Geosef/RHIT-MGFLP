@@ -1,5 +1,12 @@
+-- program is being exported under the TSU exception
+
+--[[
+	The screen that pops up when a user has submitted their
+	choices for games and is waiting for someone to match up with.
+]]
 gameWait = Core.class(BaseScreen)
 
+-- Sprites for loading spinner.
 local loadingSprites = {}
 loadingSprites[0] = Bitmap.new(Texture.new("images/LoadingSpinner/Spinner 1.png"))
 loadingSprites[1] = Bitmap.new(Texture.new("images/LoadingSpinner/Spinner 2.png"))
@@ -14,6 +21,10 @@ loadingSprites[9] = Bitmap.new(Texture.new("images/LoadingSpinner/Spinner 10.png
 loadingSprites[10] = Bitmap.new(Texture.new("images/LoadingSpinner/Spinner 11.png"))
 loadingSprites[11] = Bitmap.new(Texture.new("images/LoadingSpinner/Spinner 12.png"))
 
+--[[
+	Initializes extra scene objects and variables for the loading
+	spinner.
+]]
 function gameWait:init()
 	self.sceneName = "Waiting for Opponent..."
 	
@@ -47,6 +58,9 @@ function gameWait:init()
 	self:addChild(self.sprite)
 end
 
+--[[
+
+]]
 function gameWait:onEnterEnd()
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
 	NET_ADAPTER:registerCallback('Player Joined', function(data)
@@ -60,11 +74,17 @@ function gameWait:onEnterEnd()
 	end)]]
 end
 
+--[[
+
+]]
 function gameWait:onExitBegin()
 	self:removeEventListener("enterEnd", self.onEnterEnd)
 	self:removeEventListener("exitBegin", self.onExitBegin)
 end
 
+--[[
+
+]]
 function gameWait:onEnterFrame()
 	self.frameCounter = (self.frameCounter + 1) % 5
 	if self.frameCounter == 0 then
@@ -72,6 +92,9 @@ function gameWait:onEnterFrame()
 	end
 end
 
+--[[
+	Animates the loading spinner.
+]]
 function gameWait:animate()
 	if self.sprite and self:getChildAt(3) == self.sprite then
 		self:removeChild(self.sprite)
