@@ -1,0 +1,12 @@
+{
+	"username": "testuser1",
+	"login_info": {
+		"email": "testemail2",
+		"password": "testpassword3"
+	},
+	"user_stats": {
+		"total_wins": 10,
+		"total_plays": 20,
+		"total_loops": 5
+	}
+}
