@@ -10,8 +10,10 @@ def validLogin(email, password):
     logging.info(log_string)
     success = db.get(email) and db.get(email).get('password') == password
     if success:
+        print('Logged in email: ' + str(email) + ' password: ' + str(password))
         logging.info('Logged in email: ' + str(email) + ' password: ' + str(password))
     else:
+        print('Login failed email: ' + str(email) + ' password: ' + str(password))
         logging.info('Login failed email: ' + str(email) + ' password: ' + str(password))
     return success == True
 

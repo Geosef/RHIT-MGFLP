@@ -6,18 +6,12 @@ import time
 from pprint import pprint
 
 class FakeSocket(object):
-    '''
-    If host is true:
-    create a game
-    else:
-    browse for games until one is available, join it
-    '''
 
     login = \
     {
         'type': 'Login',
-        'email': 'user',
-        'password': 'password'
+        'email': 'test3',
+        'password': 'test3'
     }
 
     def __init__(self, host, numRematches = 2):
@@ -32,7 +26,7 @@ class FakeSocket(object):
     def send(self, jsondata):
         data = json.loads(jsondata)
         recvpacket = self.preparerecv(data)
-        data['source'] = 'send'
+        # data['source'] = 'send'
         self.log(data)
         with self.lock:
             time.sleep(0.1)
@@ -52,7 +46,7 @@ class FakeSocket(object):
                     # if self.host and self.packet.get('type') == 'Run'
                     self.packet = {}
                     toReturn = json.dumps(localpacket)
-                    localpacket['source'] = 'recv'
+                    # localpacket['source'] = 'recv'
                     self.log(localpacket)
                     if localpacket.get('type') == 'Submit Move':
                         time.sleep(3.0)
@@ -93,7 +87,7 @@ class FakeSocket(object):
             }
         },
         'scores':
-        [2, 2]
+        [10, 11]
     }
     startgame = \
     {
@@ -174,7 +168,7 @@ class FakeSocket(object):
         return {}
 
     def log(self, packet):
-        toLog = {'type': packet['type'], 'source': packet['source']}
+        toLog = {'type': packet['type'], 'source': 'null'} #packet['source']}
         pprint(packet)
         self.events.append(toLog)
 

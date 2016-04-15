@@ -1,20 +1,23 @@
 __author__ = 'kochelmj'
 
-import json, threading
-from pprint import pprint
+import json
 import logging
+import threading
 import time
-import login
-import createaccount
+from pprint import pprint
+
+import user
+
+uf = user.UserFactory()
 
 class ClientThread(threading.Thread):
 
-    def __init__(self, sock, gameFactory):
+    def __init__(self, sock, game_factory):
         super(ClientThread, self).__init__(target=self.handle)
         self.sock = sock
-        self.gameFactory = gameFactory
+        self.game_factory = game_factory
         self.loggedIn = False
-        self.userInfo = {}
+        self.user_factory = uf
 
         self.methodRoutes = \
         {
@@ -32,7 +35,8 @@ class ClientThread(threading.Thread):
             'Cancel Search': self.cancelSearch
         }
 
-    def handle(self):
+
+    def loginLoop(self):
         while True:
             try:
                 jsonstring = self.sock.recv(1024)
@@ -40,13 +44,6 @@ class ClientThread(threading.Thread):
             except Exception as e:
                 print(str(e))
                 break
-            if data.get('type') != 'Browse Games':
-                if hasattr(self, 'index'):
-                    pass
-                    # print(data.get('type'), str(self.index))
-                else:
-                    pass
-                    # print(data.get('type'))
 
             methodType = data.get('type', None)
             if not methodType:
@@ -56,17 +53,76 @@ class ClientThread(threading.Thread):
 
             method = self.methodRoutes.get(methodType, None)
             if method:
-                if self.loggedIn:
+                if methodType == 'Login':
+                    user = method(data)
+                    if user:
+                        self.setLoggedIn(user)
+                        break
+                elif methodType == 'Create Account':
                     method(data)
-                else:
-                    if methodType in ['Login', 'Create Account']:
-                        method(data)
             else:
                 pprint(data)
                 print('Invalid Client Data')
                 continue
+
+    def login(self, packet, **kw):
+
+        credentials = {
+            'email': packet.get('email'),
+            'password': packet.get('password')
+        }
+
+        user = self.user_factory.login(credentials)
+
+        if user:
+            success = True
+        else:
+            success = False
+            user = None
+
+        data = \
+        {
+            'type': 'Login',
+            'success': success
+        }
+        self.loggedIn = success
+        if not kw.get('no_data'):
+            self.sendData(data)
+
+        return user
+
+    def setLoggedIn(self, user):
+        self.user = user
+        self.afterLogin()
+
+
+    def afterLogin(self):
+        while True:
+            try:
+                jsonstring = self.sock.recv(1024)
+                data = json.loads(jsonstring)
+            except Exception as e:
+                print(str(e))
+                break
+
+            methodType = data.get('type', None)
+            if not methodType:
+                pprint(data)
+                print('Invalid Client Data')
+                continue
+
+            method = self.methodRoutes.get(methodType, None)
+            if method and methodType not in ['Login', 'Create Account']:
+                method(data)
+            else:
+                pprint(data)
+                print('Invalid Client Data')
+                continue
+
+    def handle(self):
+        self.loginLoop()
         try:
-            self.gameFactory.removeWaiterHandler(self)
+            self.game_factory.removeWaiterHandler(self)
             self.sock.close()
             logging.info('Client Disconnected')
             print 'Client Disconnected'
@@ -79,8 +135,6 @@ class ClientThread(threading.Thread):
         except Exception as e:
             self.quit()
         data = json.loads(jsonstring)
-
-
 
 
     def sendData(self, data):
@@ -117,69 +171,29 @@ class ClientThread(threading.Thread):
         self.game.updateLocations(locations, scores)
         # pprint(packet)
 
-    def joinGame(self, packet):
-        gameID = packet.get('gameID')
-        self.game = self.gameFactory.joinGame(self, gameID)
-
-        # pprint(packet)
-
-    def createGame(self, packet):
-        # pprint(packet)
-        self.game = self.gameFactory.createGame(self, packet)
-        data = \
-        {
-            'type': 'Create Game',
-	        'success': True,
-	        'gameID': self.game.gameID
-        }
-        self.sendData(data)
 
     def removeGame(self):
         self.setGame(None)
 
-    def login(self, packet, **kw):
-        #TODO: make user identified by email in JSON
-        email = packet.get('email')
-        password = packet.get('password')
-
-        success = login.validLogin(email, password)
-        # success = True
-
-        if success:
-            playerID = 1
-            self.userInfo['playerID'] = playerID
-            self.userInfo['username'] = packet.get('email')
-
-
-        data = \
-        {
-            'type': 'Login',
-            'success': success
-        }
-        self.loggedIn = success
-        if not kw.get('no_data'):
-            self.sendData(data)
 
     def createAccount(self, packet):
-        validParams = packet.get('email') and packet.get('password')
+        validParams = set(packet.keys()) == set(['type', 'username', 'email', 'password'])
         if validParams:
-            success = createaccount.createAccount(packet.get('email'), packet.get('password'))
+            user_obj = self.user_factory.createAccount(packet)
+            success = True if user_obj else False
         toSend = {
             'type': 'Create Account',
             'success': success
         }
-        if success:
-            self.login(packet, no_data=True)
+        # if success:
+        #     self.login(packet, no_data=True)
         self.sendData(toSend)
 
 
-
     def browseGames(self, packet):
-        self.gameFactory.browseGames(self, packet)
+        self.game_factory.browseGames(self, packet)
         # game factory takes care of responses
 
-        # self.sendData(games)
-        # pprint(games)
 
     def playerJoined(self, packet):
         pass
@@ -195,10 +209,34 @@ class ClientThread(threading.Thread):
         self.game = game
 
     def cancelSearch(self, packet):
-        success = self.gameFactory.removeWaiterHandler(self)
+        success = self.game_factory.removeWaiterHandler(self)
         if success:
             toSend = {
                 'type': 'Cancel Search',
                 'success': True
             }
             self.sendData(toSend)
+
+
+
+    #-------------------------------------------------------------------------------#
+    #   DEPRECATED FUNCTIONS                                                        #
+    #-------------------------------------------------------------------------------#
+
+
+    def joinGame(self, packet):
+        gameID = packet.get('gameID')
+        self.game = self.game_factory.joinGame(self, gameID)
+
+        # pprint(packet)
+
+    def createGame(self, packet):
+        # pprint(packet)
+        self.game = self.game_factory.createGame(self, packet)
+        data = \
+        {
+            'type': 'Create Game',
+	        'success': True,
+	        'gameID': self.game.gameID
+        }
+        self.sendData(data)
