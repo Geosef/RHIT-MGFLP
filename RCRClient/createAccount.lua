@@ -57,7 +57,11 @@ function createAccount:init()
 			NET_ADAPTER:registerCallback('Create Account', function(data)
 				
 				if data.success then
-					sceneManager:changeScene("mainMenu", 1, SceneManager.crossfade, easing.outBack)
+					sceneManager:changeScene("login", 1, SceneManager.crossfade, easing.outBack)
+				else
+					emailTB:setText('')
+					passwordTB:setText('')
+					confirmTB:setText('')
 				end
 			end,
 			{type='Create Account', success=true})
@@ -65,6 +69,9 @@ function createAccount:init()
 		local toSend = {type='Create Account'}
 		toSend.email = emailTB:getText()
 		toSend.password = passwordTB:getText()
+		
+		toSend.username = 'testusername'
+		
 		NET_ADAPTER:sendData(toSend)
 		print_r(toSend)
 	end)
