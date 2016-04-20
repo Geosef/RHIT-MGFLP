@@ -365,13 +365,12 @@ function StatementBox:growAndAddArray(dest, arr, iterations)
 	local j
 	for i=1, iterations do
 		for j=1, #arr do
-			local item = arr[j]
+			local elem = arr[j]
 			if elem.name == 'Move' and elem.params[2] > 1 then
 				self:growAndAddMove(dest, elem)
 			else
 				table.insert(dest, elem)
 			end
-			
 		end
 	end
 end
