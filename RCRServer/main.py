@@ -8,6 +8,7 @@ from user import clienthandler
 from game import gamefactory
 from tests import fakesocket
 import logging
+from appconfig import config as conf
 
 import signal
 import sys
@@ -17,12 +18,7 @@ def main():
 
     gameFactory = gamefactory.GameFactory()
 
-    # host = 'localhost'
-    # host = '137.112.224.148'
-    # host = '192.168.5.105'
-    # host = '54.201.206.189'
-    host = '0.0.0.0'
-
+    host = conf.config(gameFactory)
 
     loggingConfig = {
         'filename': 'logs/server.log',
