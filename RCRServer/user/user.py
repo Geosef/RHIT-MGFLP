@@ -12,14 +12,46 @@ logger = logging.getLogger("humongolus")
 
 mongodb.settings(logger=logger, db_connection=conn)
 
+
+#-------------------------------------------------------------------------------------#
+#                       ---- LOGIN INFO ----                                          #
+#-------------------------------------------------------------------------------------#
+
 class LoginInfo(mongodb.EmbeddedDocument):
     email = field.Char(min=0, max=50)
     password = field.Char(min=0, max=64)
+
+    # not the reserved init function
+    def init(self, userDict=None):
+        self.email = userDict.get('email')
+        self.password = self.hashPassword(userDict.get('password'))
+
+    def login(self, credentials):
+        hashed = self.hashPassword(credentials.get('password'))
+        success = True if self.password == hashed else False
+        return success
+
+    def hashPassword(self, password):
+        m = hashlib.sha256()
+        m.update(password)
+        return m.hexdigest()
+        # return password
+
+
+#-------------------------------------------------------------------------------------#
+#                       ---- USER STATS ----                                          #
+#-------------------------------------------------------------------------------------#
 
 class UserStats(mongodb.EmbeddedDocument):
     total_wins = field.Integer(min=0, max=10000000, default=0)
     total_games = field.Integer(min=0, max=10000000, default=0)
     total_loops = field.Integer(min=0, max=10000000, default=0)
+
+
+#-------------------------------------------------------------------------------------#
+#                       ---- USER OBJECT ----                                         #
+#                      LoginInfo and UserStats                                        #
+#-------------------------------------------------------------------------------------#
 
 
 class User(mongodb.Document):
@@ -30,13 +62,18 @@ class User(mongodb.Document):
     login_info = LoginInfo()
     user_stats = UserStats()
 
+    # not the reserved init function
+    def init(self, userDict=None):
+        self.username = userDict.get('username')
+        self.login_info = LoginInfo()
+        self.login_info.init(userDict)
+        self.user_stats = UserStats()
+
+
     def sysout(self):
         print self._json()
 
 class UserFactory(object):
-
-    def __init__(self):
-        pass
 
 
     def createAccount(self, user):
@@ -46,21 +83,10 @@ class UserFactory(object):
         '''
         if self.login(user): #user exists already
             return None
-            pass
 
         new_user = User()
-        new_user.username = user.get('username')
-
-        logininfo = LoginInfo()
-        logininfo.email = user.get('email')
-        logininfo.password = self.hashPassword(user.get('password'))
-
-        userstats = UserStats()
-
-        new_user.login_info = logininfo
-        new_user.user_stats = userstats
-
-
+        new_user.init(user)
+        
         try:
             _id = new_user.save()
         except Exception as e:
@@ -68,37 +94,34 @@ class UserFactory(object):
             return None
 
         return new_user
+    
 
-    def hashPassword(self, password):
-        m = hashlib.sha256()
-        m.update(password)
-        return m.hexdigest()
-        # return password
-
-    def login(self, credentials):
+    def login(self, credentials, bool=False):
         query = {'login_info.email': credentials.get('email')}
         userdoc = User.find_one(query)
 
         if userdoc:
-            hashed = self.hashPassword(credentials.get('password'))
-            if userdoc.login_info.password == hashed:
+            success = userdoc.login_info.login(credentials)            
+            if bool:
+                return success
+            elif success:
                 return userdoc
             else:
                 return None
-        else:
-            return None
 
 
 if __name__ == '__main__':
-    # cred = {'username': 'test3', 'email': 'test3', 'password': 'test3'}
-    #
-    # temp = UserFactory().createAccount(cred)
-    # if temp:
-    #     temp.sysout()
-    # else:
-    #     print 'already exists'
-
+    cred = {'username': 'test4', 'email': 'test4', 'password': 'test4'}
+    
+    temp = UserFactory().createAccount(cred)
+    if temp:
+        temp.sysout()
+    else:
+        print 'already exists'
+    
 
     temp = User.find({})
     for k in temp:
         k.sysout()
+
+
