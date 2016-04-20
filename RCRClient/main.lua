@@ -24,7 +24,12 @@ sceneManager = SceneManager.new({
 	["gameScreen"] = gameScreen,
 	["acctSettings"] = acctSettings,
 	["joinGame"] = joiningGame,
-	["gameOver"] = gameOver
+	["gameOver"] = gameOver,
+	["aboutGameplay"] = aboutGameplay,
+	["aboutCollector"] = aboutCollector,
+	["aboutTraps"] = aboutTraps,
+	["aboutLoops"] = aboutLoops,
+	["aboutParameters"] = aboutParameters
 })
 
 BlankScene = Core.class(Sprite)
@@ -38,6 +43,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("splash", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene("aboutCollector", 1, SceneManager.crossfade, easing.outBack)
 
 

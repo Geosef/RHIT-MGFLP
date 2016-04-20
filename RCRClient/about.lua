@@ -47,7 +47,16 @@ function bgBox:init()
 	local closeButton = CustomButton.new(closeButtonUp, closeButtonDown, dismissalFunction)
 	closeButton:setPosition((self.boxImage:getWidth() / 2) - (closeButton:getWidth() / 2), self.boxImage:getHeight() - closeButton:getHeight() - padding)
 	self:addChild(closeButton)
-
+	
+	-- Add more info button above close button
+	local moreInfoButtonUp = Bitmap.new(Texture.new("images/moreInfoButtonUp.png"))
+	local moreInfoButtonDown = Bitmap.new(Texture.new("images/moreInfoButtonDown.png"))
+	local moreInfoButton = CustomButton.new(moreInfoButtonUp, moreInfoButtonDown, function() 
+		sceneManager:changeScene("aboutGameplay", 1, SceneManager.crossfade, easing.outBack)
+		popupManager:changeScene("blank", 1, SceneManager.crossfade, easing.outBack)
+	end)
+	moreInfoButton:setPosition((self.boxImage:getWidth() / 2) - (moreInfoButton:getWidth() / 2), closeButton:getY() - moreInfoButton:getHeight() - padding)
+	self:addChild(moreInfoButton)
 end
 
 function about:init()
