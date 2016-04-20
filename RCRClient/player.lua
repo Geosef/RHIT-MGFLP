@@ -246,6 +246,96 @@ function Character:yMovePrep(velo, dist, action)
 	self.frameAction = action
 end
 
+function Character:jump(direction)
+	local maxMag = 2
+	local nextX = self.x
+	local nextY = self.y
+	
+	if direction == "N" then
+		local moveType = nil
+		if self.y > 1 then
+			moveType = self.move
+		else
+			moveType = self.wrapAroundMove
+		end
+		
+		nextY = nextY - 2
+		if nextY == 0 then
+			nextY = self.grid.gridSize
+		elseif nextY == -1 then
+			nextY = self.grid.gridSize - 1
+		end
+		local nextCell = self.grid:getCellAt(nextX, nextY)
+		if nextCell:getWall() then
+			self:yMovePrep(0, maxMag, nil)
+		else
+			self:yMovePrep(-1, maxMag, moveType)
+		end
+	elseif direction == "S" then
+		local moveType = nil
+		if self.y < self.grid.gridSize then
+			moveType = self.move
+		else
+			moveType = self.wrapAroundMove
+		end
+		
+		nextY = nextY + 2
+		if nextY == (self.grid.gridSize + 1) then
+			nextY = 1
+		elseif nextY == (self.grid.gridSize + 2) then
+			nextY = 2
+		end
+		local nextCell = self.grid:getCellAt(nextX, nextY)
+		if nextCell:getWall() then
+			self:yMovePrep(0, maxMag, nil)
+		else
+			self:yMovePrep(1, maxMag, moveType)
+		end
+	elseif direction == "E" then
+		local moveType = nil
+		if self.x < self.grid.gridSize then
+			moveType = self.move
+		else
+			moveType = self.wrapAroundMove
+		end
+		
+		nextX = nextX + 2
+		if nextX == (self.grid.gridSize + 1) then
+			nextX = 1
+		elseif nextX == -(self.grid.gridSize + 2) then
+			nextX = 2
+		end
+		local nextCell = self.grid:getCellAt(nextX, nextY)
+		if nextCell:getWall() then
+			self:xMovePrep(0, maxMag, nil)
+		else
+			self:xMovePrep(1, maxMag, moveType)
+		end
+	elseif direction == "W" then
+		local moveType = nil
+		if self.x > 1 then
+			moveType = self.move
+		else
+			moveType = self.wrapAroundMove
+		end
+		
+		nextX = nextX - 2
+		if nextX == 0 then
+			nextX = self.grid.gridSize
+		elseif nextX == -1 then
+			nextX = self.grid.gridSize - 1
+		end
+		local nextCell = self.grid:getCellAt(nextX, nextY)
+		if nextCell:getWall() then
+			self:xMovePrep(0, maxMag, nil)
+		else
+			self:xMovePrep(-1, maxMag, moveType)
+		end
+	else
+		print("Jump error")
+	end
+end
+
 -- CALLS BETWEEN EVENTS
 function Character:endMove()
 	self.digging = false

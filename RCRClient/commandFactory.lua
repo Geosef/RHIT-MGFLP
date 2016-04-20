@@ -31,7 +31,7 @@ function CommandFactory:initSpaceCollectorsGameCommands()
 	sublib["Move"] = self.masterLibrary["Move"]
 	sublib["Loop"] = self.masterLibrary["Loop"]
 	sublib["Dig"] = self.masterLibrary["Dig"]
-	--sublib["Jump"] = self.masterLibrary["Jump"]
+	sublib["Jump"] = self.masterLibrary["Jump"]
 	return sublib
 end
 

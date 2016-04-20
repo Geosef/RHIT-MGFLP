@@ -36,6 +36,6 @@ CommandLib["Loop End"] = function(player)
 end
 
 CommandLib["Jump"] = function(player, direction)
-	
+	player:jump(direction)
 end
 
