@@ -7,13 +7,13 @@ local gameCommandButtonHeight = 65
 local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 
 function gameScreen:init(gameInit)
-	if not gameInit then gameInit = SERVER_MOCKS['Game Setup'] end
+	if not gameInit then gameInit = SERVER_MOCKS['Game Setup']('Trap') end
 	self.host = gameInit.host
 	self.gameboard = TrapGameboard.new(gameInit)
 	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game
-	self.sceneName = "Da Trap House"
+	self.sceneName = gameInit.game
 	self.statementBox = StatementBox.new(self, self.gameboard.maxMoves)
 	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
