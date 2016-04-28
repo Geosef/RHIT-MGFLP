@@ -3,8 +3,8 @@ SERVER_MOCKS['Game Setup'] =
 {
 	host= true,
     type= 'Game Setup',
-    game= 'Space Collectors',
-    diff= 'Hard',
+    game= 'Da Trap House',
+    diff= 'Medium',
     gridSize= 10,
     cellData=
     {
