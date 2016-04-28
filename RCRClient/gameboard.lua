@@ -31,12 +31,17 @@ function Gameboard:postInit(gameInit)
 		self.cellImagePath = "images/board-cell-120.png"
 	end
 	local gridSize = self:calculateGridSize(gameInit.diff) --TODO: Evaluate whether this should be calculated by server, right now it is sent within Game Setup packet
+	gameInit.gridSize = gridSize
 	self.grid = Grid.new(self, gameInit, self.cellImagePath)
 	self:addChild(self.grid)
 	self.characterMoveDistance = self.grid.cellWidth
 	self:drawPlayers(gridSize, gameInit.cellData.enemyStart)
 	self:addEventListener("enterEnd", self.onEnterEnd, self)
 	self:addEventListener("exitBegin", self.onExitBegin, self)
+	
+	if self.finalInit then
+		self:finalInit()
+	end
 end
 
 function Gameboard:calculateGridSize(diff)

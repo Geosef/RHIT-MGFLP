@@ -5,6 +5,15 @@ function TrapGameboard:init(gameInit)
 	self.host = gameInit.host
 end
 
+function TrapGameboard:createBases()
+	self.grid.cells[3][3]:setWall(true)
+
+end
+
+function TrapGameboard:finalInit()
+	self:createBases()
+end
+
 function TrapGameboard:calculateGridSize(diff)
 	print("Diff " .. diff)
 	if diff == "Easy" then
