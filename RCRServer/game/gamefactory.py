@@ -29,7 +29,9 @@ class GameFactory(object):
 
     MAXGAMES = 2 * 15
 
-    def __init__(self):
+    def __init__(self, gf_config):
+        self.gametypes = gf_config.get('gametypes')
+        self.difficulties = gf_config.get('difficulties')
         self.gameWaitList = []
         self.clientWaitList = []
 
@@ -97,12 +99,28 @@ class GameFactory(object):
         self.clientWaitList.append(clientWait)
 
 
+    def checkValid(self, choices):
+        totalMax = len(self.gametypes) + len(self.difficulties)
+        if len(choices) > totalMax:
+            return False
+
+        for choice in choices:
+            if choice.get('game') not in self.gametypes \
+            or choice.get('diff') not in self.difficulties:
+                return False
+
+        return True
+
 
     def browseGames(self, client, packet):
         print str(packet)
         choices = packet.get('choices')
+        valid_request = self.checkValid(choices)
+        if not valid_request:
+            return
         noPrefs = len(choices) == 0
         match = False
+
         with self.gameWaitListLock:
             for gameWaitObj in self.gameWaitList:
                 if noPrefs or (gameWaitObj.preference in choices):
