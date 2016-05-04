@@ -61,30 +61,37 @@ end
 
 function Grid:setCellData(cellData, playerLocations)
 	-- walls, goldLocations, treasureLocations
-	for index,value in ipairs(cellData.wallLocations) do
-		local x = value.x
-		local y = value.y
-		if not isOnPlayerCell(x, y, playerLocations) then
-			local cell = self.cells[x][y]
-			cell:setWall(true)
+	--ERROR CHECKING IF STATEMENTS!!! YAY!!!
+	if cellData.wallLocations then
+		for index,value in ipairs(cellData.wallLocations) do
+			local x = value.x
+			local y = value.y
+			if not isOnPlayerCell(x, y, playerLocations) then
+				local cell = self.cells[x][y]
+				cell:setWall(true)
+			end
 		end
 	end
-	for index,value in ipairs(cellData.goldLocations) do
-		local x = value.x
-		local y = value.y
-		if not isOnPlayerCell(x, y, playerLocations) then
-			local cell = self.cells[x][y]
-			cell:setGold(true)		
+	if cellData.goldLocations then
+		for index,value in ipairs(cellData.goldLocations) do
+			local x = value.x
+			local y = value.y
+			if not isOnPlayerCell(x, y, playerLocations) then
+				local cell = self.cells[x][y]
+				cell:setGold(true)		
+			end
 		end
 	end
-	for index,value in ipairs(cellData.treasureLocations) do
-		local x = value.x
-		local y = value.y
-		if not isOnPlayerCell(x, y, playerLocations) then		
-			local cell = self.cells[x][y]
-			cell:setTreasure(true)		
-		end
-	end	
+	if cellData.goldLocations then
+		for index,value in ipairs(cellData.treasureLocations) do
+			local x = value.x
+			local y = value.y
+			if not isOnPlayerCell(x, y, playerLocations) then		
+				local cell = self.cells[x][y]
+				cell:setTreasure(true)		
+			end
+		end	
+	end
 end
 
 

@@ -1,10 +1,10 @@
 SERVER_MOCKS = {}
-SERVER_MOCKS['Game Setup'] = 
+local collectGame = 
 {
 	host= true,
     type= 'Game Setup',
-    game= 'Space Collectors',
-    diff= 'Hard',
+    game= 'Collect Game',
+    diff= 'Medium',
     gridSize= 10,
     cellData=
     {
@@ -204,6 +204,24 @@ SERVER_MOCKS['Game Setup'] =
         }
     }
 }
+local trapGame = 
+{
+	host= true,
+    type= 'Game Setup',
+    game= 'Trap Game',
+    diff= 'Medium',
+    gridSize= 16,
+    cellData=
+    {
+		wallLocations = {}
+    }
+}
+SERVER_MOCKS['Game Setup'] = function(data)
+	if data == 'Collect' then return collectGame
+	elseif data == 'Trap' then return trapGame
+	else print('SERVER MOCKS: invalid game setup parameter')
+	end
+end
 SERVER_MOCKS['Run Events'] = function(data)
 return {
 	type='Run Events',

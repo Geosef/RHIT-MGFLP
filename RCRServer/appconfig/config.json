@@ -1,4 +1,17 @@
 {
-  "host": "192.168.254.21",
-  "fake_client": true
+  "fake_client": true,
+  "gamefactory_config":
+  {
+    "gametypes":
+    [
+      "Collectors",
+      "Trap"
+    ],
+    "difficulties":
+    [
+      "Easy",
+      "Medium",
+      "Hard"
+    ]
+  }
 }

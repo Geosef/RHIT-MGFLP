@@ -104,7 +104,7 @@ class FakeSocket(object):
         'type': 'Browse Games',
         'choices': [
             {
-                'game': 'Space Collectors',
+                'game': 'Collectors',
                 'diff': 'Hard'
             }
         ]
