@@ -3,7 +3,7 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-local multiplayerMode = true
+local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
 
@@ -29,7 +29,8 @@ sceneManager = SceneManager.new({
 	["aboutCollector"] = aboutCollector,
 	["aboutTraps"] = aboutTraps,
 	["aboutLoops"] = aboutLoops,
-	["aboutParameters"] = aboutParameters
+	["aboutParameters"] = aboutParameters,
+	["aboutFunctions"] = aboutFunctions
 })
 
 BlankScene = Core.class(Sprite)

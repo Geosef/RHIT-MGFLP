@@ -1,14 +1,14 @@
 -- program is being exported under the TSU exception
 
-aboutTraps = Core.class(BaseScreen)
+aboutFunctions = Core.class(BaseScreen)
 
-function aboutTraps:init()
+function aboutFunctions:init()
 	self:addAboutObjects()
 	local titleFont = TTFont.new("fonts/arial-rounded.ttf", 60)
 	local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 
 	-- Add title
-	local titleText = TextField.new(titleFont, "Traps Gameplay")
+	local titleText = TextField.new(titleFont, "About Functions")
 	titleText:setPosition((WINDOW_WIDTH / 2) - (titleText:getWidth() / 2), 125)
 	self:addChild(titleText)
 
@@ -16,10 +16,10 @@ function aboutTraps:init()
 	self:addEventListener("exitBegin", self.onExitBegin, self)
 end
 
-function aboutTraps:onEnterEnd()
+function aboutFunctions:onEnterEnd()
 	
 end
 
-function aboutTraps:onExitBegin()
+function aboutFunctions:onExitBegin()
 	
 end
