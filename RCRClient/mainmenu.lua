@@ -181,7 +181,7 @@ function mainMenu:sendSelected(checkedButtons)
 		NET_ADAPTER:unregisterCallback('Browse Games')
 		if data.match then
 			print('here1')
-			sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
+			--sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 		else
 			print('here2')
 			sceneManager:changeScene("gameWait", 1, SceneManager.crossfade, easing.outBack)
