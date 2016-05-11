@@ -39,6 +39,15 @@ function gameSelect:init(mainMenu)
 	self:addGame("Collectors")
 	self:addGame("Da Trap House")
 	--self:addGame("Game 3")
+	
+	NET_ADAPTER:registerCallback('Game Setup', function(data)
+		print('goto game')
+		NET_ADAPTER:unregisterCallback('Game Setup')
+		print_r(data)
+		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
+		{userData=data})
+	end,
+	SERVER_MOCKS['Game Setup']('Collectors'))
 
 end
 
