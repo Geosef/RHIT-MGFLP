@@ -3,7 +3,7 @@ local collectGame =
 {
 	host= true,
     type= 'Game Setup',
-    game= 'Collect Game',
+    game= 'Collectors',
     diff= 'Medium',
     gridSize= 10,
     cellData=

@@ -1,10 +1,12 @@
 gameScreen = Core.class(BaseScreen)
 
 function gameScreen:init(gameInit)
-	if not gameInit then gameInit = SERVER_MOCKS['Game Setup']('Collect') end
+	if not gameInit then gameInit = SERVER_MOCKS['Game Setup']('Collectors') end
+	print_r(gameInit)
+	
 	self.uiConfig = configuration["ui_config"]
 	self.host = gameInit.host
-	self.gameboard = TrapGameboard.new(gameInit)
+	self.gameboard = CollectGameboard.new(gameInit)
 	self.padding = self.uiConfig["padding"]
 	self.gameActionButtonHeight = self.uiConfig["gameActionButtonHeight"]
 	self.gameCommandButtonHeight = self.uiConfig["gameCommandButtonHeight"]
