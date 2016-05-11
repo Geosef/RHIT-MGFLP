@@ -28,7 +28,7 @@ function joiningGame:onEnterEnd()
 		sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack,
 		{userData=data})
 	end,
-	SERVER_MOCKS['Game Setup']('Collect'))
+	SERVER_MOCKS['Game Setup']('Collectors'))
 end
 
 --[[

@@ -217,7 +217,7 @@ local trapGame =
     }
 }
 SERVER_MOCKS['Game Setup'] = function(data)
-	if data == 'Collect' then return collectGame
+	if data == 'Collectors' then return collectGame
 	elseif data == 'Trap' then return trapGame
 	else print('SERVER MOCKS: invalid game setup parameter')
 	end

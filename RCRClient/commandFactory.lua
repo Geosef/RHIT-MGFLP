@@ -23,7 +23,7 @@ end
 
 function CommandFactory:initSublibs()
 	self.sublibs = {}
-	self.sublibs["Collect Game"] = self:initSpaceCollectorsGameCommands()
+	self.sublibs["Collectors"] = self:initSpaceCollectorsGameCommands()
 end
 
 function CommandFactory:initSpaceCollectorsGameCommands()
