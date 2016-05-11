@@ -183,7 +183,7 @@ function mainMenu:sendSelected(checkedButtons)
 	NET_ADAPTER:registerCallback('Player Joined', function(data)
 		NET_ADAPTER:unregisterCallback('Player Joined')
 		print('Player Joined packet received')
-		sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
+		--sceneManager:changeScene("joinGame", 1, SceneManager.crossfade, easing.outBack)
 	end)
 
 	NET_ADAPTER:sendData(packet)
