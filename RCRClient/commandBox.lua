@@ -1,3 +1,9 @@
+local padding = 12
+local scriptPadding = 10
+local spritePadding = 3
+local gameActionButtonHeight = 50
+local gameCommandButtonHeight = 65
+local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 local gameCommandButtonHeight = 65
 CommandBox = Core.class(SceneObject)
 
