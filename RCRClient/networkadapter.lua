@@ -14,7 +14,6 @@ setmetatable(NetworkAdapter, {
 
 function NetworkAdapter:sendData(packet)
 	if not self.on then return end
-	self.networkConfig = configuration["network_config"]
 	local jsonString = JSON:encode(packet)
 	self.sock:send(jsonString)
 end
@@ -79,6 +78,7 @@ end
 
 function NetworkAdapter:_init(multiplayerMode)
 	self.on = multiplayerMode
+	self.networkConfig = configuration["network_config"]
 	if self.on then
 		self.ip = self.networkConfig["server_ip"]
 		self.port = self.networkConfig["port"]
