@@ -1,6 +1,16 @@
 -- program is being exported under the TSU exception
 
 --[[
+	Reads file into string.
+]]
+function readAll(file)
+    local f = io.open(file, "rb")
+    local content = f:read("*all")
+    f:close()
+    return content
+end
+
+--[[
 	Looks for item in table tbl.
 	Returns key/index of item if found, false otherwise.
 ]]

@@ -1,24 +1,22 @@
 gameScreen = Core.class(BaseScreen)
-local padding = 12
-local scriptPadding = 10
-local spritePadding = 3
-local gameActionButtonHeight = 50
-local gameCommandButtonHeight = 65
-local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 
 function gameScreen:init(gameInit)
-	if not gameInit then gameInit = SERVER_MOCKS['Game Setup']('Trap') end
+	if not gameInit then gameInit = SERVER_MOCKS['Game Setup']('Collect') end
+	self.uiConfig = configuration["ui_config"]
 	self.host = gameInit.host
 	self.gameboard = TrapGameboard.new(gameInit)
-	self.gameboard:setPosition(padding, (WINDOW_HEIGHT - padding) - self.gameboard:getHeight())
+	self.padding = self.uiConfig["padding"]
+	self.gameActionButtonHeight = self.uiConfig["gameActionButtonHeight"]
+	self.gameCommandButtonHeight = self.uiConfig["gameCommandButtonHeight"]
+	self.gameboard:setPosition(self.padding, (WINDOW_HEIGHT - self.padding) - self.gameboard:getHeight())
 	self:addChild(self.gameboard)
 	-- Eventually sceneName will be set by the type of game
 	self.sceneName = gameInit.game
 	self.statementBox = StatementBox.new(self, self.gameboard.maxMoves)
-	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + padding, (WINDOW_HEIGHT - padding) - (gameActionButtonHeight + padding) - self.statementBox:getHeight())
+	self.statementBox:setPosition(self.gameboard:getX() + self.gameboard:getWidth() + self.padding, (WINDOW_HEIGHT - self.padding) - (self.gameActionButtonHeight + self.padding) - self.statementBox:getHeight())
 	self:addChild(self.statementBox)
 	self.commandBox = CommandBox.new(self)
-	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + padding, self.statementBox:getY())
+	self.commandBox:setPosition(self.statementBox:getX() + self.statementBox:getWidth() + self.padding, self.statementBox:getY())
 	self:addChild(self.commandBox)
 	-- Player names will be passed into gameInit
 	local playerObjects = {
@@ -48,9 +46,9 @@ function gameScreen:init(gameInit)
 		
 	end)
 	
-	self.saveButton:setPosition(self.statementBox:getX(), self.statementBox:getY() + self.statementBox:getHeight() + padding)
+	self.saveButton:setPosition(self.statementBox:getX(), self.statementBox:getY() + self.statementBox:getHeight() + self.padding)
 	self:addChild(self.saveButton)
-	self.submitButton:setPosition(self.saveButton:getX() + self.saveButton:getWidth() + padding, self.saveButton:getY())
+	self.submitButton:setPosition(self.saveButton:getX() + self.saveButton:getWidth() + self.padding, self.saveButton:getY())
 	self:addChild(self.submitButton)
 	self.helpButton:setPosition(self.commandBox:getX(), self.saveButton:getY())
 	self:addChild(self.helpButton)
@@ -105,7 +103,7 @@ function gameScreen:addPlayerInfo(playerObjects)
 	infoImage1:setScale(0.5, 0.5)
 	infoImage2:setScale(0.5, 0.5)
 	
-	infoImage1:setPosition(padding, self.statementBox:getY())
+	infoImage1:setPosition(self.padding, self.statementBox:getY())
 	infoImage2:setPosition(infoImage1:getX() + infoImage1:getWidth() + 60, infoImage1:getY())
 	
 	self:addChild(infoImage1)

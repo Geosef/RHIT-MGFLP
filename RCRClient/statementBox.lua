@@ -1,9 +1,3 @@
-local padding = 12
-local scriptPadding = 10
-local spritePadding = 3
-local gameActionButtonHeight = 50
-local gameCommandButtonHeight = 65
-local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 local ScriptArea = Core.class(SceneObject)
 
 function ScriptArea:init(parent, maxMoves)
@@ -47,7 +41,7 @@ function ScriptArea:drawScript()
 			break
 		end
 		self.visibleScript[i] = v
-		v:setPosition(v:getX(), location + scriptPadding)
+		v:setPosition(v:getX(), location + self.parent.scriptPadding)
 		self:addChild(v)
 		location = v:getY() + v:getHeight()
 	end
@@ -195,7 +189,7 @@ function ScriptArea:moveCommand(toMove, y)
 	end
 	if y > location then
 		local bottomScript = self.visibleScript[table.getn(self.visibleScript)]
-		self.movementLine:setPosition(0, bottomScript:getY() + bottomScript:getHeight() + (scriptPadding/2))
+		self.movementLine:setPosition(0, bottomScript:getY() + bottomScript:getHeight() + (self.parent.scriptPadding/2))
 		self:addChild(self.movementLine)
 		return table.getn(self.visibleScript) + 1
 	end
@@ -279,11 +273,12 @@ StatementBox = Core.class(SceneObject)
 
 function StatementBox:init(parent, maxMoves)
 	self.parent = parent
+	self.scriptPadding = self.parent.uiConfig["scriptPadding"]
 	self.headerBottom = 51
 	self.boxImage = Bitmap.new(Texture.new("images/statement-box.png"))
 	self:addChild(self.boxImage)
 	self.resourceBox = ResourceBox.new(self)
-	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + padding)
+	self.resourceBox:setPosition((self:getWidth() / 2) - (self.resourceBox:getWidth() / 2), self.headerBottom + self.parent.padding)
 	self:addChild(self.resourceBox)
 	self:initScript(maxMoves)
 	self.savedScript = nil
@@ -307,7 +302,7 @@ function StatementBox:initScript(maxMoves)
 		--self.scrollCount = self.scrollCount - 1
 		self.scriptArea:scroll(true, -1)
 	end)
-	self.scriptUpButton:setPosition((self:getWidth() / 2) - (self.scriptUpButton:getWidth() / 2), self.resourceBox:getY() + self.resourceBox:getHeight() + padding)
+	self.scriptUpButton:setPosition((self:getWidth() / 2) - (self.scriptUpButton:getWidth() / 2), self.resourceBox:getY() + self.resourceBox:getHeight() + self.parent.padding)
 	self:addChild(self.scriptUpButton)
 	self.scriptArea = ScriptArea.new(self, maxMoves)
 	self.scriptArea:setPosition((self:getWidth() / 2) - (self.scriptArea:getWidth() / 2), self.scriptUpButton:getY() + self.scriptUpButton:getHeight())

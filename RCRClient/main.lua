@@ -6,8 +6,11 @@ WINDOW_WIDTH = application:getLogicalHeight()
 local multiplayerMode = false
 
 JSON = (loadfile "JSON.lua")()
+local configString = readAll("config.json")
+configuration = JSON:decode(configString)
+local startupConfig = configuration["startup_config"]
 
-NET_ADAPTER = NetworkAdapter(multiplayerMode)
+NET_ADAPTER = NetworkAdapter(startupConfig["multiplayer_mode"])
 --NET_ADAPTER:connect()
 COMMAND_FACTORY = CommandFactory.new()
 --netAdapter:login()
@@ -44,6 +47,6 @@ popupManager = SceneManager.new({
 stage:addChild(sceneManager)
 stage:addChild(popupManager)
 
-sceneManager:changeScene("gameScreen", 1, SceneManager.crossfade, easing.outBack)
+sceneManager:changeScene(startupConfig["start_screen"], 1, SceneManager.crossfade, easing.outBack)
 
 

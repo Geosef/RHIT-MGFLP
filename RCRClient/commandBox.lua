@@ -1,15 +1,10 @@
-local padding = 12
-local scriptPadding = 10
-local spritePadding = 3
-local gameActionButtonHeight = 50
-local gameCommandButtonHeight = 65
-local scoreFont = TTFont.new("fonts/arial-rounded.ttf", 15)
 local gameCommandButtonHeight = 65
 CommandBox = Core.class(SceneObject)
 
 function CommandBox:init(parent)
-	self.headerBottom = 49
 	self.parent = parent
+	self.headerBottom = 49
+	self.gameCommandButtonHeight = self.parent.uiConfig["gameCommandButtonHeight"]
 	self.boxImage = Bitmap.new(Texture.new("images/command-box.png"))
 	self:addChild(self.boxImage)
 	-- eventually, this will query the game for the buttons to add
@@ -46,7 +41,7 @@ end
 
 function CommandBox:calculateYPadding(numCommands)
 	local boxHeight = self:getHeight() - self.headerBottom
-	local buttonYSpace = gameCommandButtonHeight * numCommands
+	local buttonYSpace = self.gameCommandButtonHeight * numCommands
 	local yPadding = (boxHeight - buttonYSpace) / (numCommands + 1)
 	return yPadding
 end	

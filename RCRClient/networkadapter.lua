@@ -1,7 +1,5 @@
 -- program is being exported under the TSU exception
 
-local serverIP = '54.201.206.189';
-local port = 5005
 
 NetworkAdapter = {}
 NetworkAdapter.__index = NetworkAdapter
@@ -16,6 +14,7 @@ setmetatable(NetworkAdapter, {
 
 function NetworkAdapter:sendData(packet)
 	if not self.on then return end
+	self.networkConfig = configuration["network_config"]
 	local jsonString = JSON:encode(packet)
 	self.sock:send(jsonString)
 end
@@ -49,7 +48,7 @@ function NetworkAdapter:connect()
 	local timer = Timer.new(100)
 
 	local sock = socket.tcp()
-	sock:connect(serverIP, port)
+	sock:connect(self.networkConfig["server_ip"], self.networkConfig["port"])
 
 	sock:settimeout(0)
 	self.sock = sock
@@ -81,7 +80,7 @@ end
 function NetworkAdapter:_init(multiplayerMode)
 	self.on = multiplayerMode
 	if self.on then
-		self.ip = serverIP
-		self.port = 5005
+		self.ip = self.networkConfig["server_ip"]
+		self.port = self.networkConfig["port"]
 	end
 end
