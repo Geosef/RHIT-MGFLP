@@ -1,0 +1,16 @@
+{
+	"start_screen": "splash",
+	"multiplayer_mode": false,
+	
+	"server_ip": "192.168.5.102",
+	"port": 5005,
+	
+	"padding": 12,
+	"scriptPadding": 10,
+	"spritePadding": 3,
+	"gameActionButtonHeight": 50,
+	"gameCommandButtonHeight": 65,
+	"scoreFontType": "arial-rounded.tff",
+	"scoreFontSize": 15,
+	"gameCommandButtonHeight": 65
+}
