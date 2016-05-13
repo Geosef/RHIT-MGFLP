@@ -60,6 +60,14 @@ function Gameboard:update()
 	print("update() not implemented!")
 end
 
+function Gameboard:updateLocations()
+	print("updateLocations() not implemented!")
+end
+
+function Gameboard:endTurn()
+	print("endTurn() not implemented!")
+end
+
 function Gameboard:getPlayerImagePaths()
 	local pImages = {}
 	local pImagesIndex = 1
