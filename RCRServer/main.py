@@ -44,15 +44,6 @@ def main():
         print 'Host: ' + host
         print 'Port: ' + str(port)
 
-        peerSocket1 = fakesocket.FakeSocket(True)
-
-        peerHandler1 = clienthandler.ClientThread(peerSocket1, gameFactory)
-        # peerHandler1.start()
-
-        peerSocket2 = fakesocket.FakeSocket(False)
-
-        peerHandler2 = clienthandler.ClientThread(peerSocket2, gameFactory)
-        # peerHandler2.start()
 
         index = 0
         try:

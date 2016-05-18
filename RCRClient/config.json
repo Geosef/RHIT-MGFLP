@@ -1,10 +1,10 @@
 {
 	"startup_config" : {
-		"start_screen": "gameScreen",
-		"multiplayer_mode": false
+		"start_screen": "splash",
+		"multiplayer_mode": true
 	},
 	"network_config" : {
-		"server_ip": "192.168.5.102",
+		"server_ip": "137.112.226.191",
 		"port": 5005
 	},
 	"ui_config" : {

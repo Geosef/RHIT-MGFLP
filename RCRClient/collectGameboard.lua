@@ -7,6 +7,7 @@ end
 
 function CollectGameboard:calculateGridSize(diff)
 	print("Diff " .. diff)
+	diff = "Hard" --bad
 	if diff == "Easy" then
 		return 6
 	elseif diff == "Medium" then

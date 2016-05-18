@@ -15,7 +15,7 @@ local font = TTFont.new("fonts/arial-rounded.ttf", 20)
 To add a new row of buttons for a game, just call self:addGame() and pass in the name of the game.
 ]]
 function gameSelect:init(mainMenu)
-	local game1Text = TextField.new(font, "Space Collectors")
+	local game1Text = TextField.new(font, "Collectors")
 	local easyDiffText = TextField.new(font, "Easy")
 	local midDiffText = TextField.new(font, "Medium")
 	local hardDiffText = TextField.new(font, "Hard")
@@ -37,7 +37,7 @@ function gameSelect:init(mainMenu)
 	self.checkedButtons = {}
 	--self:addButtons(self.rowVals[self.numRows])
 	self:addGame("Collectors")
-	self:addGame("Da Trap House")
+	self:addGame("Trap")
 	--self:addGame("Game 3")
 	
 	NET_ADAPTER:registerCallback('Game Setup', function(data)

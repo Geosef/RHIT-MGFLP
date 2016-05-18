@@ -10,9 +10,9 @@ def config():
         conf = json.loads(jsonstr)
     if conf:
         if conf.get('gamefactory_config'):
-            game_factory = gf.GameFactory(conf.get('gamefactory_config'))
-            if conf.get('fake_client'):
-                fakech = ch.ClientThread(fakesocket.FakeSocket(False), game_factory)
+            game_factory = gf.GameFactory(conf.get('gamefactory_config'), conf.get('fake_client'))
+            if conf.get('fake_client') and conf.get('fake_client').get('active') and conf.get('fake_client').get('host'):
+                fakech = ch.ClientThread(fakesocket.FakeSocket(False, conf.get('fake_client')), game_factory)
                 fakech.start()
             return game_factory
     else:

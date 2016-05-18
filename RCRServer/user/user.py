@@ -28,7 +28,7 @@ class LoginInfo(mongodb.EmbeddedDocument):
 
     def login(self, credentials):
         hashed = self.hashPassword(credentials.get('password'))
-        success = True if self.password == hashed else False
+        success = self.password == hashed
         return success
 
     def hashPassword(self, password):

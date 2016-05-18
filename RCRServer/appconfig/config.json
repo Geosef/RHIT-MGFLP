@@ -1,5 +1,10 @@
 {
-  "fake_client": true,
+  "fake_client": {
+      "active": true,
+      "host": false,
+      "game": "Collectors",
+      "diff": "Hard"
+    },
   "gamefactory_config":
   {
     "gametypes":

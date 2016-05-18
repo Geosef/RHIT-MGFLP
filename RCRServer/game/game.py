@@ -3,25 +3,21 @@ __author__ = 'kochelmj'
 import threading
 import time
 from pprint import pprint
+import random
 
-import collectgame_algorithms, staticdata
+
 
 
 class Game(object):
 
     MAXTURNS = 10
-    MAXSCORE = 30
+    MAXSCORE = 20
 
-    hardcodedConfig = {
-        'goldLocations': 8,
-        'treasureLocations': 8,
-        'wallLocations': 6,
-    }
 
     def __init__(self, p1Thread, p2Thread, gameID, gamePref):
         p1Thread.index = 0
         p2Thread.index = 1
-        self.configSettings = self.hardcodedConfig
+        # self.configSettings = self.hardcodedConfig
         self.gameID = gameID
         self.threads = [p1Thread, p2Thread]
         self.lock = threading.Lock()
@@ -52,14 +48,15 @@ class Game(object):
 
     def setup(self, initial):
         self.currentTurn = 0
+        # self.setInitial()
         if initial:
             pass
             # self.threads[0].sendData(self.joinSuccess)
             # self.threads[1].sendData(self.joinSuccess)
 
 
-        # gamesetup = staticdata.gamesetup
-        gamesetup = collectgame_algorithms.createNewSetup(self)
+
+        gamesetup = self.createNewSetup()
 
         self.wasteTime()
 
@@ -71,7 +68,7 @@ class Game(object):
         self.threads[0].sendData(c1packet)
         self.threads[1].sendData(c2packet)
 
-        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self)
+        enemyMoves = self.calculateEnemyMoves()
 
         with self.lock:
             self.currentMoves['enemy'] = enemyMoves
@@ -79,14 +76,7 @@ class Game(object):
             if self.checkFinish():
                 self.finishTurn()
 
-    def getPlayerLocations(self):
-        locations = \
-            {
-                'p1': {'x': 1, 'y': 1},
-                'p2': {'x': 10, 'y': 10},
-                'enemy': {'x': 5, 'y': 5}
-            }
-        return locations
+
 
     def startGame(self, clientthread):
         with self.lock:
@@ -106,7 +96,7 @@ class Game(object):
         playerJoined = \
             {
                 'type': 'Player Joined',
-                'username': p2Thread.userInfo.get('username')
+                'username': p2Thread.user.username
             }
         self.threads[0].sendData(playerJoined)
 
@@ -123,11 +113,11 @@ class Game(object):
     def updateLocations(self, locations, scores):
 
         if self.currentTurn % 2 == 0:
-            newItemLocations = collectgame_algorithms.calculateItemLocations(self, locations)
+            newItemLocations =self.calculateItemLocations(locations)
         else:
             newItemLocations = None
 
-        enemyMoves = collectgame_algorithms.calculateEnemyMoves(self, locations)
+        enemyMoves = self.calculateEnemyMoves(locations)
 
         with self.lock:
             self.currentMoves['enemy'] = enemyMoves
@@ -188,9 +178,9 @@ class Game(object):
         if scores[0] == scores[1]:
             packet['winner'] = 'None'
         elif scores[0] > scores[1]:
-            packet['winner'] = self.threads[0].userInfo.get('username')
+            packet['winner'] = self.threads[0].user.username
         else:
-            packet['winner'] = self.threads[1].userInfo.get('username')
+            packet['winner'] = self.threads[1].user.username
 
         for client in self.threads:
             client.sendData(packet)
@@ -213,18 +203,19 @@ class Game(object):
                 self.rematchBools = [False, False]
                 self.setup(False)
 
+    def generateRandomItemLocations(self, locations, gridSize, itemDict):
+        vals = locations.values()
+        locs = []
+        result = {}
+        for k, v in itemDict.items():
+            for i in xrange(v):
+                loc = {'x': random.randrange(1, gridSize + 1), 'y': random.randrange(1, gridSize + 1)}
+                if loc not in locs and loc not in vals:
+                    locs.append(loc)
+                    if k not in result:
+                        result[k] = []
+                    result[k].append(loc)
 
-    def cleanUp(self):
-        '''
-        Here in case we need to clean up any objects
-        '''
-        pass
+        length = len(locs)
 
-    def refuse(self):
-        '''
-        Host refused to play client
-        '''
-        pass
-        #TODO: implement kicking out peer
-
-
+        return result

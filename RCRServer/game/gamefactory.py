@@ -4,8 +4,8 @@ import threading
 import weakref
 import random
 
-import game
-from tests import fakeclienthandler, fakesocket
+import game, collectgame
+from tests import fakesocket
 from user import clienthandler as ch
 
 
@@ -29,15 +29,25 @@ class GameFactory(object):
 
     MAXGAMES = 2 * 15
 
-    def __init__(self, gf_config):
+    def __init__(self, gf_config, fake_client):
         self.gametypes = gf_config.get('gametypes')
         self.difficulties = gf_config.get('difficulties')
+        self.allGameTypes = []
+        for g in self.gametypes:
+            for d in self.difficulties:
+                self.allGameTypes.append({
+                    'game': g,
+                    'diff': d
+                })
         self.gameWaitList = []
         self.clientWaitList = []
 
         self.currentGameID = 0
         self.gameIDLock = threading.Lock()
         self.gameWaitListLock = threading.Lock()
+
+        if fake_client and fake_client.get('active') and fake_client.get('host') == False:
+            self.fake_client = fake_client
 
 
     def removeWaiterHandler(self, clientHandler):
@@ -56,6 +66,8 @@ class GameFactory(object):
         for d in clientWaitObj.game_waits:
             self.gameWaitList.remove(d())
 
+    gamePreferenceMap = {'Collectors': collectgame.CollectGame}
+
     def createGame(self, host, client, preference):
         #send host "client joined"
         #send client "joining game"
@@ -65,7 +77,10 @@ class GameFactory(object):
         client.sendData(clientPacket)
 
         gameID = self.getGameID()
-        gameObject = game.Game(host, client, gameID, preference)
+        import pprint
+        pprint.pprint(preference)
+        gameConst = self.gamePreferenceMap.get(preference.get('game'))
+        gameObject = gameConst(host, client, gameID, preference)
         host.setGame(gameObject)
         client.setGame(gameObject)
 
@@ -74,7 +89,7 @@ class GameFactory(object):
         if gameWaitObj.preference is not None:
             preference = gameWaitObj.preference
         elif len(choices) > 0:
-            preference = random.choice(foo)
+            preference = random.choice(choices)
         else:
             preference = random.choice(self.allGameTypes)
 
@@ -133,6 +148,9 @@ class GameFactory(object):
         if match:
             self.joinGame(client, choices, hostWaitObj, gameWaitObj)
         else:
+            if self.fake_client:
+                fakech = ch.ClientThread(fakesocket.FakeSocket(False, self.fake_client), self)
+                fakech.start()
             pass
             # self.joinGame(client, choices, self.hw, self.gw)
             # ch = fakeclienthandler.FakeClientThread()
@@ -157,15 +175,4 @@ class GameFactory(object):
     ]
 
 if __name__ == '__main__':
-    ch1 = fakeclienthandler.FakeClientThread()
-    ch2 = fakeclienthandler.FakeClientThread()
-    gf = GameFactory()
-    browsePacket = {'type': 'Browse Games', 'choices': [
-        {
-            'gametype': 'Space Collectors',
-            'difficulty': 'Hard'
-        }
-    ]}
-    gf.browseGames(ch1, browsePacket.copy())
-    # gf.removeWaiterHandler(ch1)
-    gf.browseGames(ch2, browsePacket.copy())
+    pass

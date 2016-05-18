@@ -14,14 +14,15 @@ class FakeSocket(object):
         'password': 'test3'
     }
 
-    def __init__(self, host, numRematches = 2):
+    def __init__(self, host, conf, numRematches = 2):
+        self.score = 0
         self.host = host
         self.lock = threading.Lock()
         self.packet = {}
         self.packet = self.login
-        self.userInfo = {'username': 'fake', 'playerID': 0}
         self.numRematches = numRematches
         self.events = []
+        self.conf = conf
 
     def send(self, jsondata):
         data = json.loads(jsondata)
@@ -99,16 +100,19 @@ class FakeSocket(object):
         'gametype': 'Collect',
         'difficulty': 'Easy'
     }
-    browsegames = \
-    {
+    
+
+    def getBrowseGames(self):
+        return {
         'type': 'Browse Games',
         'choices': [
             {
-                'game': 'Collectors',
-                'diff': 'Hard'
+                'game': self.conf.get('game'),
+                'diff': self.conf.get('diff')
             }
         ]
     }
+
 
     def preparerecv(self, data):
         type = data.get('type', '')
@@ -122,7 +126,7 @@ class FakeSocket(object):
             # print 'UPDATE LOC'
             return self.submitmove
         if type == 'Login':
-            return self.browsegames
+            return self.getBrowseGames()
                 # return self.browsegames
         if type == 'Create Game':
             return {}
@@ -130,7 +134,7 @@ class FakeSocket(object):
             return {'type': 'Player Joined', 'accept': True}
         if type == 'Join Game':
             if not data.get('success'):
-                return self.browsegames
+                return self.getBrowseGames()
             else:
                 return {}
         if type == 'Browse Games':
@@ -154,8 +158,11 @@ class FakeSocket(object):
         if type == 'Run Events':
             # print 'RUN EVENTS'
             if self.host:
+                self.score += 2
                 # print 'RETURNING UPDATELOCATIONS'
-                return self.updatelocations
+                u = self.updatelocations
+                u['scores'] = [self.score, self.score]
+                return u
             else:
                 return self.submitmove
         if type == 'End Game':
