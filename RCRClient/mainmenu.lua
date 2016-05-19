@@ -36,6 +36,7 @@ function gameSelect:init(mainMenu)
 	self.buttonList = {}
 	self.checkedButtons = {}
 	--self:addButtons(self.rowVals[self.numRows])
+	-- ADD GAMES HERE
 	self:addGame("Collectors")
 	self:addGame("Trap")
 	--self:addGame("Game 3")

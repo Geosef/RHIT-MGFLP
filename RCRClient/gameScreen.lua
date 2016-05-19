@@ -6,6 +6,7 @@ function gameScreen:init(gameInit)
 	
 	self.uiConfig = configuration["ui_config"]
 	self.host = gameInit.host
+	-- This needs to be eventually replaced with GameLib in order to enable switching of game types
 	self.gameboard = CollectGameboard.new(gameInit)
 	self.padding = self.uiConfig["padding"]
 	self.gameActionButtonHeight = self.uiConfig["gameActionButtonHeight"]

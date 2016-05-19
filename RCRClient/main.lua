@@ -3,7 +3,7 @@
 WINDOW_HEIGHT = application:getLogicalWidth()
 WINDOW_WIDTH = application:getLogicalHeight()
 
-local multiplayerMode = false
+local multiplayerMode = true
 
 JSON = (loadfile "JSON.lua")()
 local configString = readAll("config.json")
