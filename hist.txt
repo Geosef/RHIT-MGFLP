@@ -1,0 +1,484 @@
+    1  python
+    2  ls
+    3  ls -al ~/.ssh
+    4  ssh-keygen -t rsa -b 4096 -C "mjkochell@gmail.com"
+    5  ls -al ~/.ssh
+    6  eval "$(ssh-agent -s)"
+    7  ssh-add ~/.ssh/id_rsa
+    8  sudo apt-get install xclip
+    9  sudo yum install xclip
+   10  xclip
+   11  cat ~/.ssh/id_rsa_pub
+   12  ls -al ~/.ssh
+   13  cat ~/.ssh/id_rsa.pub
+   14  ssh -T git@github.com
+   15  git
+   16  sudo yum install git
+   17  gfit
+   18  git
+   19  ls
+   20  git clone git@github.com:Geosef/RunCoderRun.git
+   21  ls
+   22  cd RunCoderRun/
+   23  ls
+   24  git pull
+   25  cd RCRServer/
+   26  ls
+   27  python main.py
+   28  nano main.py
+   29  python main.py
+   30  nano main.py
+   31  python main.py
+   32  nano main.py
+   33  python main.py
+   34  nano main.py
+   35  python main.py
+   36  exit
+   37  top
+   38  kill 2620
+   39  top
+   40  kill 23499
+   41  ezit
+   42  exit
+   43  top
+   44  kill 23566
+   45  netstat
+   46  top
+   47  kill 23623
+   48  cd RunCoderRun/
+   49  cd RCRServer/
+   50  ls
+   51  python main.py
+   52  git checkout main.py
+   53  nano main.oy
+   54  nano main.py
+   55  python main.py
+   56  nano main.py
+   57  python main.py
+   58  top
+   59  ls
+   60  cd RunCoderRun/
+   61  cd RCRServer/
+   62  ls
+   63  python main.py
+   64  cd /etc
+   65  cd init
+   66  ls
+   67  cd init
+   68  cd ..
+   69  cd init
+   70  ls
+   71  nano script.conf
+   72  cd /home
+   73  ls
+   74  cd ec2-user
+   75  ls
+   76  cd /home/ec2-user/RunCoderRun/RCRServer/
+   77  ls
+   78  cd /etc/init
+   79  nano script.conf
+   80  sudo nano script.conf
+   81  top
+   82  kill 26338
+   83  top
+   84  sudo initctl reload-configuration
+   85  sudo start script
+   86  sudo nano script.conf
+   87  sudo initctl reload-configuration
+   88  sudo start script
+   89  cd /homre
+   90  cd /home
+   91  cd ec2-user/
+   92  cd RunCoderRun/RCRServer/
+   93  ls
+   94  tpo
+   95  top
+   96  python main.py &
+   97  top
+   98  cd /var
+   99  ;s
+  100  ls
+  101  cd log
+  102  ls
+  103  mkdir RCR
+  104  sudo mkdir RCR
+  105  cd RCR
+  106  top
+  107  kill 26480
+  108  cd /home/ec2-user/RunCoderRun/RCRServer/
+  109  ls
+  110  git pull
+  111  git diff main.py 
+  112  git checkout 26480
+  113  git checkout main.py
+  114  git pull
+  115  gpo
+  116  git pull
+  117  cat main.py
+  118  python main.py
+  119  sudo nano main.py
+  120  python main.py
+  121  cd /homre
+  122  cd /home
+  123  sudo mkdir logs
+  124  cd logs
+  125  sudo mkdir RCR
+  126  cd /home/ec2-user/RunCoderRun/RCRServer/
+  127  python main.py
+  128  cd /home/logs
+  129  cd ..
+  130  mv logs ec2-user/logs
+  131  sudo mv logs ec2-user/logs
+  132  cd ec2-user/
+  133  cd logds
+  134  cd logs
+  135  ls
+  136  cd ../RunCoderRun/
+  137  cd RCRServer/
+  138  python main.py 
+  139  sudo nano main.py 
+  140  python main.py 
+  141  sudo nano main.py 
+  142  python main.py 
+  143  cat server.log 
+  144  sudo mkdir logs
+  145  sudo nano main.py 
+  146  sudo mkdir logs
+  147  python main.py 
+  148  sudo nano main.py 
+  149  python main.py 
+  150  sudo nano main.py 
+  151  sudo python main.py 
+  152  cd logs
+  153  cat server.log 
+  154  git status
+  155  cd ..
+  156  ls
+  157  rm server.log 
+  158  git status
+  159  git checkout main.py 
+  160  git pull
+  161  sudo python main.py &
+  162  git pull
+  163  sudo python main.py &
+  164  cd logs
+  165  cat server.log 
+  166  cd RunCoderRun/
+  167  cd RCRServer/
+  168  top
+  169  kill 26780
+  170  sudo kill 26780
+  171  git pull
+  172  sudo python main.py &
+  173  top
+  174  git pull
+  175  sudo python main.py &
+  176  top
+  177  sudo python main.py &
+  178  lsof -i :5005
+  179  sudo netstat -ap | grep :5005
+  180  sudo netstat -ap
+  181  sudo netstat -ap | grep 5005
+  182  sudo netstat -ap
+  183  sudo python main.py &
+  184  cd RunCoderRun/
+  185  cd RCRServer/
+  186  git pull
+  187  sudo python main.py 
+  188  sudo python main.py &
+  189  top
+  190  git pull
+  191  sudo python main.py &
+  192  exit
+  193  cd RunCoderRun/
+  194  cd RCRServer/
+  195  ls
+  196  git pull
+  197  sudo python main.py &
+  198  top
+  199  sudo python main.py &
+  200  sudo python main.py
+  201  top
+  202  cat logs/server.log 
+  203  sudo python main.py
+  204  cd RCR
+  205  cd RunCoderRun/
+  206  cd RCRServer/
+  207  git pull
+  208  sudo python main.py
+  209  sudo python main.py &
+  210  top
+  211  cd RunCoderRun/
+  212  cds RCRServer/
+  213  ls
+  214  cd RCRServer/
+  215  ls
+  216  sudo python main.py &
+  217  top
+  218  cd RunCoderRun/
+  219  cd RCRServer/
+  220  ls
+  221  sudo python main.py
+  222  python main.py
+  223  sudo python main.py
+  224  nano main.py 
+  225  python main.py
+  226  sudo python main.py
+  227  sudo python main.py &
+  228  exit
+  229  top | grep python
+  230  top
+  231  htop
+  232  pidof python
+  233  kill 2405
+  234  pidof python
+  235  kill 2414
+  236  sudo kill 2414
+  237  pidof python
+  238  sudo kill 2419
+  239  pidof python
+  240  sudo kill 2424
+  241  pidof python
+  242  sudo kill 2441
+  243  pidof python
+  244  sudo kill 2447
+  245  pidof python
+  246  sudo kill 2457
+  247  exit
+  248  cd RunCoderRun/
+  249  cd RCRServer/
+  250  pidof python
+  251  sudo kill 2463
+  252  git status
+  253  git checkout main.py 
+  254  sudo rm server.log 
+  255  sudo python main.py &
+  256  exit
+  257  cd RunCoderRun/
+  258  cd RCRServer/
+  259  ls
+  260  pidof python
+  261  nano startServer.sh
+  262  chmod a+x startServer.sh 
+  263  ./startServer.sh 
+  264  nano startServer.sh
+  265  ./startServer.sh 
+  266  pidof python
+  267  ./startServer.sh 
+  268  nano startServer.sh 
+  269  rm startServer.sh 
+  270  git pull
+  271  ./startServer.sh 
+  272  chmod a+x startServer.sh 
+  273  ./startServer.sh 
+  274  cd RunCoderRun/\
+  275  cd RCRServer/
+  276  ls
+  277  cd logs/
+  278  cat server.log 
+  279  git pull
+  280  ls
+  281  cd ..
+  282  ls
+  283  chmod a+x killServer.sh 
+  284  ./startServer.sh 
+  285  cd logs
+  286  ls
+  287  cat server.log 
+  288  ls
+  289  cd RunCoderRun/
+  290  ls
+  291  cd RCRServer/
+  292  ls
+  293  git status
+  294  git pull
+  295  cd logs/
+  296  cat server.log 
+  297  git checkout server.log 
+  298  rm server.log 
+  299  pidof python
+  300  cd ..
+  301  ls
+  302  ./killServer.sh 
+  303  cd logs/
+  304  rm server.log 
+  305  sudo rm server.log 
+  306  ls
+  307  git pull
+  308  sudo git pull
+  309  git pull
+  310  git status
+  311  cd ..
+  312  ls
+  313  cd ..
+  314  ls
+  315  cd ec2-user/
+  316  ls
+  317  cd RunCoderRun/
+  318  git status
+  319  cd ..
+  320  sudo rm RunCoderRun/
+  321  ls
+  322  sudo rm RunCoderRun -r
+  323  ls
+  324  git clone https://github.com/Geosef/RunCoderRun.git
+  325  git pull
+  326  ls
+  327  cd RunCoderRun/
+  328  ks
+  329  ls
+  330  cd RCRServer/
+  331  ls
+  332  nano main.py 
+  333  ls
+  334  ./startServer.sh
+  335  auso ./startServer.sh
+  336  chmod a+x startServer.sh 
+  337  sudo ./startServer.sh 
+  338  ls
+  339  gi tpull
+  340  git pull
+  341  sudo ./startServer.sh 
+  342  git pull
+  343  ls
+  344  git checkout main.py 
+  345  git pull
+  346  nano main.py 
+  347  sudo ./startServer.sh 
+  348  chmod a+x killServer.sh 
+  349  ./killServer.sh 
+  350  git pull
+  351  ./startServer.sh 
+  352  ./killServer.sh 
+  353  ./startServer.sh 
+  354  ./killServer.sh 
+  355  git pull
+  356  ./startServer.sh 
+  357  ./killServer.sh 
+  358  git pull
+  359  ./startServer.sh 
+  360  ./killServer.sh 
+  361  exit
+  362  ls
+  363  cd RunCoderRun/
+  364  ls
+  365  cd RCRServer/
+  366  ls
+  367  git status
+  368  ggit pull
+  369  git diff main.py 
+  370  git checkout main.py 
+  371  git pull
+  372  ls
+  373  ./startServer.sh 
+  374  ./killServer.sh 
+  375  git pull
+  376  ./startServer.sh 
+  377  exit
+  378  ls
+  379  cd RunCoderRun/
+  380  ls
+  381  cd RCRServer/
+  382  ls
+  383  ./killServer.sh 
+  384  git pull
+  385  ./startServer.sh 
+  386  ./killServer.sh 
+  387  ls
+  388  cd game
+  389  ls
+  390  nano gamefactory.py
+  391  ../startServer.sh 
+  392  cd ../
+  393  ls
+  394  ./startServer.sh 
+  395  ./killServer.sh 
+  396  ls
+  397  cd game
+  398  git status
+  399  git checkout gamefactory.py
+  400  cd ..
+  401  ./startServer.sh 
+  402  exit
+  403  uname -r
+  404  exit
+  405  cd /stc
+  406  cd /etc
+  407  ls
+  408  cd yum.repos.d/
+  409  ls
+  410  touch mongodb-org-3.0.repo
+  411  sudo touch mongodb-org-3.0.repo
+  412  nano mongodb-org-3.0.repo 
+  413  sudo nano mongodb-org-3.0.repo 
+  414  sudo yum install -y mongodb-org
+  415  sudo service mongod start
+  416  sudo service mongod stop
+  417  cd /home
+  418  ls
+  419  cd ec2-user/
+  420  ls
+  421  cd RunCoderRun/
+  422  ls
+  423  cd RCRServer/
+  424  ls
+  425  ./killServer.sh 
+  426  git pull
+  427  ls
+  428  git status
+  429  git checkout db/database.json
+  430  gitfetch origin
+  431  git fetch origin
+  432  git pull
+  433  ls
+  434  cd app
+  435  cd appconfig/
+  436  ls
+  437  nano config.json
+  438  cd ..
+  439  ls
+  440  ./startServer.sh 
+  441  ./killServer.sh 
+  442  pip install pymongo
+  443  sudo pip install pymongo
+  444  sudo pip install humongolus
+  445  ./startServer.sh 
+  446  y
+  447  sudo service mongod start
+  448  ./startServer.sh 
+  449  ./killServer.sh 
+  450  git pull
+  451  ./startServer.sh 
+  452  ./killServer.sh 
+  453  ls
+  454  git pull
+  455  git checkout RCRServer/appconfig/config.json
+  456  ls
+  457  git checkout appconfig/config.json
+  458  git pull
+  459  ls
+  460  cd appconfig/
+  461  ls
+  462  nano networkconfig.json 
+  463  cd ..
+  464  ./startServer.sh 
+  465  ./killServer.sh 
+  466  exit
+  467  ls
+  468  cd RunCoderRun/
+  469  ls
+  470  cd RCRServer/
+  471  ls
+  472  cd appconfig/
+  473  ls
+  474  nano config.json 
+  475  cd ..
+  476  ls
+  477  ./startServer.sh 
+  478  exit
+  479  ls
+  480  cd RunCoderRun/
+  481  ls
+  482  historu
+  483  history
+  484  history > hist.txt
