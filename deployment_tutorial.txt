@@ -1,0 +1,45 @@
+//install git and clone repo
+sudo yum install git
+git clone https://github.com/Geosef/RunCoderRun.git
+
+//pull repo
+cd RunCoderRun
+git pull
+cd RCRServer
+
+
+//install mongo
+sudo cp mongo/mongodb-org-3.0.repo /etc/yum.repos.d/
+sudo yum install -y mongodb-org
+
+
+//start mongo
+sudo service mongod start
+
+//stop mongo
+sudo service mongod stop
+
+//install python mongo libraries
+sudo pip install pymongo
+sudo pip install humongolus
+
+
+//set up ip for server config
+//for amazon linux, use the following value: "0.0.0.0"
+nano appconfig/networkconfig.json 
+
+
+chmod a+x startServer.sh
+chmod a+x killServer.sh
+
+//start server
+sudo service mongod start
+./startServer.sh 
+ 
+//kill server
+./killServer.sh
+
+
+Keep in mind the startServer and killServer scripts were written in a naive way. They actually both kill any python processes running at the beginning of execution. Please be careful with any other python programs that may be running on the instance.
+
+
